@@ -1,0 +1,19 @@
+
+repositories {
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+}
+
+dependencies {
+    implementation project(':common')
+    implementation project(':spigot-api')
+
+    // provided by platform
+    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
+    compileOnly 'org.slf4j:slf4j-api:1.7.36'
+
+    // provided
+    compileOnly 'com.guflimc.brick.i18n:spigot-api:+'
+
+
+    implementation 'com.guflimc.brick.maths:spigot-api:+'
+}

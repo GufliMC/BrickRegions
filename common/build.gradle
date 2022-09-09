@@ -1,0 +1,10 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':api')
+
+    api 'com.guflimc.brick.orm:common:+'
+    api 'com.guflimc.brick.maths:database-api:+'
+}
