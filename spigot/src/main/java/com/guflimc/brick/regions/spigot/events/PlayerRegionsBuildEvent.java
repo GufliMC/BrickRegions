@@ -1,4 +1,4 @@
-package com.guflimc.brick.regions.spigot.protection.events;
+package com.guflimc.brick.regions.spigot.events;
 
 import com.guflimc.brick.regions.api.domain.Region;
 import org.bukkit.block.Block;
@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class RegionProtectionBuildEvent extends RegionProtectionEvent {
+public class PlayerRegionsBuildEvent extends PlayerRegionsEvent {
 
     private final Block block;
 
-    public RegionProtectionBuildEvent(Player player, Collection<Region> regions, Block block) {
+    public PlayerRegionsBuildEvent(Player player, Collection<Region> regions, Block block) {
         super(player, regions);
         this.block = block;
     }

@@ -6,13 +6,17 @@ import com.guflimc.brick.maths.api.geo.area.CuboidArea;
 import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.maths.api.geo.pos.Vector;
 
-public class CubeSelection implements Selection {
+import java.util.UUID;
+
+public class CubeSelection extends AbstractSelection {
 
     // is not the same as min/max: pos2 can have a lower x, y and/or z value than pos1
     private Vector pos1;
     private Vector pos2;
 
-    private Runnable undo;
+    protected CubeSelection(UUID worldId) {
+        super(worldId);
+    }
 
     public Vector pos1() {
         return pos1;
@@ -50,11 +54,6 @@ public class CubeSelection implements Selection {
     }
 
     @Override
-    public Contour contour() {
-        return area().contour();
-    }
-
-    @Override
     public double minY() {
         return Math.min(pos1.y(), pos2.y());
     }
@@ -77,13 +76,6 @@ public class CubeSelection implements Selection {
 
         pos1 = new Vector(pos1.x(), -70, pos1.z());
         pos2 = new Vector(pos2.x(), 320, pos2.z());
-    }
-
-    @Override
-    public void undo() {
-        if (undo != null) {
-            undo.run();
-        }
     }
 
     @Override

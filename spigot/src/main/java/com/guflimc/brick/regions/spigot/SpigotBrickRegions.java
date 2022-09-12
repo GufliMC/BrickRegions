@@ -3,10 +3,13 @@ package com.guflimc.brick.regions.spigot;
 import com.google.gson.Gson;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.i18n.spigot.api.namespace.SpigotNamespace;
-import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.common.BrickRegionsConfig;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
+import com.guflimc.brick.regions.spigot.listeners.MoveListener;
+import com.guflimc.brick.regions.spigot.listeners.BuildListener;
+import com.guflimc.brick.regions.spigot.listeners.EntityPlaceListener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +24,6 @@ public class SpigotBrickRegions extends JavaPlugin {
     private static final Logger logger = LoggerFactory.getLogger(SpigotBrickRegions.class);
 
     public final Gson gson = new Gson();
-
     public BrickRegionsConfig config;
 
     //
@@ -51,7 +53,10 @@ public class SpigotBrickRegions extends JavaPlugin {
         SpigotI18nAPI.get().register(namespace);
 
         // LISTENERS
-        // TODO
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(new MoveListener(this), this);
+        pm.registerEvents(new BuildListener(), this);
+        pm.registerEvents(new EntityPlaceListener(), this);
 
         // COMMANDS
 

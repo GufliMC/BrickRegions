@@ -3,15 +3,17 @@ package com.guflimc.brick.regions.api.selection;
 import com.guflimc.brick.maths.api.geo.area.Area;
 import com.guflimc.brick.maths.api.geo.area.Contour;
 
+import java.util.UUID;
+
 public interface Selection {
 
-    boolean isValid();
-
-    Contour contour();
+    UUID worldId();
 
     double minY();
 
     double maxY();
+
+    boolean isValid();
 
     void expandY();
 

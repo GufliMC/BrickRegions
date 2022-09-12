@@ -1,16 +1,15 @@
 package com.guflimc.brick.regions.api;
 
 import com.guflimc.brick.maths.api.geo.area.Area;
+import com.guflimc.brick.maths.api.geo.pos.Location;
 import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.maths.api.geo.pos.Vector2;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.api.selection.Selection;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public interface RegionManager<S> {
@@ -31,7 +30,9 @@ public interface RegionManager<S> {
 
     Collection<Region> regions();
 
-    Collection<Region> regionsAt(@NotNull Point position);
+    Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point position);
+
+    Collection<Region> regionsAt(@NotNull Location position);
 
     CompletableFuture<Void> remove(@NotNull Region region);
 
@@ -39,10 +40,16 @@ public interface RegionManager<S> {
 
     //
 
-    CompletableFuture<Region> create(@NotNull String name, @NotNull Area area);
+    CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Area area);
 
     CompletableFuture<Region> create(@NotNull String name, @NotNull Selection selection);
 
     //
+
+    default boolean isAllowed(S subject, RuleType type, UUID worldId, Point point) {
+        return isAllowed(subject, type, regionsAt(new Location(worldId, point)));
+    }
+
+    boolean isAllowed(S subject, RuleType type, Collection<Region> regions);
 
 }

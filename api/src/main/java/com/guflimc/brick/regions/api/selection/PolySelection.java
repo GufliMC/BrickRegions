@@ -8,14 +8,17 @@ import com.guflimc.brick.maths.api.geo.pos.Vector2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class PolySelection implements Selection {
+public class PolySelection extends AbstractSelection {
 
     private final List<Vector2> points = new ArrayList<>();
     private double minY = Double.MAX_VALUE;
     private double maxY = Double.MIN_VALUE;
 
-    private Runnable undo;
+    protected PolySelection(UUID worldId) {
+        super(worldId);
+    }
 
     public int size() {
         return points.size();
@@ -52,11 +55,6 @@ public class PolySelection implements Selection {
     }
 
     @Override
-    public Contour contour() {
-        return area().contour();
-    }
-
-    @Override
     public double minY() {
         return minY;
     }
@@ -82,14 +80,10 @@ public class PolySelection implements Selection {
     }
 
     @Override
-    public void undo() {
-        if (undo != null) {
-            undo.run();
-        }
-    }
-
-    @Override
     public Area area() {
+        if ( !isValid() ) {
+            throw new IllegalStateException("PolySelection is not valid yet.");
+        }
         return new PolyArea(minY, maxY, points);
     }
 

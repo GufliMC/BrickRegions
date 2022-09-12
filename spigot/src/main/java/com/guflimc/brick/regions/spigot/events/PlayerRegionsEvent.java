@@ -1,4 +1,4 @@
-package com.guflimc.brick.regions.spigot.protection.events;
+package com.guflimc.brick.regions.spigot.events;
 
 import com.guflimc.brick.regions.api.domain.Region;
 import org.bukkit.entity.Player;
@@ -9,13 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class RegionProtectionEvent extends Event implements Cancellable {
+public class PlayerRegionsEvent extends Event implements Cancellable {
 
     private boolean cancelled;
     private final Player player;
     private final Collection<Region> regions;
 
-    public RegionProtectionEvent(Player player, Collection<Region> regions) {
+    public PlayerRegionsEvent(Player player, Collection<Region> regions) {
         this.player = player;
         this.regions = regions;
     }

@@ -1,27 +1,28 @@
 package com.guflimc.brick.regions.common;
 
 import com.guflimc.brick.maths.api.geo.area.Area;
+import com.guflimc.brick.maths.api.geo.pos.Location;
 import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.maths.api.geo.pos.Vector;
 import com.guflimc.brick.regions.api.RegionManager;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.rules.Rule;
+import com.guflimc.brick.regions.api.rules.RuleStatus;
+import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.domain.DAreaRegion;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
-import com.guflimc.brick.regions.common.engine.ZonedRegionEngine;
+import com.guflimc.brick.regions.common.engine.ZonedWorldRegionEngine;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     private final Map<P, Selection> selections = new ConcurrentHashMap<>();
-    private final RegionEngine engine = new ZonedRegionEngine(new Vector(0, 0, 0), 500);
+    private final RegionEngine engine = new RegionEngine(uuid -> new ZonedWorldRegionEngine(uuid, new Vector(0, 0, 0), 500));
 
     private final BrickRegionsDatabaseContext databaseContext;
 
@@ -63,7 +64,12 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Collection<Region> regionsAt(@NotNull Point point) {
+    public Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point position) {
+        return engine.regionsAt(new Location(worldId, position));
+    }
+
+    @Override
+    public Collection<Region> regionsAt(@NotNull Location point) {
         return engine.regionsAt(point);
     }
 
@@ -82,8 +88,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     //
 
     @Override
-    public CompletableFuture<Region> create(@NotNull String name, @NotNull Area area) {
-        DAreaRegion region = new DAreaRegion(name, area);
+    public CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Area area) {
+        DAreaRegion region = new DAreaRegion(worldId, name, area);
         return databaseContext.persistAsync(region).thenApply((n) -> {
             engine.add(region);
             return region;
@@ -92,7 +98,20 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<Region> create(@NotNull String name, @NotNull Selection selection) {
-        return create(name, selection.area());
+        return create(name, selection.worldId(), selection.area());
+    }
+
+    //
+
+    @Override
+    public boolean isAllowed(P subject, RuleType type, Collection<Region> regions) {
+        return regions.stream().flatMap(rg -> rg.rules().stream()) // get all rules
+                .sorted(Comparator.comparing(Rule::priority).reversed()) // sort by priority
+                .filter(rule -> Arrays.stream(rule.ruleTypes()).anyMatch(t -> t == type)) // filter by correct type
+                .filter(rule -> rule.predicate().test(subject, null)) // filter by predicate
+                .findFirst() // first matching = high priority, matches type and matches predicate
+                .map(r -> r.status() != RuleStatus.DENY) // return false if denied
+                .orElse(true); // return true in any other case
     }
 
 }

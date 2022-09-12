@@ -22,8 +22,8 @@ public class DAreaRegion extends DRegion implements AreaRegion {
         super();
     }
 
-    public DAreaRegion(String name, Area area) {
-        super(name);
+    public DAreaRegion(UUID worldId, String name, Area area) {
+        super(worldId, name);
         this.area = area;
     }
 

@@ -1,8 +1,6 @@
-package com.guflimc.brick.regions.spigot.protection.events;
+package com.guflimc.brick.regions.spigot.events;
 
 import com.guflimc.brick.regions.api.domain.Region;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -10,19 +8,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class RegionProtectionEntityPlaceEvent extends RegionProtectionEvent {
+public class PlayerRegionsEntityPlaceEvent extends PlayerRegionsEvent {
 
-    private final Location location;
     private final Entity entity;
 
-    public RegionProtectionEntityPlaceEvent(Player player, Collection<Region> regions, Location location, Entity entity) {
+    public PlayerRegionsEntityPlaceEvent(Player player, Collection<Region> regions, Entity entity) {
         super(player, regions);
-        this.location = location;
         this.entity = entity;
-    }
-
-    public Location location() {
-        return location;
     }
 
     public Entity entity() {

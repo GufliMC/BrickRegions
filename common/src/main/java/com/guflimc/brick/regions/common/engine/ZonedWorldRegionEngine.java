@@ -8,24 +8,31 @@ import com.guflimc.brick.regions.api.domain.AreaRegion;
 import com.guflimc.brick.regions.api.domain.Region;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
-public class ZonedRegionEngine extends AbstractRegionEngine {
+public class ZonedWorldRegionEngine implements WorldRegionEngine {
 
     private final ZoneSet zoneSet;
+    private final UUID worldId;
 
-    public ZonedRegionEngine(Point origin, int zoneRadius) {
+    public ZonedWorldRegionEngine(UUID worldId, Point origin, int zoneRadius) {
+        this.worldId = worldId;
         this.zoneSet = new ZoneSet(origin, zoneRadius);
     }
 
     @Override
-    public void remove(Region region) {
-        super.remove(region);
+    public UUID worldId() {
+        return worldId;
+    }
 
+    @Override
+    public void remove(Region region) {
         if (region instanceof AreaRegion ar) {
             zoneSet.remove(ar);
         }
@@ -34,8 +41,6 @@ public class ZonedRegionEngine extends AbstractRegionEngine {
 
     @Override
     public void add(Region region) {
-        super.add(region);
-
         if (region instanceof AreaRegion ar) {
             zoneSet.add(ar);
         }

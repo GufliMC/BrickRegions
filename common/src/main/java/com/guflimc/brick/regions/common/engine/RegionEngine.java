@@ -1,26 +1,69 @@
 package com.guflimc.brick.regions.common.engine;
 
-import com.guflimc.brick.maths.api.geo.pos.Point;
+import com.guflimc.brick.maths.api.geo.pos.Location;
 import com.guflimc.brick.regions.api.domain.Region;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
-public interface RegionEngine {
+public class RegionEngine {
 
-    void remove(Region region);
+    private final Map<UUID, Region> byId = new ConcurrentHashMap<>();
+    private final Map<String, Region> byName = new ConcurrentHashMap<>();
 
-    void add(Region region);
+    private final Map<UUID, WorldRegionEngine> worldEngines = new ConcurrentHashMap<>();
+    private final Function<UUID, WorldRegionEngine> factory;
 
-    Optional<Region> findRegion(@NotNull UUID id);
+    public RegionEngine(Function<UUID, WorldRegionEngine> factory) {
+        this.factory = factory;
+    }
 
-    Optional<Region> findRegion(@NotNull String name);
+    public void remove(Region region) {
+        byId.remove(region.id());
+        byName.remove(region.name());
 
-    Collection<Region> regions();
+        WorldRegionEngine we = worldEngines.get(region.worldId());
+        if (we != null) {
+            we.remove(region);
+        }
+    }
 
-    Collection<Region> regionsAt(@NotNull Point position);
+    public void add(Region region) {
+        byId.put(region.id(), region);
+        byName.put(region.name(), region);
 
+        WorldRegionEngine we = worldEngines.get(region.worldId());
+        if (we == null) {
+            we = factory.apply(region.worldId());
+            worldEngines.put(we.worldId(), we);
+        }
+
+        we.add(region);
+    }
+
+    public Optional<Region> findRegion(@NotNull UUID id) {
+        return Optional.ofNullable(byId.get(id));
+    }
+
+    public Optional<Region> findRegion(@NotNull String name) {
+        return Optional.ofNullable(byName.get(name));
+    }
+
+    public Collection<Region> regions() {
+        return Collections.unmodifiableCollection(byId.values());
+    }
+
+    public Collection<Region> regionsAt(@NotNull Location point) {
+        if (point.worldId() == null) {
+            return Collections.emptySet();
+        }
+        WorldRegionEngine we = worldEngines.get(point.worldId());
+        if (we == null) {
+            return Collections.emptySet();
+        }
+        return we.regionsAt(point);
+    }
 
 }
