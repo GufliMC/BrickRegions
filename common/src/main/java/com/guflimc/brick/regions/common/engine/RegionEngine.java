@@ -13,10 +13,10 @@ public class RegionEngine {
     private final Map<UUID, Region> byId = new ConcurrentHashMap<>();
     private final Map<String, Region> byName = new ConcurrentHashMap<>();
 
-    private final Map<UUID, WorldRegionEngine> worldEngines = new ConcurrentHashMap<>();
-    private final Function<UUID, WorldRegionEngine> factory;
+    private final Map<UUID, RegionContainer> worldEngines = new ConcurrentHashMap<>();
+    private final Function<UUID, RegionContainer> factory;
 
-    public RegionEngine(Function<UUID, WorldRegionEngine> factory) {
+    public RegionEngine(Function<UUID, RegionContainer> factory) {
         this.factory = factory;
     }
 
@@ -24,7 +24,7 @@ public class RegionEngine {
         byId.remove(region.id());
         byName.remove(region.name());
 
-        WorldRegionEngine we = worldEngines.get(region.worldId());
+        RegionContainer we = worldEngines.get(region.worldId());
         if (we != null) {
             we.remove(region);
         }
@@ -34,7 +34,7 @@ public class RegionEngine {
         byId.put(region.id(), region);
         byName.put(region.name(), region);
 
-        WorldRegionEngine we = worldEngines.get(region.worldId());
+        RegionContainer we = worldEngines.get(region.worldId());
         if (we == null) {
             we = factory.apply(region.worldId());
             worldEngines.put(we.worldId(), we);
@@ -59,7 +59,7 @@ public class RegionEngine {
         if (point.worldId() == null) {
             return Collections.emptySet();
         }
-        WorldRegionEngine we = worldEngines.get(point.worldId());
+        RegionContainer we = worldEngines.get(point.worldId());
         if (we == null) {
             return Collections.emptySet();
         }

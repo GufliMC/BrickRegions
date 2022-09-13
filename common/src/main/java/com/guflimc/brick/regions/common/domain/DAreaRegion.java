@@ -1,6 +1,7 @@
 package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.maths.api.geo.area.Area;
+import com.guflimc.brick.maths.database.api.AreaConverter;
 import com.guflimc.brick.regions.api.domain.AreaRegion;
 import com.guflimc.brick.regions.api.domain.Region;
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Table(name = "area_regions")
 public class DAreaRegion extends DRegion implements AreaRegion {
 
-    @Convert()
+    @Convert(converter = AreaConverter.class)
     @Column(nullable = false)
     private Area area;
 

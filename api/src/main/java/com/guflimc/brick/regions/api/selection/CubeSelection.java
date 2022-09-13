@@ -14,7 +14,7 @@ public class CubeSelection extends AbstractSelection {
     private Vector pos1;
     private Vector pos2;
 
-    protected CubeSelection(UUID worldId) {
+    public CubeSelection(UUID worldId) {
         super(worldId);
     }
 

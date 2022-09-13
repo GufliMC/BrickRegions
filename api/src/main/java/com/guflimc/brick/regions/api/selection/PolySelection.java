@@ -16,7 +16,7 @@ public class PolySelection extends AbstractSelection {
     private double minY = Double.MAX_VALUE;
     private double maxY = Double.MIN_VALUE;
 
-    protected PolySelection(UUID worldId) {
+    public PolySelection(UUID worldId) {
         super(worldId);
     }
 

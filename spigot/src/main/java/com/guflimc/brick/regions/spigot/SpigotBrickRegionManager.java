@@ -1,9 +1,23 @@
 package com.guflimc.brick.regions.spigot;
 
+import com.guflimc.brick.maths.api.geo.area.Area;
+import com.guflimc.brick.maths.spigot.api.SpigotMaths;
+import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.AbstractRegionManager;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionManager;
+import com.guflimc.brick.regions.spigot.api.events.RegionCreateEvent;
+import com.guflimc.brick.regions.spigot.api.events.RegionDeleteEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class SpigotBrickRegionManager extends AbstractRegionManager<Player> implements SpigotRegionManager {
 
@@ -11,4 +25,27 @@ public class SpigotBrickRegionManager extends AbstractRegionManager<Player> impl
         super(databaseContext);
     }
 
+    @Override
+    public CompletableFuture<Void> remove(@NotNull Region region) {
+        Bukkit.getServer().getPluginManager().callEvent(new RegionDeleteEvent(region, !Bukkit.isPrimaryThread()));
+        return super.remove(region);
+    }
+
+    @Override
+    public CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Area area) {
+        return super.create(name, worldId, area).thenApply(rg -> {
+            Bukkit.getServer().getPluginManager().callEvent(new RegionCreateEvent(rg));
+            return rg;
+        });
+    }
+
+    @Override
+    public Collection<Region> regionsAt(@NotNull Location position) {
+        return regionsAt(SpigotMaths.toBrickLocation(position));
+    }
+
+    @Override
+    public Collection<Region> regionsAt(@NotNull Entity entity) {
+        return regionsAt(entity.getLocation());
+    }
 }

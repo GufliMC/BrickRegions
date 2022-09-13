@@ -6,13 +6,12 @@ import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.maths.api.geo.pos.Vector;
 import com.guflimc.brick.regions.api.RegionManager;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.rules.Rule;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.domain.DAreaRegion;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
-import com.guflimc.brick.regions.common.engine.ZonedWorldRegionEngine;
+import com.guflimc.brick.regions.common.engine.RegionContainer;
+import com.guflimc.brick.regions.common.engine.zone.CircularRegionZoneContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -22,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     private final Map<P, Selection> selections = new ConcurrentHashMap<>();
-    private final RegionEngine engine = new RegionEngine(uuid -> new ZonedWorldRegionEngine(uuid, new Vector(0, 0, 0), 500));
+    private final RegionEngine engine = new RegionEngine(uuid -> new CircularRegionZoneContainer(uuid, new Vector(0, 0, 0), 500));
 
     private final BrickRegionsDatabaseContext databaseContext;
 
@@ -105,13 +104,14 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public boolean isAllowed(P subject, RuleType type, Collection<Region> regions) {
-        return regions.stream().flatMap(rg -> rg.rules().stream()) // get all rules
-                .sorted(Comparator.comparing(Rule::priority).reversed()) // sort by priority
-                .filter(rule -> Arrays.stream(rule.ruleTypes()).anyMatch(t -> t == type)) // filter by correct type
-                .filter(rule -> rule.predicate().test(subject, null)) // filter by predicate
-                .findFirst() // first matching = high priority, matches type and matches predicate
-                .map(r -> r.status() != RuleStatus.DENY) // return false if denied
-                .orElse(true); // return true in any other case
+//        return regions.stream().flatMap(rg -> rg.rules().stream()) // get all rules
+//                .sorted(Comparator.comparing(Rule::priority).reversed()) // sort by priority
+//                .filter(rule -> Arrays.stream(rule.ruleTypes()).anyMatch(t -> t == type)) // filter by correct type
+//                .filter(rule -> rule.predicate().test(subject, null)) // filter by predicate
+//                .findFirst() // first matching = high priority, matches type and matches predicate
+//                .map(r -> r.status() != RuleStatus.DENY) // return false if denied
+//                .orElse(true); // return true in any other case
+        return true;
     }
 
 }

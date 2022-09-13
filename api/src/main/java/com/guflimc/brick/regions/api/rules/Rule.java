@@ -1,7 +1,13 @@
 package com.guflimc.brick.regions.api.rules;
 
-import com.guflimc.brick.regions.api.domain.Region;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
-import java.util.function.BiPredicate;
+public record Rule<S>(RuleStatus status, RuleTarget<S> target, RuleType... ruleTypes) {
 
-public record Rule(int priority, RuleStatus status, BiPredicate<Object, Region> predicate, RuleType... ruleTypes) {}
+    @Override
+    public String toString() {
+        return status.name() + " " + target.name() + " " + Arrays.stream(ruleTypes).map(RuleType::name).collect(Collectors.joining(","));
+    }
+
+}

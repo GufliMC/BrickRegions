@@ -3,7 +3,7 @@ package com.guflimc.brick.regions.spigot.listeners;
 import com.guflimc.brick.maths.spigot.api.SpigotMaths;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.spigot.events.PlayerRegionsBuildEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsBuildEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

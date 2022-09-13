@@ -1,24 +1,15 @@
-package com.guflimc.brick.regions.spigot.events;
+package com.guflimc.brick.regions.spigot.api.events;
 
 import com.guflimc.brick.regions.api.domain.Region;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
+public class PlayerRegionLeaveEvent extends PlayerRegionEvent {
 
-public class PlayerRegionsBuildEvent extends PlayerRegionsEvent {
-
-    private final Block block;
-
-    public PlayerRegionsBuildEvent(Player player, Collection<Region> regions, Block block) {
-        super(player, regions);
-        this.block = block;
-    }
-
-    public Block block() {
-        return block;
+    public PlayerRegionLeaveEvent(Region region, Player player) {
+        super(region, player, true);
     }
 
     //
@@ -33,5 +24,4 @@ public class PlayerRegionsBuildEvent extends PlayerRegionsEvent {
     public static HandlerList getHandlerList() {
         return handlers;
     }
-
 }

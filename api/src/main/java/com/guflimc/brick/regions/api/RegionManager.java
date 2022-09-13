@@ -46,6 +46,8 @@ public interface RegionManager<S> {
 
     //
 
+
+
     default boolean isAllowed(S subject, RuleType type, UUID worldId, Point point) {
         return isAllowed(subject, type, regionsAt(new Location(worldId, point)));
     }

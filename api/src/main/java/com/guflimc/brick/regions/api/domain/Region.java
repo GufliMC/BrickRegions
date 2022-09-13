@@ -1,12 +1,9 @@
 package com.guflimc.brick.regions.api.domain;
 
-import com.guflimc.brick.regions.api.rules.Rule;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.api.attributes.AttributeKey;
 
-import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 public interface Region {
 
@@ -16,10 +13,19 @@ public interface Region {
 
     String name();
 
-    <P> Rule<P> addRule(int priority, RuleStatus status, Predicate<P> predicate, RuleType... ruleTypes);
+    int priority();
 
-    <P> void removeRule(Rule<P> rule);
+    void setPriority(int priority);
 
-    Collection<Rule<?>> rules();
+    <T> void setAttribute(AttributeKey<T> key, T value);
+
+    <T> Optional<T> attribute(AttributeKey<T> key);
+
+//
+//    <P> Rule<P> addRule(int priority, RuleStatus status, Predicate<P> predicate, RuleType... ruleTypes);
+//
+//    <P> void removeRule(Rule<P> rule);
+//
+//    Collection<Rule<?>> rules();
 
 }
