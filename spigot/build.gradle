@@ -18,6 +18,8 @@ dependencies {
     // provided
     compileOnly 'com.guflimc.brick.i18n:spigot-api:+'
 
+    // shade
+    implementation 'cloud.commandframework:cloud-bukkit:+'
 
     implementation 'com.guflimc.brick.maths:spigot-api:+'
 }

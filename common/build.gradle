@@ -5,6 +5,12 @@ plugins {
 dependencies {
     implementation project(':api')
 
+    // provided
+    compileOnly 'com.guflimc.brick.i18n:api:+'
+
     api 'com.guflimc.brick.orm:common:+'
     api 'com.guflimc.brick.maths:database-api:+'
+
+    api 'cloud.commandframework:cloud-core:+'
+    api 'cloud.commandframework:cloud-annotations:+'
 }

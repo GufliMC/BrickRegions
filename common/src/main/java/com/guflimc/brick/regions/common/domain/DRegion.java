@@ -1,23 +1,24 @@
 package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.regions.api.attributes.AttributeKey;
-import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.PersistentRegion;
+import com.guflimc.brick.regions.api.domain.RegionRule;
+import com.guflimc.brick.regions.api.rules.RuleStatus;
+import com.guflimc.brick.regions.api.rules.RuleTarget;
+import com.guflimc.brick.regions.api.rules.RuleType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorValue("REGION")
 @DiscriminatorColumn(name = "type")
 @Table(name = "regions")
-public class DRegion implements Region {
+public class DRegion implements PersistentRegion {
 
     @Id
     @GeneratedValue
@@ -38,7 +39,9 @@ public class DRegion implements Region {
             cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DRegionAttribute> attributes = new ArrayList<>();
 
-//    private transient final Set<Rule<?>> rules = new CopyOnWriteArraySet<>();
+    @OneToMany(targetEntity = DRegionRule.class, mappedBy = "region",
+            cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<DRegionRule> rules = new ArrayList<>();
 
     public DRegion() {
     }
@@ -96,20 +99,24 @@ public class DRegion implements Region {
                 .map(ra -> key.deserialize(ra.value()));
     }
 
-//    @Override
-//    public <P> Rule<P> addRule(int priority, RuleStatus status, Predicate<P> predicate, RuleType... ruleTypes) {
-//        Rule<P> rule = new Rule<P>(priority, status, (p, region) -> predicate.test(p), ruleTypes);
-//        rules.add(rule);
-//        return rule;
-//    }
-//
-//    @Override
-//    public <P> void removeRule(Rule<P> rule) {
-//        rules.remove(rule);
-//    }
-//
-//    @Override
-//    public Collection<Rule<?>> rules() {
-//        return Collections.unmodifiableSet(rules);
-//    }
+    public RegionRule addRule(int priority, RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
+        DRegionRule rule = new DRegionRule(this, priority, status, target, ruleTypes);
+        rules.add(rule);
+        return rule;
+    }
+
+    public RegionRule addRule(RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
+        return addRule(0, status, target, ruleTypes);
+    }
+
+    @Override
+    public void removeRule(RegionRule rule) {
+        rules.remove(rule);
+    }
+
+    @Override
+    public Collection<RegionRule> rules() {
+        return Collections.unmodifiableList(rules);
+    }
+
 }

@@ -5,6 +5,7 @@ import com.guflimc.brick.orm.database.HibernateDatabaseContext;
 import com.guflimc.brick.regions.common.domain.DAreaRegion;
 import com.guflimc.brick.regions.common.domain.DRegion;
 import com.guflimc.brick.regions.common.domain.DRegionAttribute;
+import com.guflimc.brick.regions.common.domain.DRegionRule;
 
 public class BrickRegionsDatabaseContext extends HibernateDatabaseContext {
 
@@ -21,7 +22,8 @@ public class BrickRegionsDatabaseContext extends HibernateDatabaseContext {
         return new Class[]{
                 DRegion.class,
                 DAreaRegion.class,
-                DRegionAttribute.class
+                DRegionAttribute.class,
+                DRegionRule.class
         };
     }
 

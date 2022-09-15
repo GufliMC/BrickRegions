@@ -5,10 +5,15 @@ import com.guflimc.brick.maths.api.geo.pos.Location;
 import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.maths.api.geo.pos.Vector;
 import com.guflimc.brick.regions.api.RegionManager;
+import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.RegionRule;
+import com.guflimc.brick.regions.api.rules.RuleStatus;
+import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.domain.DAreaRegion;
+import com.guflimc.brick.regions.common.domain.DRegion;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
 import com.guflimc.brick.regions.common.engine.RegionContainer;
 import com.guflimc.brick.regions.common.engine.zone.CircularRegionZoneContainer;
@@ -47,6 +52,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         selections.put(subject, selection);
     }
 
+    //
+
     @Override
     public Optional<Region> findRegion(@NotNull UUID id) {
         return engine.findRegion(id);
@@ -63,6 +70,11 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
+    public Collection<PersistentRegion> persistentRegions() {
+        return engine.regions().stream().filter(PersistentRegion.class::isInstance).map(PersistentRegion.class::cast).toList();
+    }
+
+    @Override
     public Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point position) {
         return engine.regionsAt(new Location(worldId, position));
     }
@@ -74,14 +86,37 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<Void> remove(@NotNull Region region) {
+        if ( !(region instanceof DRegion) ) {
+            throw new IllegalArgumentException("Only persistent regions can be removed.");
+        }
         engine.remove(region);
         return databaseContext.removeAsync(region);
     }
 
     @Override
     public CompletableFuture<Void> update(@NotNull Region region) {
-        return databaseContext.mergeAsync(region).thenRun(() -> {
-        });
+        if ( !(region instanceof DRegion) ) {
+            throw new IllegalArgumentException("Only persistent regions can be saved.");
+        }
+        return databaseContext.mergeAsync(region).thenRun(() -> {});
+    }
+
+    @Override
+    public void register(@NotNull Region region) {
+        if ( region instanceof DRegion ) {
+            throw new IllegalArgumentException("Only transient regions can be registered.");
+        }
+
+        engine.add(region);
+    }
+
+    @Override
+    public void unregister(@NotNull Region region) {
+        if ( region instanceof DRegion ) {
+            throw new IllegalArgumentException("Only transient regions can be unregistered.");
+        }
+
+        engine.remove(region);
     }
 
     //
@@ -104,14 +139,17 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public boolean isAllowed(P subject, RuleType type, Collection<Region> regions) {
-//        return regions.stream().flatMap(rg -> rg.rules().stream()) // get all rules
-//                .sorted(Comparator.comparing(Rule::priority).reversed()) // sort by priority
-//                .filter(rule -> Arrays.stream(rule.ruleTypes()).anyMatch(t -> t == type)) // filter by correct type
-//                .filter(rule -> rule.predicate().test(subject, null)) // filter by predicate
-//                .findFirst() // first matching = high priority, matches type and matches predicate
-//                .map(r -> r.status() != RuleStatus.DENY) // return false if denied
-//                .orElse(true); // return true in any other case
-        return true;
+        return persistentRegions().stream().flatMap(rg -> rg.rules().stream()) // get all rules
+                .filter(rule -> Arrays.stream(rule.types()).anyMatch(t -> t == type)) // filter by correct type
+                .filter(rule -> ((RuleTarget<P>) rule.target()).test(subject, null)) // filter by predicate
+                .max(Comparator
+                        .comparingInt((RegionRule rr) -> rr.region().priority()) // highest region priority first
+                        .thenComparingInt(RegionRule::priority) // then highest rule priority
+                        .thenComparingInt(rr -> rr.target().priority()) // then highest target priority
+                        .thenComparingInt(rr -> rr.status().ordinal()) // then highest status priority (ALLOW > DENY)
+                )
+                .map(r -> r.status() != RuleStatus.DENY) // return false if denied
+                .orElse(true); // return true if it says allow, or no matching rule is found
     }
 
 }

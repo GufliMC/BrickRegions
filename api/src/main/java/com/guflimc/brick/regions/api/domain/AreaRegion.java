@@ -6,6 +6,4 @@ public interface AreaRegion extends Region {
 
     Area area();
 
-    void setArea(Area area);
-
 }
