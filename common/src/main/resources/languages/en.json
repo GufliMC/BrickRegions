@@ -6,39 +6,28 @@
   "cmd.error.args": "<dark_red>{1} <red>is not a valid <dark_red>{0}<red>.",
   "cmd.error.args.player": "<red>The player <dark_red>{0} <red>is not online.",
   "cmd.error.args.region": "<red>A region with that name does not exist.",
-  "cmd.error.args.baseregion": "<red>A base region with that name does not exist.",
-  "cmd.error.args.zoneregion": "<red>A zone region with that name does not exist.",
 
   "cmd.select.invalid": "<red>Please make a valid selection first.",
-
   "cmd.select.expand": "Selection has been expanded on the vertical axis.",
-
-  "cmd.select.type.usage": "<red>Invalid usage, try this: /car select mode <mode>",
+  "cmd.select.type.usage": "<red>Invalid usage, try this: /br select <type>",
   "cmd.select.type": "Selection mode changed to {0}.",
-
-  "cmd.select.reset": "Your selection has been reset.",
+  "cmd.select.clear": "Your selection has been reset.",
   "cmd.select.undo": "Your last selection action has been undone",
-
   "cmd.select.wand": "The selection wand has been added to your inventory",
 
   "cmd.region.create.exists": "<red>A region with that name already exists.",
-  "cmd.region.create.capture.usage": "<red>Invalid usage, try this: /car region create capture <name>",
-  "cmd.region.create.capture": "You created a capture region named {0}.",
+  "cmd.region.create.usage": "<red>Invalid usage, try this: /br region create <name>",
+  "cmd.region.create": "You created a region named {0}.",
 
-  "cmd.region.create.outpost.usage": "<red>Invalid usage, try this: /car region create outpost <name>",
-  "cmd.region.create.outpost": "You created an outpost region named {0}.",
-
-  "cmd.region.create.zone.usage": "<red>Invalid usage, try this: /car region create zone <name> <base-region>",
-  "cmd.region.create.zone.invalid": "<dark_red>{0} <red>is not a base region.",
-  "cmd.region.create.zone": "You created a zone region named {0}.",
-
-  "cmd.region.delete.usage": "<red>Invalid usage, try this: /car region delete <region>",
+  "cmd.region.delete.usage": "<red>Invalid usage, try this: /br region delete <region>",
   "cmd.region.delete": "Deleted {0}.",
 
-  "cmd.region.edit.display.usage": "<red>Invalid usage, try this: /car region edit display <region> <display>",
+  "cmd.region.edit.display.usage": "<red>Invalid usage, try this: /br region edit display <region> <display>",
   "cmd.region.edit.display": "Changed display of {0} to {1}.",
 
   "cmd.region.list": "List of regions: {0}",
+
+  "select.wand.name": "<yellow>Selection Wand",
 
   "select.cuboid.primary": "Changed primary position.",
   "select.cuboid.secondary": "Changed secondary position.",

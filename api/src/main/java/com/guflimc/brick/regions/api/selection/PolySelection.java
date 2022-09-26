@@ -13,8 +13,8 @@ import java.util.UUID;
 public class PolySelection extends AbstractSelection {
 
     private final List<Vector2> points = new ArrayList<>();
-    private double minY = Double.MAX_VALUE;
-    private double maxY = Double.MIN_VALUE;
+    private double minY = Double.POSITIVE_INFINITY;
+    private double maxY = Double.NEGATIVE_INFINITY;
 
     public PolySelection(UUID worldId) {
         super(worldId);
@@ -75,8 +75,8 @@ public class PolySelection extends AbstractSelection {
             this.undo = oldUndo;
         };
 
-        minY = -70;
-        maxY = 320;
+        minY = -64;
+        maxY = 319;
     }
 
     @Override

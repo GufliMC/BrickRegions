@@ -5,23 +5,30 @@ import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
 import com.google.gson.Gson;
+import com.guflimc.brick.gui.spigot.SpigotBrickGUI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.i18n.spigot.api.namespace.SpigotNamespace;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.common.BrickRegionsConfig;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
-import com.guflimc.brick.regions.common.commands.BrickRegionsCommands;
+import com.guflimc.brick.regions.common.commands.RegionCommands;
 import com.guflimc.brick.regions.common.commands.arguments.RegionArgument;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
-import com.guflimc.brick.regions.spigot.commands.SpigotBrickRegionsCommands;
+import com.guflimc.brick.regions.spigot.commands.SpigotRegionCommands;
+import com.guflimc.brick.regions.spigot.commands.SpigotSelectionCommands;
 import com.guflimc.brick.regions.spigot.listeners.BuildListener;
 import com.guflimc.brick.regions.spigot.listeners.EntityPlaceListener;
 import com.guflimc.brick.regions.spigot.listeners.MoveListener;
 import com.guflimc.brick.regions.spigot.rules.RuleHandler;
+import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
+import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
 import io.leangen.geantyref.TypeToken;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.units.qual.N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +44,9 @@ public class SpigotBrickRegions extends JavaPlugin {
 
     public final Gson gson = new Gson();
     public BrickRegionsConfig config;
+
+    public final NamespacedKey SELECTION_WAND_KEY = new NamespacedKey(this, "selection_wand");
+    public final NamespacedKey SELECTION_TYPE = new NamespacedKey(this, "selection_type");
 
     //
 
@@ -64,12 +74,21 @@ public class SpigotBrickRegions extends JavaPlugin {
         namespace.loadValues(this, "languages");
         SpigotI18nAPI.get().register(namespace);
 
-        // LISTENERS
+        // ACTIONS
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new MoveListener(this), this);
         pm.registerEvents(new BuildListener(), this);
         pm.registerEvents(new EntityPlaceListener(), this);
+
+        // RULES
         pm.registerEvents(new RuleHandler(), this);
+
+        // SELECTION
+        new SelectionRenderer(this);
+        pm.registerEvents(new SelectionListener(this), this);
+
+        // GUI
+        SpigotBrickGUI.register(this);
 
         // COMMANDS
         try {
@@ -89,8 +108,9 @@ public class SpigotBrickRegions extends JavaPlugin {
                     parameters -> SimpleCommandMeta.empty()
             );
 
-            annotationParser.parse(new BrickRegionsCommands());
-            annotationParser.parse(new SpigotBrickRegionsCommands());
+            annotationParser.parse(new RegionCommands());
+            annotationParser.parse(new SpigotRegionCommands());
+            annotationParser.parse(new SpigotSelectionCommands(this));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

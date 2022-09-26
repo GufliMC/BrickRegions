@@ -22,6 +22,7 @@ dependencies {
     implementation 'cloud.commandframework:cloud-bukkit:+'
 
     implementation 'com.guflimc.brick.maths:spigot-api:+'
+    implementation 'com.guflimc.brick.gui:spigot-api:+'
 }
 
 bukkit {

@@ -74,8 +74,8 @@ public class CubeSelection extends AbstractSelection {
             this.undo = oldUndo;
         };
 
-        pos1 = new Vector(pos1.x(), -70, pos1.z());
-        pos2 = new Vector(pos2.x(), 320, pos2.z());
+        pos1 = new Vector(pos1.x(), -64, pos1.z());
+        pos2 = new Vector(pos2.x(), 319, pos2.z());
     }
 
     @Override
