@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class PlayerRegionsBuildEvent extends PlayerRegionsEvent {
+public abstract class PlayerRegionsBlockEvent extends PlayerRegionsEvent {
 
     private final Block block;
 
-    public PlayerRegionsBuildEvent(Player player, Collection<Region> regions, Block block) {
+    public PlayerRegionsBlockEvent(Player player, Collection<Region> regions, Block block) {
         super(player, regions);
         this.block = block;
     }
@@ -22,16 +22,5 @@ public class PlayerRegionsBuildEvent extends PlayerRegionsEvent {
     }
 
     //
-
-    private static final HandlerList handlers = new HandlerList();
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
 
 }

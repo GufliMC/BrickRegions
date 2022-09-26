@@ -1,18 +1,24 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
 import com.guflimc.brick.regions.api.domain.Region;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class PlayerRegionsEntityPlaceEvent extends PlayerRegionsEntityEvent {
+public class PlayerRegionsContainerOpenEvent extends PlayerRegionsEvent {
 
+    private final Inventory inventory;
 
-    public PlayerRegionsEntityPlaceEvent(Player player, Collection<Region> regions, Entity entity) {
-        super(player, regions, entity);
+    public PlayerRegionsContainerOpenEvent(Player player, Collection<Region> regions, Inventory inventory) {
+        super(player, regions);
+        this.inventory = inventory;
+    }
+
+    public Inventory entity() {
+        return inventory;
     }
 
     //

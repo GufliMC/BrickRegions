@@ -16,8 +16,8 @@ import com.guflimc.brick.regions.common.commands.arguments.RegionArgument;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import com.guflimc.brick.regions.spigot.commands.SpigotRegionCommands;
 import com.guflimc.brick.regions.spigot.commands.SpigotSelectionCommands;
-import com.guflimc.brick.regions.spigot.listeners.BuildListener;
-import com.guflimc.brick.regions.spigot.listeners.EntityPlaceListener;
+import com.guflimc.brick.regions.spigot.listeners.BlockBuildListener;
+import com.guflimc.brick.regions.spigot.listeners.EntityBuildListener;
 import com.guflimc.brick.regions.spigot.listeners.MoveListener;
 import com.guflimc.brick.regions.spigot.rules.RuleHandler;
 import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
@@ -25,10 +25,8 @@ import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
 import io.leangen.geantyref.TypeToken;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,8 +75,8 @@ public class SpigotBrickRegions extends JavaPlugin {
         // ACTIONS
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new MoveListener(this), this);
-        pm.registerEvents(new BuildListener(), this);
-        pm.registerEvents(new EntityPlaceListener(), this);
+        pm.registerEvents(new BlockBuildListener(), this);
+        pm.registerEvents(new EntityBuildListener(), this);
 
         // RULES
         pm.registerEvents(new RuleHandler(), this);

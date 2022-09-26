@@ -8,10 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class PlayerRegionsEntityPlaceEvent extends PlayerRegionsEntityEvent {
+public class PlayerRegionsEntityBreakEvent extends PlayerRegionsEntityEvent {
 
 
-    public PlayerRegionsEntityPlaceEvent(Player player, Collection<Region> regions, Entity entity) {
+    public PlayerRegionsEntityBreakEvent(Player player, Collection<Region> regions, Entity entity) {
         super(player, regions, entity);
     }
 

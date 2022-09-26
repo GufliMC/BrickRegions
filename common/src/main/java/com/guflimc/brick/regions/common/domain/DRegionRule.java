@@ -13,6 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.type.SqlTypes;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -95,12 +96,12 @@ public class DRegionRule implements RegionRule {
 
         @Override
         public String convertToDatabaseColumn(RuleType[] attribute) {
-            return Arrays.stream(attribute).map(Enum::name).collect(Collectors.joining(","));
+            return Arrays.stream(attribute).map(RuleType::name).collect(Collectors.joining(","));
         }
 
         @Override
         public RuleType[] convertToEntityAttribute(String dbData) {
-            return Arrays.stream(dbData.split(PATTERN)).map(RuleType::valueOf).toArray(RuleType[]::new);
+            return Arrays.stream(dbData.split(PATTERN)).map(RuleType::valueOf).filter(Objects::nonNull).toArray(RuleType[]::new);
         }
     }
 

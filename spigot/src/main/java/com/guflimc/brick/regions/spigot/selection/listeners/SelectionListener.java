@@ -1,8 +1,6 @@
 package com.guflimc.brick.regions.spigot.selection.listeners;
 
-import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
-import com.guflimc.brick.maths.api.geo.pos.Location;
 import com.guflimc.brick.maths.api.geo.pos.Vector;
 import com.guflimc.brick.regions.api.selection.CubeSelection;
 import com.guflimc.brick.regions.api.selection.PolySelection;
@@ -32,20 +30,19 @@ public class SelectionListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-        if ( item.getType() == Material.AIR ) {
+        if (item.getType() == Material.AIR) {
             return;
         }
 
-        if ( !item.getItemMeta().getPersistentDataContainer().has(plugin.SELECTION_WAND_KEY, PersistentDataType.BYTE) ) {
+        if (!item.getItemMeta().getPersistentDataContainer().has(plugin.SELECTION_WAND_KEY, PersistentDataType.BYTE)) {
             return;
         }
 
         Block b = event.getClickedBlock();
-        if ( event.getAction() == Action.LEFT_CLICK_BLOCK ) {
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             addLeftClick(event.getPlayer(), new Vector(b.getX(), b.getY(), b.getZ()));
             event.setCancelled(true);
-        }
-        else if ( event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
+        } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             addRightClick(event.getPlayer(), new Vector(b.getX(), b.getY(), b.getZ()));
             event.setCancelled(true);
         }
@@ -55,10 +52,10 @@ public class SelectionListener implements Listener {
 
     private void addLeftClick(Player player, Vector pos) {
         Selection selection = getOrCreateSelection(player);
-        if ( selection instanceof PolySelection ps) {
+        if (selection instanceof PolySelection ps) {
             ps.add(pos);
             SpigotI18nAPI.get(this).send(player, "select.poly");
-        } else if ( selection instanceof CubeSelection ss ) {
+        } else if (selection instanceof CubeSelection ss) {
             ss.setPos1(pos);
             SpigotI18nAPI.get(this).send(player, "select.cuboid.primary");
         }
@@ -68,10 +65,10 @@ public class SelectionListener implements Listener {
 
     private void addRightClick(Player player, Vector pos) {
         Selection selection = getOrCreateSelection(player);
-        if ( selection instanceof PolySelection ps) {
+        if (selection instanceof PolySelection ps) {
             ps.add(pos);
             SpigotI18nAPI.get(this).send(player, "select.poly");
-        } else if ( selection instanceof CubeSelection ss ) {
+        } else if (selection instanceof CubeSelection ss) {
             ss.setPos2(pos);
             SpigotI18nAPI.get(this).send(player, "select.cuboid.secondary");
         }
@@ -80,20 +77,20 @@ public class SelectionListener implements Listener {
     private Selection getOrCreateSelection(Player player) {
         Selection selection = SpigotRegionAPI.get().selection(player).orElse(null);
         PersistentDataContainer pdc = player.getPersistentDataContainer();
-        if ( selection == null ) {
+        if (selection == null) {
             if (pdc.has(plugin.SELECTION_TYPE, PersistentDataType.INTEGER)
-                    && pdc.get(plugin.SELECTION_TYPE, PersistentDataType.INTEGER) == SelectionType.POLY.ordinal() ) {
+                    && pdc.get(plugin.SELECTION_TYPE, PersistentDataType.INTEGER) == SelectionType.POLY.ordinal()) {
                 selection = new PolySelection(player.getWorld().getUID());
             } else {
                 selection = new CubeSelection(player.getWorld().getUID());
             }
-        } else if ( pdc.has(plugin.SELECTION_TYPE, PersistentDataType.INTEGER)
-                && pdc.get(plugin.SELECTION_TYPE, PersistentDataType.INTEGER) == SelectionType.POLY.ordinal() ) {
-            if ( selection instanceof CubeSelection) {
+        } else if (pdc.has(plugin.SELECTION_TYPE, PersistentDataType.INTEGER)
+                && pdc.get(plugin.SELECTION_TYPE, PersistentDataType.INTEGER) == SelectionType.POLY.ordinal()) {
+            if (selection instanceof CubeSelection) {
                 selection = new PolySelection(player.getWorld().getUID());
             }
         } else {
-            if ( selection instanceof PolySelection) {
+            if (selection instanceof PolySelection) {
                 selection = new CubeSelection(player.getWorld().getUID());
             }
         }

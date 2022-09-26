@@ -1,18 +1,18 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
 import com.guflimc.brick.regions.api.domain.Region;
-import org.bukkit.entity.Entity;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class PlayerRegionsEntityPlaceEvent extends PlayerRegionsEntityEvent {
+public class PlayerRegionsBlockPlaceEvent extends PlayerRegionsBlockEvent {
 
 
-    public PlayerRegionsEntityPlaceEvent(Player player, Collection<Region> regions, Entity entity) {
-        super(player, regions, entity);
+    public PlayerRegionsBlockPlaceEvent(Player player, Collection<Region> regions, Block block) {
+        super(player, regions, block);
     }
 
     //

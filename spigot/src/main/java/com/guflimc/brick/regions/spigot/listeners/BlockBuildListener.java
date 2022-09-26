@@ -3,7 +3,8 @@ package com.guflimc.brick.regions.spigot.listeners;
 import com.guflimc.brick.maths.spigot.api.SpigotMaths;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsBuildEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsBlockBreakEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsBlockPlaceEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,37 +19,48 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 
 import java.util.Collection;
 
-public class BuildListener implements Listener {
+public class BlockBuildListener implements Listener {
 
-    private void call(Player player, Block block, Cancellable e) {
-        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMaths.toPosition(block.getLocation()));
+    private void blockPlace(Player player, Block block, Cancellable e) {
+        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMaths.toBrickLocation(block.getLocation()));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerRegionsBuildEvent event = new PlayerRegionsBuildEvent(player, regions, block);
+        PlayerRegionsBlockPlaceEvent event = new PlayerRegionsBlockPlaceEvent(player, regions, block);
+        Bukkit.getPluginManager().callEvent(event);
+        e.setCancelled(event.isCancelled());
+    }
+
+    private void blockBreak(Player player, Block block, Cancellable e) {
+        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMaths.toBrickLocation(block.getLocation()));
+        if (regions.isEmpty()) {
+            return;
+        }
+
+        PlayerRegionsBlockBreakEvent event = new PlayerRegionsBlockBreakEvent(player, regions, block);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBreak(BlockBreakEvent e) {
-        call(e.getPlayer(), e.getBlock(), e);
+        blockBreak(e.getPlayer(), e.getBlock(), e);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlace(BlockPlaceEvent e) {
-        call(e.getPlayer(), e.getBlock(), e);
+        blockPlace(e.getPlayer(), e.getBlock(), e);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBucketEmpty(PlayerBucketEmptyEvent e) {
-        call(e.getPlayer(), e.getBlock(), e);
+        blockBreak(e.getPlayer(), e.getBlock(), e);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBucketFill(PlayerBucketFillEvent e) {
-        call(e.getPlayer(), e.getBlock(), e);
+        blockPlace(e.getPlayer(), e.getBlock(), e);
     }
 
     // TODO interact
