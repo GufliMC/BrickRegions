@@ -7,6 +7,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public record RuleType(String name) {
 
+    private final static Map<String, RuleType> types = new ConcurrentHashMap<>();
+
+    //
+
     public static final RuleType BUILD = new RuleType("BUILD");
     public static final RuleType CONTAINER = new RuleType("CONTAINER");
     public static final RuleType INTERACT = new RuleType("INTERACT");
@@ -21,8 +25,6 @@ public record RuleType(String name) {
     public static final RuleType COMMAND = new RuleType("COMMAND");
 
     //
-
-    private static Map<String, RuleType> types = new ConcurrentHashMap<>();
 
     public RuleType(String name) {
         this.name = name.toUpperCase();

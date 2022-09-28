@@ -16,9 +16,7 @@ import com.guflimc.brick.regions.common.commands.arguments.RegionArgument;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import com.guflimc.brick.regions.spigot.commands.SpigotRegionCommands;
 import com.guflimc.brick.regions.spigot.commands.SpigotSelectionCommands;
-import com.guflimc.brick.regions.spigot.listeners.BlockBuildListener;
-import com.guflimc.brick.regions.spigot.listeners.EntityBuildListener;
-import com.guflimc.brick.regions.spigot.listeners.MoveListener;
+import com.guflimc.brick.regions.spigot.listeners.*;
 import com.guflimc.brick.regions.spigot.rules.RuleHandler;
 import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
 import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
@@ -77,6 +75,10 @@ public class SpigotBrickRegions extends JavaPlugin {
         pm.registerEvents(new MoveListener(this), this);
         pm.registerEvents(new BlockBuildListener(), this);
         pm.registerEvents(new EntityBuildListener(), this);
+        pm.registerEvents(new CollectItemsListener(), this);
+        pm.registerEvents(new EntityBuildListener(), this);
+        pm.registerEvents(new EntityDamageListener(), this);
+        pm.registerEvents(new EntityInteractListener(), this);
 
         // RULES
         pm.registerEvents(new RuleHandler(), this);
