@@ -6,6 +6,7 @@ import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.maths.api.geo.pos.Vector2;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.RegionRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -67,5 +68,7 @@ public interface RegionManager<S> {
     }
 
     boolean isAllowed(S subject, RuleType type, Collection<Region> regions);
+
+    Optional<RegionRule> findRule(S subject, RuleType type, Collection<Region> regions);
 
 }

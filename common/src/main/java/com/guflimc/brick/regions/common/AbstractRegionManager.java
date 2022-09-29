@@ -137,19 +137,24 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     //
 
+
     @Override
     public boolean isAllowed(P subject, RuleType type, Collection<Region> regions) {
-        return persistentRegions().stream().flatMap(rg -> rg.rules().stream()) // get all rules
+        return findRule(subject, type, regions).map(r -> r.status() == RuleStatus.ALLOW).orElse(false);
+    }
+
+    @Override
+    public final Optional<RegionRule> findRule(P subject, RuleType type, Collection<Region> regions) {
+        return regions.stream().filter(rg -> rg instanceof PersistentRegion)
+                .map(rg -> (PersistentRegion) rg)
+                .flatMap(rg -> rg.rules().stream()) // get all rules
                 .filter(rule -> Arrays.stream(rule.types()).anyMatch(t -> t == type)) // filter by correct type
                 .filter(rule -> ((RuleTarget<P>) rule.target()).test(subject, null)) // filter by predicate
                 .max(Comparator
                         .comparingInt((RegionRule rr) -> rr.region().priority()) // highest region priority first
                         .thenComparingInt(RegionRule::priority) // then highest rule priority
                         .thenComparingInt(rr -> rr.target().priority()) // then highest target priority
-                        .thenComparingInt(rr -> rr.status().ordinal()) // then highest status priority (ALLOW > DENY)
-                )
-                .map(r -> r.status() != RuleStatus.DENY) // return false if denied
-                .orElse(true); // return true if it says allow, or no matching rule is found
+                        .thenComparingInt(rr -> rr.status().ordinal()) // then highest status priority (DENY > ALLOW)
+                );
     }
-
 }

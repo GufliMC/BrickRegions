@@ -1,14 +1,12 @@
 package com.guflimc.brick.regions.spigot;
 
 import com.guflimc.brick.maths.api.geo.area.Area;
-import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.maths.spigot.api.SpigotMaths;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
-import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.AbstractRegionManager;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
 import com.guflimc.brick.regions.common.domain.DRegion;
@@ -60,11 +58,6 @@ public class SpigotBrickRegionManager extends AbstractRegionManager<Player> impl
     //
 
     @Override
-    public boolean isAllowed(Player subject, RuleType type, UUID worldId, Point point) {
-        return super.isAllowed(subject, type, worldId, point);
-    }
-
-    @Override
     public Collection<Region> regionsAt(@NotNull Location position) {
         return regionsAt(SpigotMaths.toBrickLocation(position));
     }
@@ -73,4 +66,5 @@ public class SpigotBrickRegionManager extends AbstractRegionManager<Player> impl
     public Collection<Region> regionsAt(@NotNull Entity entity) {
         return regionsAt(entity.getLocation());
     }
+
 }

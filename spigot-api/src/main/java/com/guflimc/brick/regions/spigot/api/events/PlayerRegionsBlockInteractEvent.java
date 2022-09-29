@@ -1,6 +1,7 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.rules.RuleType;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -12,7 +13,7 @@ public class PlayerRegionsBlockInteractEvent extends PlayerRegionsBlockEvent {
 
 
     public PlayerRegionsBlockInteractEvent(Player player, Collection<Region> regions, Block block) {
-        super(player, regions, block);
+        super(player, regions, block, RuleType.INTERACT);
     }
 
     //

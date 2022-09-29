@@ -88,6 +88,12 @@ public class DRegionRule implements RegionRule {
         return types;
     }
 
+    @Override
+    public String toString() {
+        return status.name() + " " + target.name() + " " + Arrays.stream(types).map(RuleType::name)
+                .collect(Collectors.joining(", "));
+    }
+
     //
 
     public static class RuleTypesConverter implements AttributeConverter<RuleType[], String> {

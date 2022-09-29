@@ -3,11 +3,10 @@ package com.guflimc.brick.regions.spigot.listeners;
 import com.guflimc.brick.maths.spigot.api.SpigotMaths;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsEntityDamageEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,7 +25,14 @@ public class EntityDamageListener implements Listener {
             return;
         }
 
-        PlayerRegionsEntityDamageEvent event = new PlayerRegionsEntityDamageEvent(player, regions, entity);
+        RuleType type = null;
+        if ( entity instanceof Monster ) {
+            type = RuleType.ATTACK_HOSTILE_MOBS;
+        } else if ( entity instanceof Animals) {
+            type = RuleType.ATTACK_NEUTRAL_MOBS;
+        }
+
+        PlayerRegionsEntityDamageEvent event = new PlayerRegionsEntityDamageEvent(player, regions, entity, type);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }
