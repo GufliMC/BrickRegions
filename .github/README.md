@@ -1,41 +1,52 @@
-# ElderRegions
+# BrickRegions
 
-Region system including:
-* Database peristence
-* Wand selection
-* TODO - Placeholders
-* Capture system
+A lightweight system for defining and protecting regions.
 
 ## Commands
 
-| Command                                              | Permission                            |
+### Selection
+| Command                                              | Pbrmission                            |
 |------------------------------------------------------|---------------------------------------|
-| /er select wand                                      | elderregions.select.wand              |
-| /er select reset                                     | elderregions.select.reset             |
-| /er select type [cuboid/poly]                        | elderregions.select.type              |
-| /er select undo                                      | elderregions.select.undo              |
-| /er select expand                                    | elderregions.select.expand            |
-| /er region list                                      | elderregions.region.list              | 
-| /er region create capture (name)                     | elderregion.region.create.capture     |
-| /er region create outpost (name)                     | elderregion.region.create.outpost     |
-| /er region create capturezone (name) (captureregion) | elderregion.region.create.capturezone |
-| /er region delete (region)                           | elderregions.region.delete            |
-| /er region edit display (region) (display)           | elderregions.region.edit.display      |
+| /br select wand                                      | brickregions.select.wand              |
+| /br select clear                                     | brickregions.select.reset             |
+| /br select [cuboid/poly]                             | brickregions.select.type              |
+| /br select undo                                      | brickregions.select.undo              |
+| /br select expand                                    | brickregions.select.expand            |
 
+### Regions
+| Command                                      | Pbrmission                 |
+|----------------------------------------------|----------------------------|
+| /br region list                              | brickregions.region.list   | 
+| /br region create (name)                     | brickregions.region.create |
+| /br region delete (region)                   | brickregions.region.delete |
+
+### Region rules
+| Command                        | Pbrmission                     |
+|--------------------------------|--------------------------------|
+| /br region rules list (region) | brickregions.region.rules.list |
+| /br region rules add (region) (status) (target) (type) | brickregions.region.rules.add |
+| /br region rules remove (region) (rule) | brickregions.region.rules.remove |
+
+## Protection
+
+A region can be protected by applying rules. Rules consist of 3 values:
+- A status: ALLOW or DENY
+- A target, to whom the rule applies
+- A type, defines what is protected
 
 ## API
 
 ### Maven
 ```
 repositories {
-    maven { url "https://repo.jorisg.com/eldershore" }
+    maven { url "https://repo.jorisg.com/snapshots" }
 }
 
 dependencies {
-    implementation 'com.gufli.eldershore.regions:api:1.0-SNAPSHOT'
+    implementation 'com.guflimc.brick.regions:api:1.0-SNAPSHOT'
 }
 ```
 
 ### Usage
 
-Check the [javadocs](https://eldershore.github.io/ElderRegions/)
+Check the [javadocs](https://guflimc.github.io/BrickRegions/)

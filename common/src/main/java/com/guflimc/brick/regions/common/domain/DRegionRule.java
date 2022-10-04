@@ -119,7 +119,7 @@ public class DRegionRule implements RegionRule {
 
         @Override
         public RuleTarget<?> convertToEntityAttribute(String dbData) {
-            return RuleTarget.byName(dbData).orElse(null);
+            return RuleTarget.valueOf(dbData);
         }
     }
 
