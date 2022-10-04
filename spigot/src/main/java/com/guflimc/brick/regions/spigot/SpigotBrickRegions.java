@@ -5,14 +5,21 @@ import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
 import com.google.gson.Gson;
+import com.guflimc.brick.RuleTypes.common.commands.arguments.RuleTypeArgument;
 import com.guflimc.brick.gui.spigot.SpigotBrickGUI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.i18n.spigot.api.namespace.SpigotNamespace;
+import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.rules.RuleStatus;
+import com.guflimc.brick.regions.api.rules.RuleTarget;
+import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.common.BrickRegionsConfig;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
 import com.guflimc.brick.regions.common.commands.RegionCommands;
 import com.guflimc.brick.regions.common.commands.arguments.RegionArgument;
+import com.guflimc.brick.regions.common.commands.arguments.RuleStatusArgument;
+import com.guflimc.brick.regions.common.commands.arguments.RuleTargetArgument;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import com.guflimc.brick.regions.spigot.commands.SpigotRegionCommands;
 import com.guflimc.brick.regions.spigot.commands.SpigotSelectionCommands;
@@ -101,6 +108,18 @@ public class SpigotBrickRegions extends JavaPlugin {
 
             commandManager.parserRegistry().registerParserSupplier(TypeToken.get(Region.class),
                     ps -> new RegionArgument.RegionParser<>());
+
+            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(PersistentRegion.class),
+                    ps -> new RegionArgument.RegionParser<>());
+
+            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleType.class),
+                    ps -> new RuleTypeArgument.RuleTypeParser<>());
+
+            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleTarget.class),
+                    ps -> new RuleTargetArgument.RuleTargetParser<>());
+
+            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleStatus.class),
+                    ps -> new RuleStatusArgument.RuleStatusParser<>());
 
             AnnotationParser<CommandSender> annotationParser = new AnnotationParser<>(
                     commandManager,

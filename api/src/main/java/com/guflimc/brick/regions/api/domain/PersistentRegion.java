@@ -17,11 +17,11 @@ public interface PersistentRegion extends Region {
 
     <T> Optional<T> attribute(AttributeKey<T> key);
 
-//    RegionRule addRule(int priority, RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes);
-//
-//    default RegionRule addRule(RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
-//        return addRule(0, status, target, ruleTypes);
-//    }
+    RegionRule addRule(int priority, RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes);
+
+    default RegionRule addRule(RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
+        return addRule(0, status, target, ruleTypes);
+    }
 
     void removeRule(RegionRule rule);
 

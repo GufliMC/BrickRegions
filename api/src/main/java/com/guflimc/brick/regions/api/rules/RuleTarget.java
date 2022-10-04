@@ -1,6 +1,7 @@
 package com.guflimc.brick.regions.api.rules;
 
 import com.guflimc.brick.regions.api.domain.Region;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
@@ -42,8 +43,8 @@ public abstract class RuleTarget<S> {
 
     //
 
-    public static Optional<RuleTarget<?>> byName(String name) {
-        return Optional.ofNullable(targets.get(name));
+    public static @Nullable RuleTarget<?> valueOf(String name) {
+        return targets.get(name);
     }
 
     public static RuleTarget<?>[] values() {

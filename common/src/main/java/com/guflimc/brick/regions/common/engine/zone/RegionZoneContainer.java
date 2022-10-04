@@ -16,18 +16,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class RegionZoneContainer extends RegionContainer {
 
-    protected final List<RegionZone> zones = new CopyOnWriteArrayList<>();
-
     public RegionZoneContainer(UUID worldId) {
         super(worldId);
-    }
-
-    @Override
-    public void remove(Region region) {
-        if (region instanceof AreaRegion ar) {
-            zones.forEach(z -> z.remove(ar));
-        }
-        // TODO else
     }
 
     @Override
@@ -37,6 +27,8 @@ public abstract class RegionZoneContainer extends RegionContainer {
             for (Vector2 vec : contour) {
                 zoneAt(new Vector(vec.x(), 0, vec.y())).add(ar);
             }
+            // TODO | what if a side of the contour is greater than the chunk length?
+            // TODO | or passes diagonally by a corner of a chunk
         }
         // TODO else
     }

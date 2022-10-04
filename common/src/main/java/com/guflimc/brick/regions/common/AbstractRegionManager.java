@@ -15,8 +15,7 @@ import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.domain.DAreaRegion;
 import com.guflimc.brick.regions.common.domain.DRegion;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
-import com.guflimc.brick.regions.common.engine.RegionContainer;
-import com.guflimc.brick.regions.common.engine.zone.CircularRegionZoneContainer;
+import com.guflimc.brick.regions.common.engine.zone.ChunkedRegionZoneContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -26,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     private final Map<P, Selection> selections = new ConcurrentHashMap<>();
-    private final RegionEngine engine = new RegionEngine(uuid -> new CircularRegionZoneContainer(uuid, new Vector(0, 0, 0), 500));
+    private final RegionEngine engine = new RegionEngine(uuid -> new ChunkedRegionZoneContainer(uuid, 512));
 
     private final BrickRegionsDatabaseContext databaseContext;
 
@@ -71,7 +70,10 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public Collection<PersistentRegion> persistentRegions() {
-        return engine.regions().stream().filter(PersistentRegion.class::isInstance).map(PersistentRegion.class::cast).toList();
+        return engine.regions().stream()
+                .filter(PersistentRegion.class::isInstance)
+                .map(PersistentRegion.class::cast)
+                .toList();
     }
 
     @Override

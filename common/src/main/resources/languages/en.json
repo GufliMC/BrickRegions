@@ -33,8 +33,8 @@
   "select.cuboid.secondary": "Changed secondary position.",
   "select.poly": "Added position to the selection.",
 
-  "capture.progress.actionbar": "{0}: {1}",
-  "capture.claiming.started" : "{0} has started claiming {1}.",
-  "capture.claiming.finished": "{0} has claimed {1}."
+  "cmd.region.rules.list": "<gray>List of rules for <green>{0}</green>: <green>{1}</green>.",
+  "cmd.region.rules.add": "<gray>Added rule <green>{0}</green> to <green>{1}</green>.",
+  "cmd.region.rules.remove": "<gray>Removed rule <green>{0}</green> to <green>{1}</green>."
 
 }
