@@ -4,10 +4,7 @@ import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 public interface RegionProtectionRule {
@@ -30,20 +27,21 @@ public interface RegionProtectionRule {
     static <S> Optional<RegionProtectionRule> match(S subject, RuleType type, Collection<Region> regions) {
         return match(persistentRegions(regions)
                 .flatMap(rg -> rg.rules().stream()) // flat map to all rules
-                .filter(rule -> Arrays.stream(rule.types()).anyMatch(t -> t == type)) // filter by correct type
+                .filter(rule -> Arrays.stream(rule.types()).anyMatch(t -> t == type || t == RuleType.ALL)) // filter by correct type
                 .filter(rule -> rule.target().testAny(subject, rule.region()))// filter by predicate
                 .toList());
     }
 
     /**
      * Returns the best matching rule based on multiple priorities:
-     * region > rule > target > status
+     * region > rule > target > type (ALL or specific) > status
      */
     static <S> Optional<RegionProtectionRule> match(Collection<RegionProtectionRule> rules) {
         return rules.stream().max(Comparator
                 .comparingInt((RegionProtectionRule rr) -> rr.region().priority()) // region
                 .thenComparingInt(RegionProtectionRule::priority) // rule
                 .thenComparingInt(rr -> rr.target().priority()) // target
+                .thenComparingInt(rr -> List.of(rr.types()).contains(RuleType.ALL) ? 0 : 1) // type (specific > ALL)
                 .thenComparingInt(rr -> rr.status().ordinal()) // status (ALLOW > DENY)
         );
     }
@@ -56,7 +54,7 @@ public interface RegionProtectionRule {
     }
 
     /**
-     * Returns the status of the given optional rule. Will fallback to ALLOWED by default.
+     * Returns the status of the given optional rule. Will fall back to ALLOWED by default.
      */
     static RuleStatus status(Optional<RegionProtectionRule> rule) {
         return rule
