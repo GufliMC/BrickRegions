@@ -9,48 +9,50 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import cloud.commandframework.exceptions.parsing.ParserException;
 import com.guflimc.brick.regions.api.RegionAPI;
+import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
-public final class RegionArgument<C> extends CommandArgument<C, Region> {
+public final class PersistentRegionArgument<C> extends CommandArgument<C, PersistentRegion> {
 
-    private RegionArgument(
+    private PersistentRegionArgument(
             final boolean required,
             final @NotNull String name,
             final @NotNull String defaultValue,
             final @Nullable BiFunction<CommandContext<C>, String,
                     List<String>> suggestionsProvider
     ) {
-        super(required, name, new RegionParser<>(), defaultValue, Region.class, suggestionsProvider);
+        super(required, name, new PersistentRegionParser<>(), defaultValue, PersistentRegion.class, suggestionsProvider);
     }
 
-    public static final class RegionParser<C> implements ArgumentParser<C, Region> {
+    public static final class PersistentRegionParser<C> implements ArgumentParser<C, PersistentRegion> {
 
         @Override
-        public @NotNull ArgumentParseResult<Region> parse(
+        public @NotNull ArgumentParseResult<PersistentRegion> parse(
                 final @NotNull CommandContext<C> commandContext,
                 final @NotNull Queue<String> inputQueue
         ) {
             final String input = inputQueue.peek();
             if (input == null) {
                 return ArgumentParseResult.failure(new NoInputProvidedException(
-                        RegionParser.class,
+                        PersistentRegionParser.class,
                         commandContext
                 ));
             }
             inputQueue.remove();
 
-            Region region = RegionAPI.get().findRegion(input).orElse(null);
+            PersistentRegion region = (PersistentRegion) RegionAPI.get().findRegion(input)
+                    .filter(r -> r instanceof PersistentRegion).orElse(null);
 
             if (region == null) {
-                return ArgumentParseResult.failure(new RegionParseException(input, commandContext));
+                return ArgumentParseResult.failure(new PersistentRegionParseException(input, commandContext));
             }
 
             return ArgumentParseResult.success(region);
@@ -61,31 +63,28 @@ public final class RegionArgument<C> extends CommandArgument<C, Region> {
                 final @NotNull CommandContext<C> commandContext,
                 final @NotNull String input
         ) {
-            List<String> output = new ArrayList<>();
-
-            RegionAPI.get().regions().stream().filter(rg -> rg.name() != null)
-                    .forEach(rg -> output.add(rg.name()));
-
-            return output;
+            return RegionAPI.get().persistentRegions().stream()
+                    .map(Region::name)
+                    .filter(Objects::nonNull).toList();
         }
 
     }
 
-    public static final class RegionParseException extends ParserException {
+    public static final class PersistentRegionParseException extends ParserException {
 
         @Serial
         private static final long serialVersionUID = -2563079642852029296L;
 
         private final String input;
 
-        public RegionParseException(
+        public PersistentRegionParseException(
                 final @NotNull String input,
                 final @NotNull CommandContext<?> context
         ) {
             super(
-                    RegionArgument.RegionParser.class,
+                    PersistentRegionArgument.PersistentRegionParser.class,
                     context,
-                    Caption.of("cmd.args.error.Region"),
+                    Caption.of("cmd.args.error.PersistentRegion"),
                     CaptionVariable.of("0", input)
             );
             this.input = input;

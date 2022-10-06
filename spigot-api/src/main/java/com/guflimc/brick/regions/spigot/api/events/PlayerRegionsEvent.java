@@ -1,7 +1,7 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.RegionRule;
+import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
 import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import org.bukkit.entity.Player;
@@ -18,16 +18,16 @@ public abstract class PlayerRegionsEvent extends Event implements Cancellable {
     private Result result = Result.NEUTRAL;
     private final Player player;
     private final Collection<Region> regions;
-    private final Optional<RegionRule> rule;
+    private final RegionProtectionRule rule;
 
-    public PlayerRegionsEvent(Player player, Collection<Region> regions, Optional<RegionRule> rule) {
+    public PlayerRegionsEvent(Player player, Collection<Region> regions, RegionProtectionRule rule) {
         this.player = player;
         this.regions = regions;
         this.rule = rule;
     }
 
     public PlayerRegionsEvent(Player player, Collection<Region> regions, RuleType type) {
-        this(player, regions, type == null ? Optional.empty() : SpigotRegionAPI.get().findRule(player, type, regions));
+        this(player, regions, type != null ? RegionProtectionRule.match(player, type, regions).orElse(null) : null);
     }
 
     public Player player() {
@@ -38,8 +38,8 @@ public abstract class PlayerRegionsEvent extends Event implements Cancellable {
         return regions;
     }
 
-    public Optional<RegionRule> rule() {
-        return rule;
+    public Optional<RegionProtectionRule> rule() {
+        return Optional.ofNullable(rule);
     }
 
     public Result result() {

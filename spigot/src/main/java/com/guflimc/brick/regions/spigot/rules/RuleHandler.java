@@ -1,6 +1,8 @@
 package com.guflimc.brick.regions.spigot.rules;
 
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
+import com.guflimc.brick.regions.api.RegionAPI;
+import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.spigot.api.events.*;
 import org.bukkit.entity.Monster;
@@ -12,7 +14,7 @@ public class RuleHandler implements Listener {
 
     private boolean shouldCancel(PlayerRegionsEvent event) {
         return event.result() == PlayerRegionsEvent.Result.NEUTRAL
-                && event.rule().map(r -> r.status() != RuleStatus.ALLOW).orElse(true);
+                && RegionProtectionRule.status(event.rule()) == RuleStatus.DENY;
     }
 
     // BLOCK BUILD
@@ -85,7 +87,7 @@ public class RuleHandler implements Listener {
     public void onEntityDamage(PlayerRegionsEntityDamageEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            if ( event.entity() instanceof Monster ) {
+            if (event.entity() instanceof Monster) {
                 SpigotI18nAPI.get(this).send(event.player(), "protection.attack_hostile_mobs");
             } else {
                 SpigotI18nAPI.get(this).send(event.player(), "protection.attack_neutral_mobs");

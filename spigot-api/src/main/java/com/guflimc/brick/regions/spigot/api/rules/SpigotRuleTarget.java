@@ -20,7 +20,7 @@ public class SpigotRuleTarget extends RuleTarget<Player> {
     //
 
     public SpigotRuleTarget(String name, BiPredicate<Player, Region> predicate) {
-        super(name, predicate);
+        super(name, Player.class, predicate);
     }
 
     public static void load() {

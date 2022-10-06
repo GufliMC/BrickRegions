@@ -3,11 +3,10 @@ package com.guflimc.brick.regions.common;
 import com.guflimc.brick.maths.api.geo.area.Area;
 import com.guflimc.brick.maths.api.geo.pos.Location;
 import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.maths.api.geo.pos.Vector;
 import com.guflimc.brick.regions.api.RegionManager;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.RegionRule;
+import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -137,26 +136,4 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         return create(name, selection.worldId(), selection.area());
     }
 
-    //
-
-
-    @Override
-    public boolean isAllowed(P subject, RuleType type, Collection<Region> regions) {
-        return findRule(subject, type, regions).map(r -> r.status() == RuleStatus.ALLOW).orElse(false);
-    }
-
-    @Override
-    public final Optional<RegionRule> findRule(P subject, RuleType type, Collection<Region> regions) {
-        return regions.stream().filter(rg -> rg instanceof PersistentRegion)
-                .map(rg -> (PersistentRegion) rg)
-                .flatMap(rg -> rg.rules().stream()) // get all rules
-                .filter(rule -> Arrays.stream(rule.types()).anyMatch(t -> t == type)) // filter by correct type
-                .filter(rule -> ((RuleTarget<P>) rule.target()).test(subject, null)) // filter by predicate
-                .max(Comparator
-                        .comparingInt((RegionRule rr) -> rr.region().priority()) // highest region priority first
-                        .thenComparingInt(RegionRule::priority) // then highest rule priority
-                        .thenComparingInt(rr -> rr.target().priority()) // then highest target priority
-                        .thenComparingInt(rr -> rr.status().ordinal()) // then highest status priority (DENY > ALLOW)
-                );
-    }
 }

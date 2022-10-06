@@ -16,17 +16,20 @@ public abstract class RuleTarget<S> {
 
     private final String name;
     private final int priority;
+
+    private final Class<S> type;
     private final BiPredicate<S, Region> predicate;
 
-    public RuleTarget(String name, int priority, BiPredicate<S, Region> predicate) {
+    public RuleTarget(String name, int priority, Class<S> type, BiPredicate<S, Region> predicate) {
         this.name = name;
         this.priority = priority;
+        this.type = type;
         this.predicate = predicate;
         targets.put(name, this);
     }
 
-    public RuleTarget(String name, BiPredicate<S, Region> predicate) {
-        this(name, 0, predicate);
+    public RuleTarget(String name, Class<S> type, BiPredicate<S, Region> predicate) {
+        this(name, 0, type, predicate);
     }
 
     public final String name() {
@@ -39,6 +42,10 @@ public abstract class RuleTarget<S> {
 
     public final boolean test(S subject, Region region) {
         return predicate.test(subject, region);
+    }
+
+    public final boolean testAny(Object subject, Region region) {
+        return type.isAssignableFrom(subject.getClass()) && test((S) subject, region);
     }
 
     //

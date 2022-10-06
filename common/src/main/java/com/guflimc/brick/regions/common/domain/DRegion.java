@@ -2,7 +2,7 @@ package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.regions.api.attributes.AttributeKey;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
-import com.guflimc.brick.regions.api.domain.RegionRule;
+import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -39,9 +39,9 @@ public class DRegion implements PersistentRegion {
             cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE }, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DRegionAttribute> attributes = new ArrayList<>();
 
-    @OneToMany(targetEntity = DRegionRule.class, mappedBy = "region",
+    @OneToMany(targetEntity = DRegionProtectionRule.class, mappedBy = "region",
             cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE }, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<DRegionRule> rules = new ArrayList<>();
+    private List<DRegionProtectionRule> rules = new ArrayList<>();
 
     public DRegion() {
     }
@@ -75,6 +75,8 @@ public class DRegion implements PersistentRegion {
         this.priority = priority;
     }
 
+    // attributes
+
     @Override
     public <T> void removeAttribute(AttributeKey<T> key) {
         attributes.removeIf(attr -> attr.name().equals(key.name()));
@@ -100,29 +102,31 @@ public class DRegion implements PersistentRegion {
                 .map(ra -> key.deserialize(ra.value()));
     }
 
-    public RegionRule addRule(int priority, RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
-        DRegionRule rule = new DRegionRule(this, priority, status, target, ruleTypes);
+    // protection rules
+
+    @Override
+    public List<RegionProtectionRule> rules() {
+        return Collections.unmodifiableList(rules);
+    }
+
+    public RegionProtectionRule addProtectionRule(int priority, RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
+        DRegionProtectionRule rule = new DRegionProtectionRule(this, priority, status, target, ruleTypes);
         rules.add(rule);
         return rule;
     }
 
-    public RegionRule addRule(RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
-        return addRule(0, status, target, ruleTypes);
+    public RegionProtectionRule addProtectionRule(RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
+        return addProtectionRule(0, status, target, ruleTypes);
     }
 
     @Override
-    public void removeRule(RegionRule rule) {
+    public void removeRule(RegionProtectionRule rule) {
         rules.remove(rule);
     }
 
     @Override
     public void clearRules() {
         rules.clear();
-    }
-
-    @Override
-    public List<RegionRule> rules() {
-        return Collections.unmodifiableList(rules);
     }
 
 }

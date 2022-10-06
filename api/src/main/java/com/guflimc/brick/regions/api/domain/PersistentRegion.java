@@ -5,14 +5,14 @@ import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface PersistentRegion extends Region {
 
     void setPriority(int priority);
+
+    // attributes
 
     <T> void setAttribute(AttributeKey<T> key, T value);
 
@@ -20,16 +20,18 @@ public interface PersistentRegion extends Region {
 
     <T> Optional<T> attribute(AttributeKey<T> key);
 
-    RegionRule addRule(int priority, RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes);
+    // protection rules
 
-    default RegionRule addRule(RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
-        return addRule(0, status, target, ruleTypes);
+    List<RegionProtectionRule> rules();
+
+    RegionProtectionRule addProtectionRule(int priority, RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes);
+
+    default RegionProtectionRule addProtectionRule(RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
+        return addProtectionRule(0, status, target, ruleTypes);
     }
 
-    void removeRule(RegionRule rule);
+    void removeRule(RegionProtectionRule rule);
 
     void clearRules();
-
-    List<RegionRule> rules();
 
 }

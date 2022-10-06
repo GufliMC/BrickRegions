@@ -1,7 +1,7 @@
 package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.RegionRule;
+import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Table(
         name = "region_rules"
 )
-public class DRegionRule implements RegionRule {
+public class DRegionProtectionRule implements RegionProtectionRule {
 
     @Id
     @GeneratedValue
@@ -49,10 +49,10 @@ public class DRegionRule implements RegionRule {
     @Convert(converter = RuleTypesConverter.class)
     private RuleType[] types;
 
-    public DRegionRule() {
+    public DRegionProtectionRule() {
     }
 
-    public DRegionRule(DRegion region, int priority, RuleStatus status, RuleTarget<?> target, RuleType... types) {
+    public DRegionProtectionRule(DRegion region, int priority, RuleStatus status, RuleTarget<?> target, RuleType... types) {
         this.region = region;
         this.priority = priority;
         this.status = status;
@@ -60,7 +60,7 @@ public class DRegionRule implements RegionRule {
         this.types = types;
     }
 
-    public DRegionRule(DRegion region, RuleStatus status, RuleTarget<?> target, RuleType... types) {
+    public DRegionProtectionRule(DRegion region, RuleStatus status, RuleTarget<?> target, RuleType... types) {
         this(region, 0, status, target, types);
     }
 

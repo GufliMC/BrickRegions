@@ -63,29 +63,4 @@ public class BlockBuildListener implements Listener {
         blockPlace(e.getPlayer(), e.getBlock(), e);
     }
 
-    // TODO interact
-//    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-//    public void onSoilDestroy(PlayerInteractEvent e) {
-//        if (e.getAction() != Action.PHYSICAL) {
-//            return;
-//        }
-//
-//        if (e.getClickedBlock() == null) {
-//            return;
-//        }
-//
-//        String type = e.getClickedBlock().getType().name();
-//        if (!type.equals("SOIL") && !type.equals("FARMLAND")) {
-//            return;
-//        }
-//
-//        if (module.isAllowed(e.getClickedBlock().getLocation(), e.getPlayer(), RuleType.BUILD, type)) {
-//            return;
-//        }
-//
-//        module.kdcp.getMessages().send(module.kdc.getPlayer(e.getPlayer().getUniqueId()), "regionsProtectBuild");
-//        e.setCancelled(true);
-//    }
-
-
 }

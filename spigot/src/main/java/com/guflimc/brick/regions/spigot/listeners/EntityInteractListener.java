@@ -76,7 +76,6 @@ public class EntityInteractListener implements Listener {
             public void setCancelled(boolean cancel) {
                 Interact interact = new Interact(e.getPlayer(), ent, cancel);
                 cache.add(interact);
-                System.out.println(cache.size());
                 e.setCancelled(cancel);
             }
         });

@@ -11,6 +11,8 @@ public record RuleType(String name) {
 
     //
 
+    public static final RuleType ALL = new RuleType("ALL");
+
     public static final RuleType BUILD = new RuleType("BUILD");
     public static final RuleType CONTAINER = new RuleType("CONTAINER");
     public static final RuleType INTERACT = new RuleType("INTERACT");

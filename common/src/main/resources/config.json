@@ -6,5 +6,6 @@
     "username": "root",
     "password": "root",
     "debug": true
-  }
+  },
+  "defaultProtection": false
 }

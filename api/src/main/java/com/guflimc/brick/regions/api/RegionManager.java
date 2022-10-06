@@ -3,19 +3,15 @@ package com.guflimc.brick.regions.api;
 import com.guflimc.brick.maths.api.geo.area.Area;
 import com.guflimc.brick.maths.api.geo.pos.Location;
 import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.maths.api.geo.pos.Vector2;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.RegionRule;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleTarget;
-import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.api.selection.Selection;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiPredicate;
 
 public interface RegionManager<S> {
 
@@ -54,21 +50,5 @@ public interface RegionManager<S> {
     CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Area area);
 
     CompletableFuture<Region> create(@NotNull String name, @NotNull Selection selection);
-
-    //
-
-    void addRule(PersistentRegion region, RuleStatus status, RuleTarget<S> target, RuleType... type);
-
-    void addRule(PersistentRegion region, int priority, RuleStatus status, RuleTarget<S> target, RuleType... type);
-
-    //
-
-    default boolean isAllowed(S subject, RuleType type, UUID worldId, Point point) {
-        return isAllowed(subject, type, regionsAt(new Location(worldId, point)));
-    }
-
-    boolean isAllowed(S subject, RuleType type, Collection<Region> regions);
-
-    Optional<RegionRule> findRule(S subject, RuleType type, Collection<Region> regions);
 
 }
