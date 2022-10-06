@@ -11,7 +11,12 @@ import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 //@CommandContainer
@@ -34,7 +39,20 @@ public class RegionCommands {
 
     @CommandMethod("br rules list <region>")
     public void rulesList(Audience sender, @Argument("region") PersistentRegion region) {
-        I18nAPI.get(this).send(sender, "cmd.region.rules.list", region.name(), region.rules());
+        List<RegionRule> rules = region.rules();
+        if ( rules.isEmpty() ) {
+            I18nAPI.get(this).send(sender, "cmd.region.rules.list.error.empty", region.name());
+            return;
+        }
+
+        List<Component> result = new ArrayList<>();
+        for (int i = 0; i < rules.size(); i++) {
+            RegionRule rule = rules.get(i);
+            result.add(I18nAPI.get(this).translate(sender, "cmd.region.rules.list.format", (i + 1), rule));
+        }
+
+        I18nAPI.get(this).send(sender, "cmd.region.rules.list", region.name(),
+                Component.newline().append(Component.join(JoinConfiguration.newlines(), result)));
     }
 
     @CommandMethod("br rules add <region> <status> <target> <type>")
@@ -42,31 +60,48 @@ public class RegionCommands {
                          @Argument("region") PersistentRegion region,
                          @Argument("status") RuleStatus status,
                          @Argument("target") RuleTarget target,
-                         @Argument("type") RuleType[] types) {
-        RegionRule rule = region.addRule(status, target, types);
-        RegionAPI.get().update(region);
-        I18nAPI.get(this).send(sender, "cmd.region.rules.add", rule, region.name());
-    }
-
-    @CommandMethod("br rules remove <region> <status> <target> <type>")
-    public void rulesRemove(Audience sender,
-                            @Argument("region") PersistentRegion region,
-                            @Argument("status") RuleStatus status,
-                            @Argument("target") RuleTarget target,
-                            @Argument("type") RuleType[] types) {
+                         @Argument("type") RuleType type) {
         RegionRule rule = region.rules().stream()
                 .filter(r -> r.status().equals(status))
                 .filter(r -> r.target().equals(target))
-                .findFirst().orElse(null); // TODO filter types
-        if ( rule == null ) {
-            // TODO
+                .filter(r -> Arrays.asList(r.types()).contains(type))
+                .findFirst().orElse(null);
+
+        if ( rule != null ) {
+            I18nAPI.get(this).send(sender, "cmd.region.rules.add.error.exists");
             return;
         }
 
+        rule = region.addRule(status, target, type);
+        RegionAPI.get().update(region);
+
+        I18nAPI.get(this).send(sender, "cmd.region.rules.add", rule, region.name());
+    }
+
+    @CommandMethod("br rules remove <region> <index>")
+    public void rulesRemove(Audience sender,
+                            @Argument("region") PersistentRegion region,
+                            @Argument("index") int index) {
+        if ( region.rules().size() < index || index < 1 ) {
+            I18nAPI.get(this).send(sender, "cmd.region.rules.remove.error.index");
+            return;
+        }
+
+        RegionRule rule = region.rules().get(index-1);
         region.removeRule(rule);
         RegionAPI.get().update(region);
 
         I18nAPI.get(this).send(sender, "cmd.region.rules.remove", rule, region.name());
+    }
+
+    @CommandMethod("br rules clear <region>")
+    public void rulesClear(Audience sender,
+                            @Argument("region") PersistentRegion region) {
+
+        region.clearRules();
+        RegionAPI.get().update(region);
+
+        I18nAPI.get(this).send(sender, "cmd.region.rules.clear", region.name());
     }
 
 

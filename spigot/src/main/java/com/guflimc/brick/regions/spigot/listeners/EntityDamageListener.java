@@ -39,6 +39,10 @@ public class EntityDamageListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onEntityHit(EntityDamageByEntityEvent e) {
+        if ( e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Hanging ) {
+            return;
+        }
+
         attackEntityEvent(e, e.getDamager());
     }
 

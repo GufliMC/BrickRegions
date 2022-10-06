@@ -1,7 +1,9 @@
 package com.guflimc.brick.regions.spigot.rules;
 
+import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.spigot.api.events.*;
+import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -10,7 +12,7 @@ public class RuleHandler implements Listener {
 
     private boolean shouldCancel(PlayerRegionsEvent event) {
         return event.result() == PlayerRegionsEvent.Result.NEUTRAL
-                && event.rule().map(r -> r.status() == RuleStatus.DENY).orElse(true);
+                && event.rule().map(r -> r.status() != RuleStatus.ALLOW).orElse(true);
     }
 
     // BLOCK BUILD
@@ -19,7 +21,7 @@ public class RuleHandler implements Listener {
     public void onBlockBreak(PlayerRegionsBlockBreakEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            // TODO message
+            SpigotI18nAPI.get(this).send(event.player(), "protection.build");
         }
     }
 
@@ -27,7 +29,7 @@ public class RuleHandler implements Listener {
     public void onBlockPlace(PlayerRegionsBlockPlaceEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            // TODO message
+            SpigotI18nAPI.get(this).send(event.player(), "protection.build");
         }
     }
 
@@ -37,7 +39,7 @@ public class RuleHandler implements Listener {
     public void onEntityBreak(PlayerRegionsEntityBreakEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            // TODO message
+            SpigotI18nAPI.get(this).send(event.player(), "protection.build");
         }
     }
 
@@ -45,7 +47,7 @@ public class RuleHandler implements Listener {
     public void onEntityPlace(PlayerRegionsEntityPlaceEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            // TODO message
+            SpigotI18nAPI.get(this).send(event.player(), "protection.build");
         }
     }
 
@@ -55,7 +57,7 @@ public class RuleHandler implements Listener {
     public void onBlockInteract(PlayerRegionsBlockInteractEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            // TODO message
+            SpigotI18nAPI.get(this).send(event.player(), "protection.interact");
         }
     }
 
@@ -63,7 +65,7 @@ public class RuleHandler implements Listener {
     public void onEntityInteract(PlayerRegionsEntityInteractEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            // TODO message
+            SpigotI18nAPI.get(this).send(event.player(), "protection.interact");
         }
     }
 
@@ -73,7 +75,7 @@ public class RuleHandler implements Listener {
     public void onContainerOpen(PlayerRegionsContainerOpenEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            // TODO message
+            SpigotI18nAPI.get(this).send(event.player(), "protection.container");
         }
     }
 
@@ -83,7 +85,11 @@ public class RuleHandler implements Listener {
     public void onEntityDamage(PlayerRegionsEntityDamageEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            // TODO message (check for neutral or hostile mob)
+            if ( event.entity() instanceof Monster ) {
+                SpigotI18nAPI.get(this).send(event.player(), "protection.attack_hostile_mobs");
+            } else {
+                SpigotI18nAPI.get(this).send(event.player(), "protection.attack_neutral_mobs");
+            }
         }
     }
 
@@ -93,7 +99,6 @@ public class RuleHandler implements Listener {
     public void onCollectItem(PlayerRegionsCollectItemEvent event) {
         if (shouldCancel(event)) {
             event.setCancelled(true);
-            // TODO message
         }
     }
 

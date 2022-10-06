@@ -24,8 +24,6 @@ public abstract class PlayerRegionsEvent extends Event implements Cancellable {
         this.player = player;
         this.regions = regions;
         this.rule = rule;
-
-        rule.ifPresent(System.out::println); // TODO remove this
     }
 
     public PlayerRegionsEvent(Player player, Collection<Region> regions, RuleType type) {

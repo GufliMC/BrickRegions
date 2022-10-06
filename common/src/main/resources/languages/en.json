@@ -8,33 +8,48 @@
   "cmd.error.args.region": "<red>A region with that name does not exist.",
 
   "cmd.select.invalid": "<red>Please make a valid selection first.",
-  "cmd.select.expand": "Selection has been expanded on the vertical axis.",
-  "cmd.select.type.usage": "<red>Invalid usage, try this: /br select <type>",
-  "cmd.select.type": "Selection mode changed to {0}.",
-  "cmd.select.clear": "Your selection has been reset.",
-  "cmd.select.undo": "Your last selection action has been undone",
-  "cmd.select.wand": "The selection wand has been added to your inventory",
+  "cmd.select.expand": "<gray>Selection has been expanded on the vertical axis.",
+  "cmd.select.type.usage": "<red>Invalid usage, try this: <dark_red>/br select <type></dark_red>.",
+  "cmd.select.type": "<gray>Selection mode changed to <green>{0}</green>.",
+  "cmd.select.clear": "<gray>Your selection has been cleared.",
+  "cmd.select.undo": "<gray>Your last selection action has been undone",
+  "cmd.select.wand": "<gray>The selection wand has been added to your inventory",
 
   "cmd.region.create.exists": "<red>A region with that name already exists.",
   "cmd.region.create.usage": "<red>Invalid usage, try this: /br region create <name>",
-  "cmd.region.create": "You created a region named {0}.",
+  "cmd.region.create": "<gray>You created a region named <green>{0}</green>.",
 
-  "cmd.region.delete.usage": "<red>Invalid usage, try this: /br region delete <region>",
-  "cmd.region.delete": "Deleted {0}.",
+  "cmd.region.delete.usage": "<red>Invalid usage, try this: <dark_red>/br region delete <region></dark_red>.",
+  "cmd.region.delete": "<gray>Deleted <green>{0}</green>.",
 
   "cmd.region.edit.display.usage": "<red>Invalid usage, try this: /br region edit display <region> <display>",
   "cmd.region.edit.display": "Changed display of {0} to {1}.",
 
-  "cmd.region.list": "List of regions: {0}",
+  "cmd.region.list": "<gray>List of regions: <green>{0}</green>.</gray>",
 
   "select.wand.name": "<yellow>Selection Wand",
 
-  "select.cuboid.primary": "Changed primary position.",
-  "select.cuboid.secondary": "Changed secondary position.",
-  "select.poly": "Added position to the selection.",
+  "select.cuboid.primary": "<gray>Changed primary position.",
+  "select.cuboid.secondary": "<gray>Changed secondary position.",
+  "select.poly": "<gray>Added position to the selection.",
 
-  "cmd.region.rules.list": "<gray>List of rules for <green>{0}</green>: <green>{1}</green>.",
+  "cmd.region.rules.list": "<gray>List of rules for <green>{0}</green>: {1}",
+  "cmd.region.rules.list.format": "<yellow>{0} <gray>- <green>{1}",
+  "cmd.region.rules.list.error.empty": "<gray>The region <green>{0}</green> has no rules.",
+
   "cmd.region.rules.add": "<gray>Added rule <green>{0}</green> to <green>{1}</green>.",
-  "cmd.region.rules.remove": "<gray>Removed rule <green>{0}</green> to <green>{1}</green>."
+  "cmd.region.rules.add.error.exists": "<red>A rule that does the same already exists.",
+
+  "cmd.region.rules.remove": "<gray>Removed rule <green>{0}</green> to <green>{1}</green>.",
+  "cmd.region.rules.remove.error.index": "<red>A rule with that index does not exist.",
+
+  "cmd.region.rules.clear": "<gray>Removed all rules from <green>{0}</green>.",
+
+  "protection.build": "<red>You cannot build here.",
+  "protection.interact": "<red>You cannot do that here.",
+  "protection.pvp": "<red>You cannot attack players here.",
+  "protection.container": "<red>You cannot open containers here.",
+  "protection.attack_neutral_mobs": "<red>You cannot attack neutral mobs here.",
+  "protection.attack_hostile_mobs": "<red>You cannot attack hostile mobs here."
 
 }

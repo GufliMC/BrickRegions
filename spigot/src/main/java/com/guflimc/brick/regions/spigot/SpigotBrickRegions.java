@@ -21,6 +21,7 @@ import com.guflimc.brick.regions.common.commands.arguments.RegionArgument;
 import com.guflimc.brick.regions.common.commands.arguments.RuleStatusArgument;
 import com.guflimc.brick.regions.common.commands.arguments.RuleTargetArgument;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
+import com.guflimc.brick.regions.spigot.api.rules.SpigotRuleTarget;
 import com.guflimc.brick.regions.spigot.commands.SpigotRegionCommands;
 import com.guflimc.brick.regions.spigot.commands.SpigotSelectionCommands;
 import com.guflimc.brick.regions.spigot.listeners.*;
@@ -54,6 +55,11 @@ public class SpigotBrickRegions extends JavaPlugin {
     //
 
     @Override
+    public void onLoad() {
+        SpigotRuleTarget.load();
+    }
+
+    @Override
     public void onEnable() {
         try (
                 InputStream is = getResource("config.json");
@@ -85,7 +91,9 @@ public class SpigotBrickRegions extends JavaPlugin {
         pm.registerEvents(new CollectItemsListener(), this);
         pm.registerEvents(new EntityBuildListener(), this);
         pm.registerEvents(new EntityDamageListener(), this);
-        pm.registerEvents(new EntityInteractListener(), this);
+        pm.registerEvents(new EntityInteractListener(this), this);
+        pm.registerEvents(new ContainerListener(), this);
+        pm.registerEvents(new BlockInteractListener(), this);
 
         // RULES
         pm.registerEvents(new RuleHandler(), this);

@@ -36,11 +36,11 @@ public class DRegion implements PersistentRegion {
     private int priority = 1;
 
     @OneToMany(targetEntity = DRegionAttribute.class, mappedBy = "region",
-            cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+            cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE }, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DRegionAttribute> attributes = new ArrayList<>();
 
     @OneToMany(targetEntity = DRegionRule.class, mappedBy = "region",
-            cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+            cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE }, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DRegionRule> rules = new ArrayList<>();
 
     public DRegion() {
@@ -75,7 +75,8 @@ public class DRegion implements PersistentRegion {
         this.priority = priority;
     }
 
-    private <T> void removeAttribute(AttributeKey<T> key) {
+    @Override
+    public <T> void removeAttribute(AttributeKey<T> key) {
         attributes.removeIf(attr -> attr.name().equals(key.name()));
     }
 
@@ -115,7 +116,12 @@ public class DRegion implements PersistentRegion {
     }
 
     @Override
-    public Collection<RegionRule> rules() {
+    public void clearRules() {
+        rules.clear();
+    }
+
+    @Override
+    public List<RegionRule> rules() {
         return Collections.unmodifiableList(rules);
     }
 

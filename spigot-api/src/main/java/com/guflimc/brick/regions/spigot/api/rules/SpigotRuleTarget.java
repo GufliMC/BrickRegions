@@ -11,16 +11,20 @@ public class SpigotRuleTarget extends RuleTarget<Player> {
 
     public static final SpigotRuleTarget ANY = new SpigotRuleTarget("ANY", (p, r) -> true);
 
-    public static final SpigotRuleTarget CREATIVE = new SpigotRuleTarget("CREATIVE",
-            (p, r) -> p.getGameMode().equals(GameMode.CREATIVE));
-
-    public static final SpigotRuleTarget SURVIVAL = new SpigotRuleTarget("SURVIVAL",
-            (p, r) -> p.getGameMode().equals(GameMode.SURVIVAL));
+//    public static final SpigotRuleTarget CREATIVE = new SpigotRuleTarget("CREATIVE",
+//            (p, r) -> p.getGameMode().equals(GameMode.CREATIVE));
+//
+//    public static final SpigotRuleTarget SURVIVAL = new SpigotRuleTarget("SURVIVAL",
+//            (p, r) -> p.getGameMode().equals(GameMode.SURVIVAL));
 
     //
 
     public SpigotRuleTarget(String name, BiPredicate<Player, Region> predicate) {
         super(name, predicate);
+    }
+
+    public static void load() {
+        // just needs to load this class
     }
 
 }
