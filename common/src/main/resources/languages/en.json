@@ -15,7 +15,8 @@
   "cmd.select.undo": "<gray>Your last selection action has been undone",
   "cmd.select.wand": "<gray>The selection wand has been added to your inventory",
 
-  "cmd.region.create.exists": "<red>A region with that name already exists.",
+  "cmd.create.error.poly-invalid": "<red>A polygon selection must be convex.",
+  "cmd.region.create.error.exists": "<red>A region with that name already exists.",
   "cmd.region.create.usage": "<red>Invalid usage, try this: /br region create <name>",
   "cmd.region.create": "<gray>You created a region named <green>{0}</green>.",
 

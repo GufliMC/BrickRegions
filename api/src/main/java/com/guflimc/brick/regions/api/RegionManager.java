@@ -3,6 +3,7 @@ package com.guflimc.brick.regions.api;
 import com.guflimc.brick.maths.api.geo.area.Area;
 import com.guflimc.brick.maths.api.geo.pos.Location;
 import com.guflimc.brick.maths.api.geo.pos.Point;
+import com.guflimc.brick.regions.api.domain.AreaRegion;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.selection.Selection;
@@ -32,6 +33,10 @@ public interface RegionManager<S> {
     Collection<Region> regions();
 
     Collection<PersistentRegion> persistentRegions();
+
+    Collection<AreaRegion> intersecting(Area area);
+
+    Collection<AreaRegion> intersecting(AreaRegion region);
 
     Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point position);
 

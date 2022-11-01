@@ -1,9 +1,11 @@
 package com.guflimc.brick.regions.common;
 
 import com.guflimc.brick.maths.api.geo.area.Area;
+import com.guflimc.brick.maths.api.geo.area.PolyArea;
 import com.guflimc.brick.maths.api.geo.pos.Location;
 import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.regions.api.RegionManager;
+import com.guflimc.brick.regions.api.domain.AreaRegion;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
@@ -17,6 +19,7 @@ import com.guflimc.brick.regions.common.engine.RegionEngine;
 import com.guflimc.brick.regions.common.engine.zone.ChunkedRegionZoneContainer;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -76,6 +79,20 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
+    public Collection<AreaRegion> intersecting(Area area) {
+        return regions().stream()
+                .filter(rg -> rg instanceof AreaRegion)
+                .map(rg -> (AreaRegion) rg)
+                .filter(rg -> area.intersects(rg.area()))
+                .toList();
+    }
+
+    @Override
+    public Collection<AreaRegion> intersecting(AreaRegion region) {
+        return intersecting(region.area());
+    }
+
+    @Override
     public Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point position) {
         return engine.regionsAt(new Location(worldId, position));
     }
@@ -124,6 +141,9 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Area area) {
+        if ( area instanceof PolyArea pa && !pa.isConvex() ) {
+            throw new IllegalArgumentException("A polygon area must be convex.");
+        }
         DAreaRegion region = new DAreaRegion(worldId, name, area);
         return databaseContext.persistAsync(region).thenApply((n) -> {
             engine.add(region);
