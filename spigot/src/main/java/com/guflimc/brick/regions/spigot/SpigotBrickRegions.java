@@ -35,9 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -60,8 +58,9 @@ public class SpigotBrickRegions extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveResource("config.json", false);
         try (
-                InputStream is = getResource("config.json");
+                InputStream is = new FileInputStream(new File(getDataFolder(), "config.json"));
                 InputStreamReader isr = new InputStreamReader(is)
         ) {
             config = gson.fromJson(isr, BrickRegionsConfig.class);
