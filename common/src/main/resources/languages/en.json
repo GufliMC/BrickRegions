@@ -26,7 +26,8 @@
   "cmd.region.edit.display.usage": "<red>Invalid usage, try this: /br region edit display <region> <display>",
   "cmd.region.edit.display": "Changed display of {0} to {1}.",
 
-  "cmd.region.list": "<gray>List of regions: <green>{0}</green>.</gray>",
+  "cmd.region.list": "<gray>List of regions in your current world: <green>{0}</green>.</gray>",
+  "cmd.region.list.world": "<gray>List of regions in <dark_gray>{0}<gray>: <green>{1}</green>.",
 
   "select.wand.name": "<yellow>Selection Wand",
 

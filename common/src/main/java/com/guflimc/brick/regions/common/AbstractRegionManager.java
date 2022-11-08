@@ -23,9 +23,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     private final Map<P, Selection> selections = new ConcurrentHashMap<>();
-    protected final RegionEngine engine = new RegionEngine();
+    private final RegionEngine engine = new RegionEngine();
 
-    protected final BrickRegionsDatabaseContext databaseContext;
+    private final BrickRegionsDatabaseContext databaseContext;
 
     protected AbstractRegionManager(BrickRegionsDatabaseContext databaseContext) {
         this.databaseContext = databaseContext;
@@ -33,7 +33,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     public void loadWorld(UUID worldId) {
         List<DRegion> regions = databaseContext
-                .findAllWhereAsync(DRegion.class, "world_id", worldId.toString()).join();
+                .findAllWhereAsync(DRegion.class, "worldId", worldId).join();
 
         WorldRegion worldRegion = (WorldRegion) regions.stream()
                 .filter(rg -> rg instanceof WorldRegion)
@@ -45,7 +45,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
         regions.remove(worldRegion);
 
-        engine.addContainer(worldId).setWorldRegion(worldRegion);
+        engine.addContainer(worldId, worldRegion);
         regions.forEach(engine::add);
     }
 
@@ -106,10 +106,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Region globalRegion(@NotNull UUID worldId) {
-        return regions(worldId).stream()
-                .filter(rg -> rg instanceof DWorldRegion)
-                .findFirst().orElse(null);
+    public WorldRegion worldRegion(@NotNull UUID worldId) {
+        return engine.worldRegion(worldId);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.guflimc.brick.regions.spigot;
 
 import cloud.commandframework.annotations.AnnotationParser;
 import cloud.commandframework.bukkit.BukkitCommandManager;
+import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
@@ -30,6 +31,7 @@ import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
 import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
 import io.leangen.geantyref.TypeToken;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -126,6 +128,9 @@ public class SpigotBrickRegions extends JavaPlugin {
 
             commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleStatus.class),
                     ps -> new RuleStatusArgument.RuleStatusParser<>());
+
+//            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(World.class),
+//                    ps -> new WorldArgument.WorldParser<>());
 
             commandManager.registerCommandPreProcessor(pctx -> {
                 CommandContext<CommandSender> ctx = pctx.getCommandContext();

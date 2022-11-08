@@ -30,8 +30,8 @@ public class SpigotRegionCommands {
     }
 
     @CommandMethod("br list <world>")
-    public void listWorld(Audience sender, World world) {
-        I18nAPI.get(this).send(sender, "cmd.region.list",
+    public void listWorld(Audience sender, @Argument(value = "world") World world) {
+        I18nAPI.get(this).send(sender, "cmd.region.list.world", world.getName(),
                 RegionAPI.get().persistentRegions(world.getUID()).stream()
                         .map(Region::name)
                         .filter(Objects::nonNull).toList()

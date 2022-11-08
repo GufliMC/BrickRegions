@@ -48,15 +48,16 @@ public final class PersistentRegionArgument<C> extends CommandArgument<C, Persis
                 ));
             }
             inputQueue.remove();
+            System.out.println(input);
 
             UUID worldId = commandContext.get("worldId");
-
             PersistentRegion region = (PersistentRegion) RegionAPI.get()
                     .findRegion(worldId, input)
                     .filter(r -> r instanceof PersistentRegion)
                     .orElse(null);
 
             if (region == null) {
+                System.out.println("oi");
                 return ArgumentParseResult.failure(new PersistentRegionParseException(input, commandContext));
             }
 
@@ -68,7 +69,9 @@ public final class PersistentRegionArgument<C> extends CommandArgument<C, Persis
                 final @NotNull CommandContext<C> commandContext,
                 final @NotNull String input
         ) {
-            return RegionAPI.get().persistentRegions().stream()
+
+            UUID worldId = commandContext.get("worldId");
+            return RegionAPI.get().persistentRegions(worldId).stream()
                     .map(Region::name)
                     .filter(Objects::nonNull).toList();
         }

@@ -19,7 +19,7 @@ import java.util.*;
 @DiscriminatorValue("REGION")
 @DiscriminatorColumn(name = "type")
 @Table(name = "regions", indexes = {
-        @Index(columnList = "world_id,name"),
+        @Index(columnList = "worldId,name"),
 })
 public class DRegion implements PersistentRegion {
 

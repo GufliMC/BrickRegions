@@ -5,7 +5,6 @@ import com.guflimc.brick.maths.spigot.api.SpigotMaths;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.common.AbstractRegionManager;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
-import com.guflimc.brick.regions.common.domain.DAreaRegion;
 import com.guflimc.brick.regions.common.domain.DWorldRegion;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionManager;
 import com.guflimc.brick.regions.spigot.api.events.RegionCreateEvent;
@@ -67,7 +66,7 @@ public class SpigotBrickRegionManager extends AbstractRegionManager<Player> impl
 
     @Override
     public Region globalRegion(@NotNull World world) {
-        return globalRegion(world.getUID());
+        return worldRegion(world.getUID());
     }
 
 }
