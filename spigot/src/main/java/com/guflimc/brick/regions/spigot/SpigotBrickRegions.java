@@ -23,6 +23,7 @@ import com.guflimc.brick.regions.common.commands.arguments.RuleStatusArgument;
 import com.guflimc.brick.regions.common.commands.arguments.RuleTargetArgument;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import com.guflimc.brick.regions.spigot.api.rules.SpigotRuleTarget;
+import com.guflimc.brick.regions.spigot.benchmark.Benchmark;
 import com.guflimc.brick.regions.spigot.commands.SpigotRegionCommands;
 import com.guflimc.brick.regions.spigot.commands.SpigotSelectionCommands;
 import com.guflimc.brick.regions.spigot.listeners.*;
@@ -52,6 +53,8 @@ public class SpigotBrickRegions extends JavaPlugin {
 
     public final NamespacedKey SELECTION_WAND_KEY = new NamespacedKey(this, "selection_wand");
     public final NamespacedKey SELECTION_TYPE = new NamespacedKey(this, "selection_type");
+
+    public final Benchmark benchmark = new Benchmark(this);
 
     //
 
@@ -129,9 +132,6 @@ public class SpigotBrickRegions extends JavaPlugin {
             commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleStatus.class),
                     ps -> new RuleStatusArgument.RuleStatusParser<>());
 
-//            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(World.class),
-//                    ps -> new WorldArgument.WorldParser<>());
-
             commandManager.registerCommandPreProcessor(pctx -> {
                 CommandContext<CommandSender> ctx = pctx.getCommandContext();
                 if ( ctx.getSender() instanceof Player p ) {
@@ -146,7 +146,7 @@ public class SpigotBrickRegions extends JavaPlugin {
             );
 
             annotationParser.parse(new RegionCommands());
-            annotationParser.parse(new SpigotRegionCommands());
+            annotationParser.parse(new SpigotRegionCommands(this));
             annotationParser.parse(new SpigotSelectionCommands(this));
         } catch (Exception e) {
             throw new RuntimeException(e);

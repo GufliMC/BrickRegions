@@ -13,7 +13,7 @@ public class PlayerRegionsEntityInteractEvent extends PlayerRegionsEntityEvent {
 
 
     public PlayerRegionsEntityInteractEvent(Player player, Collection<Region> regions, Entity entity) {
-        super(player, regions, entity, RuleType.INTERACT);
+        super(player, regions, entity);
     }
 
     //

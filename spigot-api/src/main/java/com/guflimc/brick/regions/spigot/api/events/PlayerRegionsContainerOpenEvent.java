@@ -14,7 +14,7 @@ public class PlayerRegionsContainerOpenEvent extends PlayerRegionsEvent {
     private final Inventory inventory;
 
     public PlayerRegionsContainerOpenEvent(Player player, Collection<Region> regions, Inventory inventory) {
-        super(player, regions, RuleType.CONTAINER);
+        super(player, regions);
         this.inventory = inventory;
     }
 

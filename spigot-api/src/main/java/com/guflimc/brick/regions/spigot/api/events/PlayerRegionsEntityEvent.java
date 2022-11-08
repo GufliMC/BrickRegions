@@ -13,8 +13,8 @@ public abstract class PlayerRegionsEntityEvent extends PlayerRegionsEvent {
 
     private final Entity entity;
 
-    public PlayerRegionsEntityEvent(Player player, Collection<Region> regions, Entity entity, RuleType type) {
-        super(player, regions, type);
+    public PlayerRegionsEntityEvent(Player player, Collection<Region> regions, Entity entity) {
+        super(player, regions);
         this.entity = entity;
     }
 

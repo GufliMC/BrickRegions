@@ -13,7 +13,7 @@ public class PlayerRegionsEntityBreakEvent extends PlayerRegionsEntityEvent {
 
 
     public PlayerRegionsEntityBreakEvent(Player player, Collection<Region> regions, Entity entity) {
-        super(player, regions, entity, RuleType.BUILD);
+        super(player, regions, entity);
     }
 
     //

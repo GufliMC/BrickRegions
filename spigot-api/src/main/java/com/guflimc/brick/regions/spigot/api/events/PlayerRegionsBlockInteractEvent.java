@@ -13,7 +13,7 @@ public class PlayerRegionsBlockInteractEvent extends PlayerRegionsBlockEvent {
 
 
     public PlayerRegionsBlockInteractEvent(Player player, Collection<Region> regions, Block block) {
-        super(player, regions, block, RuleType.INTERACT);
+        super(player, regions, block);
     }
 
     //

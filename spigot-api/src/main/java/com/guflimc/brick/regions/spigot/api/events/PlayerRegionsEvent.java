@@ -15,19 +15,14 @@ import java.util.Optional;
 
 public abstract class PlayerRegionsEvent extends Event implements Cancellable {
 
-    private Result result = Result.NEUTRAL;
     private final Player player;
     private final Collection<Region> regions;
-    private final RegionProtectionRule rule;
 
-    public PlayerRegionsEvent(Player player, Collection<Region> regions, RegionProtectionRule rule) {
+    private boolean cancelled = false;
+
+    public PlayerRegionsEvent(Player player, Collection<Region> regions) {
         this.player = player;
         this.regions = regions;
-        this.rule = rule;
-    }
-
-    public PlayerRegionsEvent(Player player, Collection<Region> regions, RuleType type) {
-        this(player, regions, type != null ? RegionProtectionRule.match(player, type, regions).orElse(null) : null);
     }
 
     public Player player() {
@@ -38,26 +33,14 @@ public abstract class PlayerRegionsEvent extends Event implements Cancellable {
         return regions;
     }
 
-    public Optional<RegionProtectionRule> rule() {
-        return Optional.ofNullable(rule);
-    }
-
-    public Result result() {
-        return result;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
-    }
-
     @Override
     public boolean isCancelled() {
-        return result == Result.DENY;
+        return cancelled;
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        this.result = Result.DENY;
+        this.cancelled = cancel;
     }
 
     //
@@ -71,23 +54,6 @@ public abstract class PlayerRegionsEvent extends Event implements Cancellable {
 
     public static HandlerList getHandlerList() {
         return handlers;
-    }
-
-    //
-
-    public enum Result {
-        /**
-         * Allow the event in any case, built-in rules will be ignored.
-         */
-        ALLOW,
-        /**
-         * Deny the event, you must provide feedback yourself.
-         */
-        DENY,
-        /**
-         * Neutral, built-in rules will still be checked.
-         */
-        NEUTRAL;
     }
 
 }

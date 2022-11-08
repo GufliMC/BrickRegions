@@ -13,7 +13,7 @@ public class PlayerRegionsBlockPlaceEvent extends PlayerRegionsBlockEvent {
 
 
     public PlayerRegionsBlockPlaceEvent(Player player, Collection<Region> regions, Block block) {
-        super(player, regions, block, RuleType.BUILD);
+        super(player, regions, block);
     }
 
     //

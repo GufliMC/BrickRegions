@@ -14,8 +14,8 @@ public abstract class PlayerRegionsBlockEvent extends PlayerRegionsEvent {
 
     private final Block block;
 
-    public PlayerRegionsBlockEvent(Player player, Collection<Region> regions, Block block, RuleType type) {
-        super(player, regions, type);
+    public PlayerRegionsBlockEvent(Player player, Collection<Region> regions, Block block) {
+        super(player, regions);
         this.block = block;
     }
 

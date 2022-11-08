@@ -13,7 +13,7 @@ import java.util.Collection;
 public class PlayerRegionsCollectItemEvent extends PlayerRegionsEntityEvent {
 
     public PlayerRegionsCollectItemEvent(Player player, Collection<Region> regions, Item entity) {
-        super(player, regions, entity, RuleType.COLLECT_ITEMS);
+        super(player, regions, entity);
     }
 
     @Override

@@ -9,16 +9,35 @@ import com.guflimc.brick.maths.api.geo.area.PolyArea;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.selection.Selection;
+import com.guflimc.brick.regions.spigot.SpigotBrickRegions;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
-import java.util.Optional;
 
 //@CommandContainer
 public class SpigotRegionCommands {
+
+    private final SpigotBrickRegions plugin;
+
+    public SpigotRegionCommands(SpigotBrickRegions plugin) {
+        this.plugin = plugin;
+    }
+
+    @CommandMethod("br benchmark start")
+    public void benchmarkStart(Audience audience) {
+        audience.sendMessage(Component.text("Benchmark started."));
+        plugin.benchmark.start();
+    }
+
+    @CommandMethod("br benchmark stop")
+    public void benchmarkStop(Audience audience) {
+        audience.sendMessage(Component.text("Benchmark stopped. Check console for results."));
+        plugin.benchmark.stop();
+    }
 
     @CommandMethod("br list")
     public void list(Player sender) {
