@@ -82,7 +82,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="PlayerRegionsBlockEvent.html" title="class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsBlockEvent</a></code>, <code><a href="PlayerRegionsContainerOpenEvent.html" title="class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsContainerOpenEvent</a></code>, <code><a href="PlayerRegionsEntityEvent.html" title="class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsEntityEvent</a></code></dd>
+<dd><code><a href="PlayerRegionsBlockEvent.html" title="class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsBlockEvent</a></code>, <code><a href="PlayerRegionsContainerOpenEvent.html" title="class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsContainerOpenEvent</a></code>, <code><a href="PlayerRegionsDenyByRuleEvent.html" title="class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsDenyByRuleEvent</a></code>, <code><a href="PlayerRegionsEntityEvent.html" title="class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsEntityEvent</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">PlayerRegionsEvent</span>
@@ -95,15 +95,9 @@ implements org.bukkit.event.Cancellable</span></div>
 <li>
 <section class="nested-class-summary" id="nested-class-summary">
 <h2>Nested Class Summary</h2>
-<div class="caption"><span>Nested Classes</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Class</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="PlayerRegionsEvent.Result.html" class="type-name-link" title="enum class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsEvent.Result</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
+<div class="inherited-list">
+<h2 id="nested-classes-inherited-from-class-org.bukkit.event.Event">Nested classes/interfaces inherited from class&nbsp;org.bukkit.event.Event</h2>
+<code>org.bukkit.event.Event.Result</code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -114,14 +108,9 @@ implements org.bukkit.event.Cancellable</span></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.bukkit.entity.Player,java.util.Collection,com.guflimc.brick.regions.api.domain.RegionProtectionRule)" class="member-name-link">PlayerRegionsEvent</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;regions,
- <a href="../../../api/domain/RegionProtectionRule.html" title="interface in com.guflimc.brick.regions.api.domain">RegionProtectionRule</a>&nbsp;rule)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.bukkit.entity.Player,java.util.Collection)" class="member-name-link">PlayerRegionsEvent</a><wbr>(org.bukkit.entity.Player&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;regions)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(org.bukkit.entity.Player,java.util.Collection,com.guflimc.brick.regions.api.rules.RuleType)" class="member-name-link">PlayerRegionsEvent</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;regions,
- <a href="../../../api/rules/RuleType.html" title="class in com.guflimc.brick.regions.api.rules">RuleType</a>&nbsp;type)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -151,18 +140,9 @@ implements org.bukkit.event.Cancellable</span></div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#regions()" class="member-name-link">regions</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PlayerRegionsEvent.Result.html" title="enum class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsEvent.Result</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#result()" class="member-name-link">result</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../../api/domain/RegionProtectionRule.html" title="interface in com.guflimc.brick.regions.api.domain">RegionProtectionRule</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rule()" class="member-name-link">rule</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCancelled(boolean)" class="member-name-link">setCancelled</a><wbr>(boolean&nbsp;cancel)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setResult(com.guflimc.brick.regions.spigot.api.events.PlayerRegionsEvent.Result)" class="member-name-link">setResult</a><wbr>(<a href="PlayerRegionsEvent.Result.html" title="enum class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsEvent.Result</a>&nbsp;result)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -184,19 +164,10 @@ implements org.bukkit.event.Cancellable</span></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(org.bukkit.entity.Player,java.util.Collection,com.guflimc.brick.regions.api.domain.RegionProtectionRule)">
+<section class="detail" id="&lt;init&gt;(org.bukkit.entity.Player,java.util.Collection)">
 <h3>PlayerRegionsEvent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerRegionsEvent</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;regions,
- <a href="../../../api/domain/RegionProtectionRule.html" title="interface in com.guflimc.brick.regions.api.domain">RegionProtectionRule</a>&nbsp;rule)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(org.bukkit.entity.Player,java.util.Collection,com.guflimc.brick.regions.api.rules.RuleType)">
-<h3>PlayerRegionsEvent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerRegionsEvent</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;regions,
- <a href="../../../api/rules/RuleType.html" title="class in com.guflimc.brick.regions.api.rules">RuleType</a>&nbsp;type)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;regions)</span></div>
 </section>
 </li>
 </ul>
@@ -217,24 +188,6 @@ implements org.bukkit.event.Cancellable</span></div>
 <section class="detail" id="regions()">
 <h3>regions</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</span>&nbsp;<span class="element-name">regions</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="rule()">
-<h3>rule</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../../api/domain/RegionProtectionRule.html" title="interface in com.guflimc.brick.regions.api.domain">RegionProtectionRule</a>&gt;</span>&nbsp;<span class="element-name">rule</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="result()">
-<h3>result</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="PlayerRegionsEvent.Result.html" title="enum class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsEvent.Result</a></span>&nbsp;<span class="element-name">result</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setResult(com.guflimc.brick.regions.spigot.api.events.PlayerRegionsEvent.Result)">
-<h3>setResult</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setResult</span><wbr><span class="parameters">(<a href="PlayerRegionsEvent.Result.html" title="enum class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsEvent.Result</a>&nbsp;result)</span></div>
 </section>
 </li>
 <li>
