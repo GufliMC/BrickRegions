@@ -92,6 +92,12 @@ extends <a href="../../api/RegionManager.html" title="interface in com.guflimc.b
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#globalRegion(org.bukkit.World)" class="member-name-link">globalRegion</a><wbr>(@NotNull org.bukkit.World&nbsp;world)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#regions(org.bukkit.World)" class="member-name-link">regions</a><wbr>(@NotNull org.bukkit.World&nbsp;world)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#regionsAt(org.bukkit.entity.Entity)" class="member-name-link">regionsAt</a><wbr>(@NotNull org.bukkit.entity.Entity&nbsp;entity)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
@@ -103,7 +109,7 @@ extends <a href="../../api/RegionManager.html" title="interface in com.guflimc.b
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.guflimc.brick.regions.api.RegionManager">Methods inherited from interface&nbsp;com.guflimc.brick.regions.api.<a href="../../api/RegionManager.html" title="interface in com.guflimc.brick.regions.api">RegionManager</a></h3>
-<code><a href="../../api/RegionManager.html#clearSelection(S)">clearSelection</a>, <a href="../../api/RegionManager.html#create(java.lang.String,com.guflimc.brick.regions.api.selection.Selection)">create</a>, <a href="../../api/RegionManager.html#create(java.lang.String,java.util.UUID,com.guflimc.brick.maths.api.geo.area.Area)">create</a>, <a href="../../api/RegionManager.html#findRegion(java.lang.String)">findRegion</a>, <a href="../../api/RegionManager.html#findRegion(java.util.UUID)">findRegion</a>, <a href="../../api/RegionManager.html#intersecting(com.guflimc.brick.maths.api.geo.area.Area)">intersecting</a>, <a href="../../api/RegionManager.html#intersecting(com.guflimc.brick.regions.api.domain.AreaRegion)">intersecting</a>, <a href="../../api/RegionManager.html#persistentRegions()">persistentRegions</a>, <a href="../../api/RegionManager.html#regions()">regions</a>, <a href="../../api/RegionManager.html#regionsAt(com.guflimc.brick.maths.api.geo.pos.Location)">regionsAt</a>, <a href="../../api/RegionManager.html#regionsAt(java.util.UUID,com.guflimc.brick.maths.api.geo.pos.Point)">regionsAt</a>, <a href="../../api/RegionManager.html#register(com.guflimc.brick.regions.api.domain.Region)">register</a>, <a href="../../api/RegionManager.html#remove(com.guflimc.brick.regions.api.domain.Region)">remove</a>, <a href="../../api/RegionManager.html#selection(S)">selection</a>, <a href="../../api/RegionManager.html#setSelection(S,com.guflimc.brick.regions.api.selection.Selection)">setSelection</a>, <a href="../../api/RegionManager.html#unregister(com.guflimc.brick.regions.api.domain.Region)">unregister</a>, <a href="../../api/RegionManager.html#update(com.guflimc.brick.regions.api.domain.Region)">update</a></code></div>
+<code><a href="../../api/RegionManager.html#clearSelection(S)">clearSelection</a>, <a href="../../api/RegionManager.html#create(java.lang.String,com.guflimc.brick.regions.api.selection.Selection)">create</a>, <a href="../../api/RegionManager.html#create(java.lang.String,java.util.UUID,com.guflimc.brick.maths.api.geo.area.Area)">create</a>, <a href="../../api/RegionManager.html#findRegion(java.util.UUID)">findRegion</a>, <a href="../../api/RegionManager.html#findRegion(java.util.UUID,java.lang.String)">findRegion</a>, <a href="../../api/RegionManager.html#globalRegion(java.util.UUID)">globalRegion</a>, <a href="../../api/RegionManager.html#intersecting(com.guflimc.brick.maths.api.geo.area.Area)">intersecting</a>, <a href="../../api/RegionManager.html#intersecting(com.guflimc.brick.regions.api.domain.AreaRegion)">intersecting</a>, <a href="../../api/RegionManager.html#persistentRegions()">persistentRegions</a>, <a href="../../api/RegionManager.html#persistentRegions(java.util.UUID)">persistentRegions</a>, <a href="../../api/RegionManager.html#regions()">regions</a>, <a href="../../api/RegionManager.html#regions(java.util.UUID)">regions</a>, <a href="../../api/RegionManager.html#regionsAt(com.guflimc.brick.maths.api.geo.pos.Location)">regionsAt</a>, <a href="../../api/RegionManager.html#regionsAt(java.util.UUID,com.guflimc.brick.maths.api.geo.pos.Point)">regionsAt</a>, <a href="../../api/RegionManager.html#register(com.guflimc.brick.regions.api.domain.Region)">register</a>, <a href="../../api/RegionManager.html#remove(com.guflimc.brick.regions.api.domain.Region)">remove</a>, <a href="../../api/RegionManager.html#selection(S)">selection</a>, <a href="../../api/RegionManager.html#setSelection(S,com.guflimc.brick.regions.api.selection.Selection)">setSelection</a>, <a href="../../api/RegionManager.html#unregister(com.guflimc.brick.regions.api.domain.Region)">unregister</a>, <a href="../../api/RegionManager.html#update(com.guflimc.brick.regions.api.domain.Region)">update</a></code></div>
 </section>
 </li>
 </ul>
@@ -127,6 +133,20 @@ extends <a href="../../api/RegionManager.html" title="interface in com.guflimc.b
 <h3>regionsAt</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</span>&nbsp;<span class="element-name">regionsAt</span><wbr><span class="parameters">(@NotNull
  @NotNull org.bukkit.entity.Entity&nbsp;entity)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="regions(org.bukkit.World)">
+<h3>regions</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</span>&nbsp;<span class="element-name">regions</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.World&nbsp;world)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="globalRegion(org.bukkit.World)">
+<h3>globalRegion</h3>
+<div class="member-signature"><span class="return-type"><a href="../../api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a></span>&nbsp;<span class="element-name">globalRegion</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.World&nbsp;world)</span></div>
 </section>
 </li>
 </ul>
