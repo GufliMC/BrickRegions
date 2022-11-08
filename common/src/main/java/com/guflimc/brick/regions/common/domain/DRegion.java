@@ -1,5 +1,6 @@
 package com.guflimc.brick.regions.common.domain;
 
+import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.regions.api.attributes.AttributeKey;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
@@ -17,7 +18,9 @@ import java.util.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorValue("REGION")
 @DiscriminatorColumn(name = "type")
-@Table(name = "regions")
+@Table(name = "regions", indexes = {
+        @Index(columnList = "world_id,name"),
+})
 public class DRegion implements PersistentRegion {
 
     @Id
@@ -26,9 +29,10 @@ public class DRegion implements PersistentRegion {
     private UUID id;
 
     @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(nullable = false)
     private UUID worldId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
@@ -36,11 +40,11 @@ public class DRegion implements PersistentRegion {
     private int priority = 1;
 
     @OneToMany(targetEntity = DRegionAttribute.class, mappedBy = "region",
-            cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE }, orphanRemoval = true, fetch = FetchType.EAGER)
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DRegionAttribute> attributes = new ArrayList<>();
 
     @OneToMany(targetEntity = DRegionProtectionRule.class, mappedBy = "region",
-            cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE }, orphanRemoval = true, fetch = FetchType.EAGER)
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DRegionProtectionRule> rules = new ArrayList<>();
 
     public DRegion() {
@@ -71,11 +75,16 @@ public class DRegion implements PersistentRegion {
     }
 
     @Override
+    public boolean contains(Point point) {
+        return false;
+    }
+
+    @Override
     public void setPriority(int priority) {
         this.priority = priority;
     }
 
-    // attributes
+// attributes
 
     @Override
     public <T> void removeAttribute(AttributeKey<T> key) {
@@ -102,7 +111,7 @@ public class DRegion implements PersistentRegion {
                 .map(ra -> key.deserialize(ra.value()));
     }
 
-    // protection rules
+// protection rules
 
     @Override
     public List<RegionProtectionRule> rules() {

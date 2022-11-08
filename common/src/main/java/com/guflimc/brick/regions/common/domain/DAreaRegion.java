@@ -1,6 +1,7 @@
 package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.maths.api.geo.area.Area;
+import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.maths.database.api.AreaConverter;
 import com.guflimc.brick.regions.api.domain.AreaRegion;
 import com.guflimc.brick.regions.api.domain.PersistentAreaRegion;
@@ -40,5 +41,10 @@ public class DAreaRegion extends DRegion implements PersistentAreaRegion {
     @Override
     public void setArea(Area area) {
         this.area = area;
+    }
+
+    @Override
+    public boolean contains(Point point) {
+        return  PersistentAreaRegion.super.contains(point);
     }
 }

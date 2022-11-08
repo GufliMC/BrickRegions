@@ -8,18 +8,14 @@ import com.guflimc.brick.regions.api.RegionManager;
 import com.guflimc.brick.regions.api.domain.AreaRegion;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleTarget;
-import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.api.domain.WorldRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.domain.DAreaRegion;
 import com.guflimc.brick.regions.common.domain.DRegion;
+import com.guflimc.brick.regions.common.domain.DWorldRegion;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
-import com.guflimc.brick.regions.common.engine.zone.ChunkedRegionZoneContainer;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,16 +23,33 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     private final Map<P, Selection> selections = new ConcurrentHashMap<>();
-    private final RegionEngine engine = new RegionEngine(uuid -> new ChunkedRegionZoneContainer(uuid, 512));
+    protected final RegionEngine engine = new RegionEngine();
 
-    private final BrickRegionsDatabaseContext databaseContext;
+    protected final BrickRegionsDatabaseContext databaseContext;
 
     protected AbstractRegionManager(BrickRegionsDatabaseContext databaseContext) {
         this.databaseContext = databaseContext;
-
-        databaseContext.findAllAsync(DAreaRegion.class).join()
-                .forEach(engine::add);
     }
+
+    public void loadWorld(UUID worldId) {
+        List<DRegion> regions = databaseContext
+                .findAllWhereAsync(DRegion.class, "world_id", worldId.toString()).join();
+
+        WorldRegion worldRegion = (WorldRegion) regions.stream()
+                .filter(rg -> rg instanceof WorldRegion)
+                .findFirst().orElseGet(() -> {
+                    DWorldRegion region = new DWorldRegion(worldId, "__global__");
+                    databaseContext.persistAsync(region).join();
+                    return region;
+                });
+
+        regions.remove(worldRegion);
+
+        engine.addContainer(worldId).setWorldRegion(worldRegion);
+        regions.forEach(engine::add);
+    }
+
+    //
 
     @Override
     public void clearSelection(@NotNull P subject) {
@@ -61,8 +74,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Optional<Region> findRegion(@NotNull String name) {
-        return engine.findRegion(name);
+    public Optional<Region> findRegion(@NotNull UUID worldId, @NotNull String name) {
+        return engine.findRegion(worldId, name);
     }
 
     @Override
@@ -71,11 +84,32 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
+    public Collection<Region> regions(@NotNull UUID worldId) {
+        return regions().stream()
+                .filter(rg -> rg.worldId().equals(worldId))
+                .toList();
+    }
+
+    @Override
     public Collection<PersistentRegion> persistentRegions() {
         return engine.regions().stream()
                 .filter(PersistentRegion.class::isInstance)
                 .map(PersistentRegion.class::cast)
                 .toList();
+    }
+
+    @Override
+    public Collection<PersistentRegion> persistentRegions(@NotNull UUID worldId) {
+        return persistentRegions().stream()
+                .filter(rg -> rg.worldId().equals(worldId))
+                .toList();
+    }
+
+    @Override
+    public Region globalRegion(@NotNull UUID worldId) {
+        return regions(worldId).stream()
+                .filter(rg -> rg instanceof DWorldRegion)
+                .findFirst().orElse(null);
     }
 
     @Override
@@ -104,7 +138,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<Void> remove(@NotNull Region region) {
-        if ( !(region instanceof DRegion) ) {
+        if (!(region instanceof DRegion)) {
             throw new IllegalArgumentException("Only persistent regions can be removed.");
         }
         engine.remove(region);
@@ -113,15 +147,16 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<Void> update(@NotNull Region region) {
-        if ( !(region instanceof DRegion) ) {
+        if (!(region instanceof DRegion)) {
             throw new IllegalArgumentException("Only persistent regions can be saved.");
         }
-        return databaseContext.mergeAsync(region).thenRun(() -> {});
+        return databaseContext.mergeAsync(region).thenRun(() -> {
+        });
     }
 
     @Override
     public void register(@NotNull Region region) {
-        if ( region instanceof DRegion ) {
+        if (region instanceof DRegion) {
             throw new IllegalArgumentException("Only transient regions can be registered.");
         }
 
@@ -130,7 +165,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public void unregister(@NotNull Region region) {
-        if ( region instanceof DRegion ) {
+        if (region instanceof DRegion) {
             throw new IllegalArgumentException("Only transient regions can be unregistered.");
         }
 
@@ -141,7 +176,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Area area) {
-        if ( area instanceof PolyArea pa && !pa.isConvex() ) {
+        if (area instanceof PolyArea pa && !pa.isConvex()) {
             throw new IllegalArgumentException("A polygon area must be convex.");
         }
         DAreaRegion region = new DAreaRegion(worldId, name, area);

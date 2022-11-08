@@ -28,11 +28,17 @@ public interface RegionManager<S> {
 
     Optional<Region> findRegion(@NotNull UUID id);
 
-    Optional<Region> findRegion(@NotNull String name);
+    Optional<Region> findRegion(@NotNull UUID worldId, @NotNull String name);
 
     Collection<Region> regions();
 
+    Collection<Region> regions(@NotNull UUID worldId);
+
     Collection<PersistentRegion> persistentRegions();
+
+    Collection<PersistentRegion> persistentRegions(@NotNull UUID worldId);
+
+    Region globalRegion(@NotNull UUID worldId);
 
     Collection<AreaRegion> intersecting(Area area);
 

@@ -2,6 +2,7 @@ package com.guflimc.brick.regions.spigot;
 
 import cloud.commandframework.annotations.AnnotationParser;
 import cloud.commandframework.bukkit.BukkitCommandManager;
+import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
 import com.google.gson.Gson;
@@ -30,6 +31,7 @@ import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
 import io.leangen.geantyref.TypeToken;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
@@ -92,6 +94,7 @@ public class SpigotBrickRegions extends JavaPlugin {
         pm.registerEvents(new EntityInteractListener(this), this);
         pm.registerEvents(new ContainerListener(), this);
         pm.registerEvents(new BlockInteractListener(), this);
+        pm.registerEvents(new WorldListener(manager), this);
 
         // RULES
         pm.registerEvents(new RuleHandler(), this);
@@ -123,6 +126,13 @@ public class SpigotBrickRegions extends JavaPlugin {
 
             commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleStatus.class),
                     ps -> new RuleStatusArgument.RuleStatusParser<>());
+
+            commandManager.registerCommandPreProcessor(pctx -> {
+                CommandContext<CommandSender> ctx = pctx.getCommandContext();
+                if ( ctx.getSender() instanceof Player p ) {
+                    ctx.set("worldId", p.getWorld().getUID());
+                }
+            });
 
             AnnotationParser<CommandSender> annotationParser = new AnnotationParser<>(
                     commandManager,

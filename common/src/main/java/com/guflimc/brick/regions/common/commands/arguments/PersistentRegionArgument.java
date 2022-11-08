@@ -18,6 +18,7 @@ import java.io.Serial;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.UUID;
 import java.util.function.BiFunction;
 
 public final class PersistentRegionArgument<C> extends CommandArgument<C, PersistentRegion> {
@@ -48,8 +49,12 @@ public final class PersistentRegionArgument<C> extends CommandArgument<C, Persis
             }
             inputQueue.remove();
 
-            PersistentRegion region = (PersistentRegion) RegionAPI.get().findRegion(input)
-                    .filter(r -> r instanceof PersistentRegion).orElse(null);
+            UUID worldId = commandContext.get("worldId");
+
+            PersistentRegion region = (PersistentRegion) RegionAPI.get()
+                    .findRegion(worldId, input)
+                    .filter(r -> r instanceof PersistentRegion)
+                    .orElse(null);
 
             if (region == null) {
                 return ArgumentParseResult.failure(new PersistentRegionParseException(input, commandContext));

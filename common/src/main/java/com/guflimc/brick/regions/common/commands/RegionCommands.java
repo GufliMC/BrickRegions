@@ -14,22 +14,10 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 //@CommandContainer
 public class RegionCommands {
-
-    @CommandMethod("br list")
-    public void list(Audience sender) {
-        I18nAPI.get(this).send(sender, "cmd.region.list",
-                RegionAPI.get().persistentRegions().stream()
-                        .map(Region::name)
-                        .filter(Objects::nonNull).toList()
-        );
-    }
 
     @CommandMethod("br delete <region>")
     public void delete(Audience sender, @Argument("region") PersistentRegion region) {
