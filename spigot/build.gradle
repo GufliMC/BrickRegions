@@ -32,6 +32,7 @@ bukkit {
     author = 'GufliMC'
     website = 'https://github.com/GufliMC/BrickRegions'
     apiVersion = '1.13'
+    depend = ["BrickI18n"]
 }
 
 // I want it nice like that
