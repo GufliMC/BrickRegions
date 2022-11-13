@@ -21,7 +21,7 @@ import java.util.UUID;
 public class DAreaRegion extends DRegion implements PersistentAreaRegion {
 
     @Convert(converter = AreaConverter.class)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 8192)
     private Area area;
 
     public DAreaRegion() {

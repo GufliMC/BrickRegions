@@ -60,7 +60,7 @@ public class SpigotRegionCommands {
     @CommandMethod("br create <name>")
     public void create(Player sender, @Argument(value = "name") String name) {
         if (RegionAPI.get().findRegion(sender.getWorld().getUID(), name).isPresent()) {
-            SpigotI18nAPI.get(this).send(sender, "cmd.create.error.exists", name);
+            SpigotI18nAPI.get(this).send(sender, "cmd.region.create.error.exists", name);
             return;
         }
 
@@ -70,10 +70,9 @@ public class SpigotRegionCommands {
             return;
         }
 
-
         Area area = selection.area();
         if ( area instanceof PolyArea pa && !pa.isConvex() ) {
-            SpigotI18nAPI.get(this).send(sender, "cmd.create.poly-invalid");
+            SpigotI18nAPI.get(this).send(sender, "cmd.region.create.error.poly-invalid");
             return;
         }
 

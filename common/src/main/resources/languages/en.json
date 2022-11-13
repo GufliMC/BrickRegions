@@ -15,16 +15,13 @@
   "cmd.select.undo": "<gray>Your last selection action has been undone",
   "cmd.select.wand": "<gray>The selection wand has been added to your inventory",
 
-  "cmd.create.error.poly-invalid": "<red>A polygon selection must be convex.",
+  "cmd.region.create.error.poly-invalid": "<red>A polygon selection must be convex.",
   "cmd.region.create.error.exists": "<red>A region with that name already exists.",
   "cmd.region.create.usage": "<red>Invalid usage, try this: /br region create <name>",
   "cmd.region.create": "<gray>You created a region named <green>{0}</green>.",
 
   "cmd.region.delete.usage": "<red>Invalid usage, try this: <dark_red>/br region delete <region></dark_red>.",
   "cmd.region.delete": "<gray>Deleted <green>{0}</green>.",
-
-  "cmd.region.edit.display.usage": "<red>Invalid usage, try this: /br region edit display <region> <display>",
-  "cmd.region.edit.display": "Changed display of {0} to {1}.",
 
   "cmd.region.list": "<gray>List of regions in your current world: <green>{0}</green>.</gray>",
   "cmd.region.list.world": "<gray>List of regions in <dark_gray>{0}<gray>: <green>{1}</green>.",

@@ -12,6 +12,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 
 import java.util.Optional;
 
@@ -82,7 +83,7 @@ public class SelectionRenderer {
         int hSteps;
 
         // horizontal lines
-        hStep = .33;
+        hStep = .5;
         hSteps = (int) Math.floor(length / hStep);
 
         double height = maxY - minY;
@@ -94,8 +95,7 @@ public class SelectionRenderer {
             point = point.add(vec);
 
             for (double y = minY; y <= maxY; y += vStep) {
-                player.spawnParticle(Particle.FLAME,
-                        new Location(player.getWorld(), point.x() + .5, y + .5, point.y() + .5), 1, 0, 0, 0, 0);
+                sendParticle(player, new Location(player.getWorld(), point.x() + .5, y + .5, point.y() + .5));
             }
         }
 
@@ -103,7 +103,7 @@ public class SelectionRenderer {
         hStep = length / Math.floor(length / 2);
         hSteps = (int) Math.floor(length / hStep);
 
-        vStep = .33;
+        vStep = .5;
 
         vec = vector.scale(1 / length).scale(hStep);
         point = from;
@@ -111,9 +111,17 @@ public class SelectionRenderer {
             point = point.add(vec);
 
             for (double y = minY; y <= maxY; y += vStep) {
-                player.spawnParticle(Particle.FLAME,
-                        new Location(player.getWorld(), point.x() + .5, y + .5, point.y() + .5), 1, 0, 0, 0, 0);
+                sendParticle(player, new Location(player.getWorld(), point.x() + .5, y + .5, point.y() + .5));
             }
+        }
+    }
+
+    private void sendParticle(Player player, Location location) {
+        Vector diff = location.clone().subtract(player.getLocation()).toVector();
+        double angle = player.getEyeLocation().getDirection().angle(diff);
+        if ( angle < 1.2 ) {
+            player.spawnParticle(Particle.FLAME,
+                    location, 1, 0, 0, 0, 0);
         }
     }
 }
