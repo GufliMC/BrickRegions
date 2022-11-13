@@ -21,7 +21,7 @@ public class RuleHandler implements Listener {
 
         PlayerRegionsDenyByRuleEvent denyEvent = new PlayerRegionsDenyByRuleEvent(event, rule);
         Bukkit.getServer().getPluginManager().callEvent(denyEvent);
-        return !event.isCancelled();
+        return !denyEvent.isCancelled();
     }
 
     // BLOCK BUILD
