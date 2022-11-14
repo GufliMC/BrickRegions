@@ -31,6 +31,7 @@ import com.guflimc.brick.regions.spigot.rules.RuleHandler;
 import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
 import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
 import io.leangen.geantyref.TypeToken;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -99,6 +100,10 @@ public class SpigotBrickRegions extends JavaPlugin {
         pm.registerEvents(new EntityInteractListener(this), this);
         pm.registerEvents(new ContainerListener(), this);
         pm.registerEvents(new BlockInteractListener(), this);
+        pm.registerEvents(new DropItemsListener(), this);
+        pm.registerEvents(new PlayerDamageListener(), this);
+
+        // WORLD LOADING
         pm.registerEvents(new WorldListener(manager), this);
 
         // RULES

@@ -49,6 +49,7 @@
   "protection.pvp": "<red>You cannot attack players here.",
   "protection.container": "<red>You cannot open containers here.",
   "protection.attack_neutral_mobs": "<red>You cannot attack neutral mobs here.",
-  "protection.attack_hostile_mobs": "<red>You cannot attack hostile mobs here."
+  "protection.attack_hostile_mobs": "<red>You cannot attack hostile mobs here.",
+  "protection.drop_items": "<red>You cannot drop items here."
 
 }

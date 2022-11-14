@@ -7,6 +7,7 @@ import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.spigot.api.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -112,6 +113,29 @@ public class RuleHandler implements Listener {
     public void onCollectItem(PlayerRegionsCollectItemEvent event) {
         if (shouldCancel(event, RuleType.COLLECT_ITEMS)) {
             event.setCancelled(true);
+        }
+    }
+
+    // DROP ITEMS
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onDropItem(PlayerRegionsDropItemEvent event) {
+        if (shouldCancel(event, RuleType.DROP_ITEMS)) {
+            event.setCancelled(true);
+            SpigotI18nAPI.get(this).send(event.player(), "protection.drop_items");
+        }
+    }
+
+    // PVP
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onPlayerDamage(PlayerRegionsAttackedByEntityEvent event) {
+        if ( !(event.entity() instanceof Player attacker) ) {
+            return;
+        }
+        if (shouldCancel(event, RuleType.PVP)) {
+            event.setCancelled(true);
+            SpigotI18nAPI.get(this).send(attacker, "protection.pvp");
         }
     }
 

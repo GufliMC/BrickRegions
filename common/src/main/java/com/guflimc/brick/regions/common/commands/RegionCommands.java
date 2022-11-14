@@ -76,8 +76,13 @@ public class RegionCommands {
         }
 
         RegionProtectionRule rule = region.rules().get(index-1);
+        System.out.println();
+        System.out.println("a: " + region.rules().size());
         region.removeRule(rule);
-        RegionAPI.get().update(region);
+        System.out.println("b: " + region.rules().size());
+        RegionAPI.get().update(region).thenRun(() -> {
+            System.out.println("c: " + region.rules().size());
+        });
 
         I18nAPI.get(this).send(sender, "cmd.region.rules.remove", rule, region.name());
     }

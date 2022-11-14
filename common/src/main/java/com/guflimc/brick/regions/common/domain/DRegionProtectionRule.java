@@ -5,36 +5,37 @@ import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
-import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.type.SqlTypes;
+import io.ebean.annotation.ConstraintMode;
+import io.ebean.annotation.DbDefault;
+import io.ebean.annotation.DbForeignKey;
+import io.ebean.annotation.Index;
 
+import javax.persistence.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(
-        name = "region_rules"
-)
+@Table(name = "region_rules")
+@Index(columnNames = {"region_id", "status", "target", "type_set"}, unique = true)
 public class DRegionProtectionRule implements RegionProtectionRule {
 
     @Id
     @GeneratedValue
-    @JdbcTypeCode(SqlTypes.CHAR)
+//    @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
     @ManyToOne(optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+    @DbForeignKey(onDelete = ConstraintMode.CASCADE)
     private DRegion region;
 
     @Column(nullable = false)
-    @ColumnDefault("0")
+//    @ColumnDefault("0")
+    @DbDefault("0")
     private int priority;
 
     @Column(nullable = false)
@@ -46,8 +47,8 @@ public class DRegionProtectionRule implements RegionProtectionRule {
     private RuleTarget<?> target;
 
     @Column(nullable = false)
-    @Convert(converter = RuleTypesConverter.class)
-    private RuleType[] types;
+    @Convert(converter = RuleTypeSetConverter.class)
+    private RuleTypeSet typeSet;
 
     public DRegionProtectionRule() {
     }
@@ -57,7 +58,7 @@ public class DRegionProtectionRule implements RegionProtectionRule {
         this.priority = priority;
         this.status = status;
         this.target = target;
-        this.types = types;
+        this.typeSet = new RuleTypeSet(types);
     }
 
     public DRegionProtectionRule(DRegion region, RuleStatus status, RuleTarget<?> target, RuleType... types) {
@@ -85,29 +86,34 @@ public class DRegionProtectionRule implements RegionProtectionRule {
 
     @Override
     public RuleType[] types() {
-        return types;
+        return typeSet.types;
     }
 
     @Override
     public String toString() {
-        return status.name() + " " + target.name() + " " + Arrays.stream(types).map(RuleType::name)
+        return status.name() + " " + target.name() + " " + Arrays.stream(typeSet.types).map(RuleType::name)
                 .collect(Collectors.joining(", "));
     }
 
     //
 
-    public static class RuleTypesConverter implements AttributeConverter<RuleType[], String> {
+    private record RuleTypeSet(RuleType[] types) {}
+
+    public static class RuleTypeSetConverter implements AttributeConverter<RuleTypeSet, String> {
 
         private final static String PATTERN = Pattern.quote(", ");
 
         @Override
-        public String convertToDatabaseColumn(RuleType[] attribute) {
-            return Arrays.stream(attribute).map(RuleType::name).collect(Collectors.joining(","));
+        public String convertToDatabaseColumn(RuleTypeSet attribute) {
+            return Arrays.stream(attribute.types).map(RuleType::name).collect(Collectors.joining(","));
         }
 
         @Override
-        public RuleType[] convertToEntityAttribute(String dbData) {
-            return Arrays.stream(dbData.split(PATTERN)).map(RuleType::valueOf).filter(Objects::nonNull).toArray(RuleType[]::new);
+        public RuleTypeSet convertToEntityAttribute(String dbData) {
+            return new RuleTypeSet(Arrays.stream(dbData.split(PATTERN))
+                    .map(RuleType::valueOf)
+                    .filter(Objects::nonNull)
+                    .toArray(RuleType[]::new));
         }
     }
 

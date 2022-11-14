@@ -25,14 +25,7 @@ public class EntityDamageListener implements Listener {
             return;
         }
 
-        RuleType type = null;
-        if ( entity instanceof Monster ) {
-            type = RuleType.ATTACK_HOSTILE_MOBS;
-        } else if ( entity instanceof Animals) {
-            type = RuleType.ATTACK_NEUTRAL_MOBS;
-        }
-
-        PlayerRegionsEntityDamageEvent event = new PlayerRegionsEntityDamageEvent(player, regions, entity, type);
+        PlayerRegionsEntityDamageEvent event = new PlayerRegionsEntityDamageEvent(player, regions, entity);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }
@@ -57,10 +50,10 @@ public class EntityDamageListener implements Listener {
         }
 
         Player player;
-        if (attacker instanceof Player) {
-            player = (Player) attacker;
-        } else if (attacker instanceof Projectile && ((Projectile) attacker).getShooter() instanceof Player) {
-            player = (Player) ((Projectile) attacker).getShooter();
+        if (attacker instanceof Player p) {
+            player = p;
+        } else if (attacker instanceof Projectile p && p.getShooter() instanceof Player pl ) {
+            player = pl;
         } else {
             return;
         }

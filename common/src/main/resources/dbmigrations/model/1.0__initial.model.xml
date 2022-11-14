@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="regions" identityType="external" pkName="pk_regions">
+            <column name="dtype" type="varchar(31)" notnull="true"/>
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="world_id" type="uuid" notnull="true"/>
+            <column name="name" type="varchar" notnull="true"/>
+            <column name="priority" type="integer" defaultValue="1" notnull="true"/>
+            <column name="area" type="varchar(8192)" notnull="true"/>
+            <uniqueConstraint name="uq_regions_world_id_name" columnNames="world_id,name" oneToOne="false" nullableColumns=""/>
+        </createTable>
+        <createTable name="region_attributes" identityType="external" pkName="pk_region_attributes">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="region_id" type="uuid" notnull="true" references="regions.id" foreignKeyName="fk_region_attributes_region_id" foreignKeyIndex="ix_region_attributes_region_id" foreignKeyOnDelete="CASCADE" foreignKeyOnUpdate="RESTRICT"/>
+            <column name="name" type="varchar" notnull="true"/>
+            <column name="value" type="varchar" notnull="true"/>
+            <uniqueConstraint name="uq_region_attributes_region_id_name" columnNames="region_id,name" oneToOne="false" nullableColumns=""/>
+        </createTable>
+        <createTable name="region_rules" identityType="external" pkName="pk_region_rules">
+            <column name="id" type="uuid" primaryKey="true" identity="true"/>
+            <column name="region_id" type="uuid" notnull="true" references="regions.id" foreignKeyName="fk_region_rules_region_id" foreignKeyIndex="ix_region_rules_region_id" foreignKeyOnDelete="CASCADE" foreignKeyOnUpdate="RESTRICT"/>
+            <column name="priority" type="integer" defaultValue="0" notnull="true"/>
+            <column name="status" type="varchar(5)" notnull="true" checkConstraint="check ( status in ('DENY','ALLOW'))" checkConstraintName="ck_region_rules_status"/>
+            <column name="target" type="varchar" notnull="true"/>
+            <column name="type_set" type="varchar" notnull="true"/>
+            <uniqueConstraint name="uq_region_rules_region_id_status_target_type_set" columnNames="region_id,status,target,type_set" oneToOne="false" nullableColumns=""/>
+        </createTable>
+    </changeSet>
+</migration>

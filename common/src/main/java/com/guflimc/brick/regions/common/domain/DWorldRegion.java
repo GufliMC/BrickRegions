@@ -2,15 +2,13 @@ package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.maths.api.geo.pos.Point;
 import com.guflimc.brick.regions.api.domain.WorldRegion;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import javax.persistence.*;
 
 import java.util.UUID;
 
 @Entity
-@DiscriminatorValue("GLOBAL")
-@Table(name = "global_regions")
+//@DiscriminatorValue("global")
+@Table(name = "world_regions")
 public class DWorldRegion extends DRegion implements WorldRegion {
 
     public DWorldRegion() {

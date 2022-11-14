@@ -1,5 +1,10 @@
 plugins {
     id 'java-library'
+    id 'io.ebean' version '13.+'
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -8,7 +13,9 @@ dependencies {
     // provided
     compileOnly 'com.guflimc.brick.i18n:api:+'
 
-    api 'com.guflimc.brick.orm:common:+'
+    api 'com.guflimc.brick.orm:ebean:+'
+//    annotationProcessor 'io.ebean:querybean-generator:12.+'
+
     api 'com.guflimc.brick.maths:database-api:+'
 
     api 'cloud.commandframework:cloud-core:+'

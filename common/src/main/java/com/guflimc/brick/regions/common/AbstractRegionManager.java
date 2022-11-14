@@ -145,11 +145,10 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<Void> update(@NotNull Region region) {
-        if (!(region instanceof DRegion)) {
+        if (!(region instanceof DRegion dr)) {
             throw new IllegalArgumentException("Only persistent regions can be saved.");
         }
-        return databaseContext.mergeAsync(region).thenRun(() -> {
-        });
+        return databaseContext.persistAsync(region);
     }
 
     @Override

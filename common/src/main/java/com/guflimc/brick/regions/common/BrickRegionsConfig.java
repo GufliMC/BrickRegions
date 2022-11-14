@@ -1,9 +1,9 @@
 package com.guflimc.brick.regions.common;
 
-import com.guflimc.brick.orm.database.HibernateConfig;
+import com.guflimc.brick.orm.ebean.database.EbeanConfig;
 
 public class BrickRegionsConfig {
 
-    public HibernateConfig database;
+    public EbeanConfig database;
 
 }

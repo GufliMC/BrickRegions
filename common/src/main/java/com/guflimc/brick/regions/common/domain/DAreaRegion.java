@@ -2,21 +2,17 @@ package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.maths.api.geo.area.Area;
 import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.maths.database.api.AreaConverter;
-import com.guflimc.brick.regions.api.domain.AreaRegion;
+import com.guflimc.brick.orm.ebean.converters.JakartaWrapperConverter;
 import com.guflimc.brick.regions.api.domain.PersistentAreaRegion;
-import com.guflimc.brick.regions.api.domain.PersistentRegion;
-import com.guflimc.brick.regions.api.domain.Region;
-import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@DiscriminatorValue("AREA")
+//@DiscriminatorValue("area")
 @Table(name = "area_regions")
 public class DAreaRegion extends DRegion implements PersistentAreaRegion {
 
@@ -45,6 +41,12 @@ public class DAreaRegion extends DRegion implements PersistentAreaRegion {
 
     @Override
     public boolean contains(Point point) {
-        return  PersistentAreaRegion.super.contains(point);
+        return PersistentAreaRegion.super.contains(point);
+    }
+
+    public static class AreaConverter extends JakartaWrapperConverter<Area, String> {
+        public AreaConverter() {
+            super(new com.guflimc.brick.maths.database.api.AreaConverter());
+        }
     }
 }
