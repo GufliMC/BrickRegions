@@ -22,6 +22,7 @@
 
   "cmd.region.delete.usage": "<red>Invalid usage, try this: <dark_red>/br region delete <region></dark_red>.",
   "cmd.region.delete": "<gray>Deleted <green>{0}</green>.",
+  "cmd.region.delete.error.global": "<red>You can't delete the global region.",
 
   "cmd.region.list": "<gray>List of regions in your current world: <green>{0}</green>.</gray>",
   "cmd.region.list.world": "<gray>List of regions in <dark_gray>{0}<gray>: <green>{1}</green>.",

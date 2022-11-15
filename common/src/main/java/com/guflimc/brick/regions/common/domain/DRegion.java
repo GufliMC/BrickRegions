@@ -20,10 +20,8 @@ public class DRegion implements PersistentRegion {
 
     @Id
     @GeneratedValue
-//    @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
-    //    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(nullable = false)
     private UUID worldId;
 

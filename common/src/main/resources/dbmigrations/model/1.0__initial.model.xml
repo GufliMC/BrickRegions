@@ -7,7 +7,7 @@
             <column name="world_id" type="uuid" notnull="true"/>
             <column name="name" type="varchar" notnull="true"/>
             <column name="priority" type="integer" defaultValue="1" notnull="true"/>
-            <column name="area" type="varchar(8192)" notnull="true"/>
+            <column name="area" type="varchar(8192)" defaultValue="null"/>
             <uniqueConstraint name="uq_regions_world_id_name" columnNames="world_id,name" oneToOne="false" nullableColumns=""/>
         </createTable>
         <createTable name="region_attributes" identityType="external" pkName="pk_region_attributes">

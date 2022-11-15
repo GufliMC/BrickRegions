@@ -77,6 +77,7 @@ public class SpigotRegionCommands {
         }
 
         SpigotRegionAPI.get().create(name, selection);
+        SpigotRegionAPI.get().clearSelection(sender);
 
         SpigotI18nAPI.get(this).send(sender, "cmd.region.create", name);
     }

@@ -5,7 +5,7 @@ create table regions (
   world_id                      varchar(40) not null,
   name                          varchar(255) not null,
   priority                      integer default 1 not null,
-  area                          varchar(8192) not null,
+  area                          varchar(8192) default null,
   constraint uq_regions_world_id_name unique (world_id,name),
   constraint pk_regions primary key (id)
 );

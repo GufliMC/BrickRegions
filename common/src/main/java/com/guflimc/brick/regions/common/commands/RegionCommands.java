@@ -7,6 +7,7 @@ import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
+import com.guflimc.brick.regions.api.domain.WorldRegion;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -21,6 +22,10 @@ public class RegionCommands {
 
     @CommandMethod("br delete <region>")
     public void delete(Audience sender, @Argument("region") PersistentRegion region) {
+        if ( region instanceof WorldRegion ) {
+            I18nAPI.get(this).send(sender, "cmd.region.delete.error.global");
+        }
+
         RegionAPI.get().remove(region);
         I18nAPI.get(this).send(sender, "cmd.region.delete", region.name());
     }
@@ -76,13 +81,8 @@ public class RegionCommands {
         }
 
         RegionProtectionRule rule = region.rules().get(index-1);
-        System.out.println();
-        System.out.println("a: " + region.rules().size());
         region.removeRule(rule);
-        System.out.println("b: " + region.rules().size());
-        RegionAPI.get().update(region).thenRun(() -> {
-            System.out.println("c: " + region.rules().size());
-        });
+        RegionAPI.get().update(region);
 
         I18nAPI.get(this).send(sender, "cmd.region.rules.remove", rule, region.name());
     }

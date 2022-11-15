@@ -7,8 +7,6 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-//@DiscriminatorValue("global")
-@Table(name = "world_regions")
 public class DWorldRegion extends DRegion implements WorldRegion {
 
     public DWorldRegion() {

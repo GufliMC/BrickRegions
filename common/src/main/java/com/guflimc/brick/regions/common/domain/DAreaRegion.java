@@ -2,22 +2,21 @@ package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.maths.api.geo.area.Area;
 import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.orm.ebean.converters.JakartaWrapperConverter;
+import com.guflimc.brick.maths.database.api.AreaConverter;
 import com.guflimc.brick.regions.api.domain.PersistentAreaRegion;
+import io.ebean.annotation.DbDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-//@DiscriminatorValue("area")
-@Table(name = "area_regions")
 public class DAreaRegion extends DRegion implements PersistentAreaRegion {
 
     @Convert(converter = AreaConverter.class)
-    @Column(nullable = false, length = 8192)
+    @Column(length = 8192)
+    @DbDefault("null")
     private Area area;
 
     public DAreaRegion() {
@@ -42,11 +41,5 @@ public class DAreaRegion extends DRegion implements PersistentAreaRegion {
     @Override
     public boolean contains(Point point) {
         return PersistentAreaRegion.super.contains(point);
-    }
-
-    public static class AreaConverter extends JakartaWrapperConverter<Area, String> {
-        public AreaConverter() {
-            super(new com.guflimc.brick.maths.database.api.AreaConverter());
-        }
     }
 }
