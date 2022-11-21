@@ -1,6 +1,7 @@
 package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.maths.api.geo.pos.Point;
+import com.guflimc.brick.orm.jpa.converters.ComponentConverter;
 import com.guflimc.brick.regions.api.attributes.AttributeKey;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
@@ -8,14 +9,16 @@ import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
 import io.ebean.annotation.DbDefault;
-import javax.persistence.*;
+import io.ebean.annotation.Index;
+import net.kyori.adventure.text.Component;
 
+import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Inheritance
 @Table(name = "regions")
-@io.ebean.annotation.Index(columnNames = {"world_id", "name"}, unique = true)
+@Index(columnNames = {"world_id", "name"}, unique = true)
 public class DRegion implements PersistentRegion {
 
     @Id
@@ -27,6 +30,11 @@ public class DRegion implements PersistentRegion {
 
     @Column(nullable = false)
     private String name;
+
+    @Convert(converter = ComponentConverter.class)
+    @Column(nullable = true)
+    @DbDefault("null")
+    private Component displayName;
 
     @Column(nullable = false)
     @DbDefault("1")
@@ -63,18 +71,28 @@ public class DRegion implements PersistentRegion {
     }
 
     @Override
+    public Component displayName() {
+        return displayName == null ? PersistentRegion.super.displayName() : displayName;
+    }
+
+    @Override
+    public void setDisplayName(Component displayName) {
+        this.displayName = displayName;
+    }
+
+    @Override
     public int priority() {
         return priority;
     }
 
     @Override
-    public boolean contains(Point point) {
-        return false;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     @Override
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public boolean contains(Point point) {
+        return false;
     }
 
     // attributes

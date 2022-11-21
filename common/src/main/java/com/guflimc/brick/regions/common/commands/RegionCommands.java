@@ -14,6 +14,7 @@ import com.guflimc.brick.regions.api.rules.RuleType;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.*;
 
@@ -27,6 +28,13 @@ public class RegionCommands {
         }
 
         RegionAPI.get().remove(region);
+        I18nAPI.get(this).send(sender, "cmd.region.delete", region.name());
+    }
+
+    @CommandMethod("br setdisplayname <region> <name>")
+    public void setdisplayname(Audience sender, @Argument("region") PersistentRegion region, @Argument("name") String name) {
+        region.setDisplayName(MiniMessage.miniMessage().deserialize(name));
+        RegionAPI.get().update(region);
         I18nAPI.get(this).send(sender, "cmd.region.delete", region.name());
     }
 

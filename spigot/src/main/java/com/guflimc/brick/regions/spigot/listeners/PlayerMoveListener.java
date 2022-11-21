@@ -17,12 +17,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MoveListener implements Listener {
+public class PlayerMoveListener implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<Player, Location> lastLocation = new ConcurrentHashMap<>();
 
-    public MoveListener(JavaPlugin plugin) {
+    public PlayerMoveListener(JavaPlugin plugin) {
         this.plugin = plugin;
 
         for ( Player player : Bukkit.getOnlinePlayers() ) {

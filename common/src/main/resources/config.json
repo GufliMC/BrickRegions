@@ -7,5 +7,5 @@
     "password": "root",
     "debug": true
   },
-  "defaultProtection": false
+  "showRegionTitles": true
 }

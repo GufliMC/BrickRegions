@@ -4,6 +4,7 @@ import com.guflimc.brick.maths.database.api.AreaConverter;
 import com.guflimc.brick.orm.ebean.database.EbeanConfig;
 import com.guflimc.brick.orm.ebean.database.EbeanDatabaseContext;
 import com.guflimc.brick.orm.ebean.database.EbeanMigrations;
+import com.guflimc.brick.orm.jpa.converters.ComponentConverter;
 import com.guflimc.brick.regions.common.domain.*;
 import io.ebean.annotation.Platform;
 
@@ -36,7 +37,8 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
 
             AreaConverter.class,
             DRegionProtectionRule.RuleTargetConverter.class,
-            DRegionProtectionRule.RuleTypeSetConverter.class
+            DRegionProtectionRule.RuleTypeSetConverter.class,
+            ComponentConverter.class
     };
 
     public static void main(String[] args) throws IOException, SQLException {

@@ -2,7 +2,6 @@ package com.guflimc.brick.regions.spigot;
 
 import cloud.commandframework.annotations.AnnotationParser;
 import cloud.commandframework.bukkit.BukkitCommandManager;
-import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
@@ -31,9 +30,8 @@ import com.guflimc.brick.regions.spigot.rules.RuleHandler;
 import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
 import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
 import io.leangen.geantyref.TypeToken;
-import org.bukkit.Bukkit;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -50,7 +48,9 @@ public class SpigotBrickRegions extends JavaPlugin {
     private static final Logger logger = LoggerFactory.getLogger(SpigotBrickRegions.class);
 
     public final Gson gson = new Gson();
+
     public BrickRegionsConfig config;
+    public BukkitAudiences adventure;
 
     public final NamespacedKey SELECTION_WAND_KEY = new NamespacedKey(this, "selection_wand");
     public final NamespacedKey SELECTION_TYPE = new NamespacedKey(this, "selection_type");
@@ -89,9 +89,12 @@ public class SpigotBrickRegions extends JavaPlugin {
         namespace.loadValues(this, "languages");
         SpigotI18nAPI.get().register(namespace);
 
+        // ADVENTURE
+        adventure = BukkitAudiences.create(this);
+
         // ACTIONS
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new MoveListener(this), this);
+        pm.registerEvents(new PlayerMoveListener(this), this);
         pm.registerEvents(new BlockBuildListener(), this);
         pm.registerEvents(new EntityBuildListener(), this);
         pm.registerEvents(new CollectItemsListener(), this);
@@ -102,6 +105,10 @@ public class SpigotBrickRegions extends JavaPlugin {
         pm.registerEvents(new BlockInteractListener(), this);
         pm.registerEvents(new DropItemsListener(), this);
         pm.registerEvents(new PlayerDamageListener(), this);
+
+        if ( config.showRegionTitles ) {
+            pm.registerEvents(new PlayerMoveTitlesListener(this), this);
+        }
 
         // WORLD LOADING
         pm.registerEvents(new WorldListener(manager), this);

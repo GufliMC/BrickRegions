@@ -4,6 +4,7 @@ import com.guflimc.brick.regions.api.attributes.AttributeKey;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,8 @@ import java.util.Optional;
 public interface PersistentRegion extends Region {
 
     void setPriority(int priority);
+
+    void setDisplayName(Component displayName);
 
     // attributes
 

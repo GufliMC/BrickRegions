@@ -13,10 +13,13 @@ dependencies {
     // provided
     compileOnly 'com.guflimc.brick.i18n:api:+'
 
+    implementation 'net.kyori:adventure-text-minimessage:4.+'
+
     api 'com.guflimc.brick.orm:ebean:+'
 //    annotationProcessor 'io.ebean:querybean-generator:12.+'
 
     api 'com.guflimc.brick.maths:database-converters:+'
+    api 'com.guflimc.brick.orm:jpa-converters:+'
 
     api 'cloud.commandframework:cloud-core:+'
     api 'cloud.commandframework:cloud-annotations:+'

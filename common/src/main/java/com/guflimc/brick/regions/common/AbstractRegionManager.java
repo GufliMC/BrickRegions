@@ -14,6 +14,8 @@ import com.guflimc.brick.regions.common.domain.DAreaRegion;
 import com.guflimc.brick.regions.common.domain.DRegion;
 import com.guflimc.brick.regions.common.domain.DWorldRegion;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -39,6 +41,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
                 .filter(rg -> rg instanceof WorldRegion)
                 .findFirst().orElseGet(() -> {
                     DWorldRegion region = new DWorldRegion(worldId, "__global__");
+                    region.setDisplayName(Component.text("Wilderness", NamedTextColor.GREEN));
                     databaseContext.persistAsync(region).join();
                     return region;
                 });
