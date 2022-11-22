@@ -159,6 +159,9 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         if (region instanceof DRegion) {
             throw new IllegalArgumentException("Only transient regions can be registered.");
         }
+        if ( engine.findRegion(region.id()).isPresent() ) {
+            return;
+        }
 
         engine.add(region);
     }
