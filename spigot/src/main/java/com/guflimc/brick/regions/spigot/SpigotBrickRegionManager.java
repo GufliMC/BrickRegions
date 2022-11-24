@@ -55,11 +55,6 @@ public class SpigotBrickRegionManager extends AbstractRegionManager<Player> impl
     }
 
     @Override
-    public Collection<Region> regionsAt(@NotNull Entity entity) {
-        return regionsAt(entity.getLocation());
-    }
-
-    @Override
     public Collection<Region> regions(@NotNull World world) {
         return regions(world.getUID());
     }

@@ -35,7 +35,7 @@ public class RegionCommands {
     public void setdisplayname(Audience sender, @Argument("region") PersistentRegion region, @Argument("name") String name) {
         region.setDisplayName(MiniMessage.miniMessage().deserialize(name));
         RegionAPI.get().update(region);
-        I18nAPI.get(this).send(sender, "cmd.region.delete", region.name());
+        I18nAPI.get(this).send(sender, "cmd.region.setdisplayname", region.name(), region.displayName());
     }
 
     @CommandMethod("br rules list <region>")
