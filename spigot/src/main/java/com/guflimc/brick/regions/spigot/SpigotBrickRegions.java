@@ -26,6 +26,7 @@ import com.guflimc.brick.regions.spigot.benchmark.Benchmark;
 import com.guflimc.brick.regions.spigot.commands.SpigotRegionCommands;
 import com.guflimc.brick.regions.spigot.commands.SpigotSelectionCommands;
 import com.guflimc.brick.regions.spigot.listeners.*;
+import com.guflimc.brick.regions.spigot.placeholders.RegionPlaceholders;
 import com.guflimc.brick.regions.spigot.rules.RuleHandler;
 import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
 import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
@@ -122,6 +123,11 @@ public class SpigotBrickRegions extends JavaPlugin {
 
         // GUI
         SpigotBrickGUI.register(this);
+
+        // PLACEHOLDERS
+        if ( pm.isPluginEnabled("BrickPlaceholders") ) {
+            RegionPlaceholders.init();
+        }
 
         // COMMANDS
         try {

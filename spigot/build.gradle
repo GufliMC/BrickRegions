@@ -17,6 +17,7 @@ dependencies {
 
     // provided
     compileOnly 'com.guflimc.brick.i18n:spigot-api:+'
+    compileOnly 'com.guflimc.brick.placeholders:spigot-api:+'
 
     // shade
     implementation 'cloud.commandframework:cloud-bukkit:+'
@@ -34,6 +35,7 @@ bukkit {
     website = 'https://github.com/GufliMC/BrickRegions'
     apiVersion = '1.13'
     depend = ["BrickI18n"]
+    softDepend = ["BrickPlaceholders"]
 }
 
 // I want it nice like that

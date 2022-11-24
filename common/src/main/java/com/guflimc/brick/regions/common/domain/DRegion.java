@@ -1,8 +1,8 @@
 package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.maths.api.geo.pos.Point;
+import com.guflimc.brick.orm.api.attributes.AttributeKey;
 import com.guflimc.brick.orm.jpa.converters.ComponentConverter;
-import com.guflimc.brick.regions.api.attributes.AttributeKey;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
