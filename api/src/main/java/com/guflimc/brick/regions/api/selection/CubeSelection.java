@@ -34,7 +34,7 @@ public class CubeSelection extends AbstractSelection {
             this.undo = oldUndo;
         };
 
-        this.pos1 = Vector.from(pos1);
+        this.pos1 = Vector.of(pos1);
     }
 
     public void setPos2(Point pos2) {
@@ -45,7 +45,7 @@ public class CubeSelection extends AbstractSelection {
             this.undo = oldUndo;
         };
 
-        this.pos2 = Vector.from(pos2);
+        this.pos2 = Vector.of(pos2);
     }
 
     @Override
