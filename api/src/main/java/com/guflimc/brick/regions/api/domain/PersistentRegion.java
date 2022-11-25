@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public interface PersistentRegion extends Region {
 
@@ -17,11 +18,11 @@ public interface PersistentRegion extends Region {
 
     // attributes
 
-    <T> void setAttribute(AttributeKey<T> key, T value);
+    <T> void setAttribute(RegionAttributeKey<T> key, T value);
 
-    <T> void removeAttribute(AttributeKey<T> key);
+    <T> void removeAttribute(RegionAttributeKey<T> key);
 
-    <T> Optional<T> attribute(AttributeKey<T> key);
+    <T> Optional<T> attribute(RegionAttributeKey<T> key);
 
     // protection rules
 
@@ -36,5 +37,15 @@ public interface PersistentRegion extends Region {
     void removeRule(RegionProtectionRule rule);
 
     void clearRules();
+
+    //
+
+    class RegionAttributeKey<T> extends AttributeKey<T> {
+
+        public RegionAttributeKey(String name, Class<T> type, Function<T, String> serializer, Function<String, T> deserializer) {
+            super(name, type, serializer, deserializer);
+        }
+
+    }
 
 }

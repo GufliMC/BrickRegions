@@ -1,7 +1,6 @@
 package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.orm.api.attributes.AttributeKey;
 import com.guflimc.brick.orm.jpa.converters.ComponentConverter;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
 import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
@@ -98,27 +97,34 @@ public class DRegion implements PersistentRegion {
     // attributes
 
     @Override
-    public <T> void removeAttribute(AttributeKey<T> key) {
+    public <T> void removeAttribute(RegionAttributeKey<T> key) {
         attributes.removeIf(attr -> attr.name().equals(key.name()));
     }
 
     @Override
-    public <T> void setAttribute(AttributeKey<T> key, T value) {
+    public <T> void setAttribute(RegionAttributeKey<T> key, T value) {
         if (value == null) {
             removeAttribute(key);
             return;
         }
 
-        attributes.stream().filter(attr -> attr.name().equals(key.name())).findFirst()
-                .ifPresentOrElse(
-                        attr -> attr.setValue(key.serialize(value)),
-                        () -> attributes.add(new DRegionAttribute(this, key.name(), key.serialize(value)))
-                );
+        DRegionAttribute attribute = attributes.stream()
+                .filter(attr -> attr.name().equals(key.name()))
+                .findFirst().orElse(null);
+
+        if (attribute == null) {
+            attributes.add(new DRegionAttribute(this, key.name(), key.serialize(value)));
+            return;
+        }
+
+        attribute.setValue(key.serialize(value));
     }
 
     @Override
-    public <T> Optional<T> attribute(AttributeKey<T> key) {
-        return attributes.stream().filter(attr -> attr.name().equals(key.name())).findFirst()
+    public <T> Optional<T> attribute(RegionAttributeKey<T> key) {
+        return attributes.stream()
+                .filter(attr -> attr.name().equals(key.name()))
+                .findFirst()
                 .map(ra -> key.deserialize(ra.value()));
     }
 
