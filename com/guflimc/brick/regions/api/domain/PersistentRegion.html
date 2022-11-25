@@ -43,7 +43,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -85,6 +85,21 @@ extends <a href="Region.html" title="interface in com.guflimc.brick.regions.api.
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Interface</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="PersistentRegion.RegionAttributeKey.html" class="type-name-link" title="class in com.guflimc.brick.regions.api.domain">PersistentRegion.RegionAttributeKey</a>&lt;<a href="PersistentRegion.RegionAttributeKey.html" title="type parameter in PersistentRegion.RegionAttributeKey">T</a>&gt;</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
@@ -108,13 +123,13 @@ extends <a href="Region.html" title="interface in com.guflimc.brick.regions.api.
  <a href="../rules/RuleType.html" title="class in com.guflimc.brick.regions.api.rules">RuleType</a>...&nbsp;ruleTypes)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#attribute(com.guflimc.brick.orm.api.attributes.AttributeKey)" class="member-name-link">attribute</a><wbr>(com.guflimc.brick.orm.api.attributes.AttributeKey&lt;T&gt;&nbsp;key)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#attribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey)" class="member-name-link">attribute</a><wbr>(<a href="PersistentRegion.RegionAttributeKey.html" title="class in com.guflimc.brick.regions.api.domain">PersistentRegion.RegionAttributeKey</a>&lt;T&gt;&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#clearRules()" class="member-name-link">clearRules</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>&lt;T&gt;&nbsp;void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#removeAttribute(com.guflimc.brick.orm.api.attributes.AttributeKey)" class="member-name-link">removeAttribute</a><wbr>(com.guflimc.brick.orm.api.attributes.AttributeKey&lt;T&gt;&nbsp;key)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#removeAttribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey)" class="member-name-link">removeAttribute</a><wbr>(<a href="PersistentRegion.RegionAttributeKey.html" title="class in com.guflimc.brick.regions.api.domain">PersistentRegion.RegionAttributeKey</a>&lt;T&gt;&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#removeRule(com.guflimc.brick.regions.api.domain.RegionProtectionRule)" class="member-name-link">removeRule</a><wbr>(<a href="RegionProtectionRule.html" title="interface in com.guflimc.brick.regions.api.domain">RegionProtectionRule</a>&nbsp;rule)</code></div>
@@ -123,7 +138,7 @@ extends <a href="Region.html" title="interface in com.guflimc.brick.regions.api.
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#rules()" class="member-name-link">rules</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>&lt;T&gt;&nbsp;void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setAttribute(com.guflimc.brick.orm.api.attributes.AttributeKey,T)" class="member-name-link">setAttribute</a><wbr>(com.guflimc.brick.orm.api.attributes.AttributeKey&lt;T&gt;&nbsp;key,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setAttribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey,T)" class="member-name-link">setAttribute</a><wbr>(<a href="PersistentRegion.RegionAttributeKey.html" title="class in com.guflimc.brick.regions.api.domain">PersistentRegion.RegionAttributeKey</a>&lt;T&gt;&nbsp;key,
  T&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
@@ -162,22 +177,22 @@ extends <a href="Region.html" title="interface in com.guflimc.brick.regions.api.
 </section>
 </li>
 <li>
-<section class="detail" id="setAttribute(com.guflimc.brick.orm.api.attributes.AttributeKey,T)">
-<h3 id="setAttribute(com.guflimc.brick.orm.api.attributes.AttributeKey,java.lang.Object)">setAttribute</h3>
-<div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAttribute</span><wbr><span class="parameters">(com.guflimc.brick.orm.api.attributes.AttributeKey&lt;T&gt;&nbsp;key,
+<section class="detail" id="setAttribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey,T)">
+<h3 id="setAttribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey,java.lang.Object)">setAttribute</h3>
+<div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAttribute</span><wbr><span class="parameters">(<a href="PersistentRegion.RegionAttributeKey.html" title="class in com.guflimc.brick.regions.api.domain">PersistentRegion.RegionAttributeKey</a>&lt;T&gt;&nbsp;key,
  T&nbsp;value)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="removeAttribute(com.guflimc.brick.orm.api.attributes.AttributeKey)">
+<section class="detail" id="removeAttribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey)">
 <h3>removeAttribute</h3>
-<div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeAttribute</span><wbr><span class="parameters">(com.guflimc.brick.orm.api.attributes.AttributeKey&lt;T&gt;&nbsp;key)</span></div>
+<div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeAttribute</span><wbr><span class="parameters">(<a href="PersistentRegion.RegionAttributeKey.html" title="class in com.guflimc.brick.regions.api.domain">PersistentRegion.RegionAttributeKey</a>&lt;T&gt;&nbsp;key)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="attribute(com.guflimc.brick.orm.api.attributes.AttributeKey)">
+<section class="detail" id="attribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey)">
 <h3>attribute</h3>
-<div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</span>&nbsp;<span class="element-name">attribute</span><wbr><span class="parameters">(com.guflimc.brick.orm.api.attributes.AttributeKey&lt;T&gt;&nbsp;key)</span></div>
+<div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</span>&nbsp;<span class="element-name">attribute</span><wbr><span class="parameters">(<a href="PersistentRegion.RegionAttributeKey.html" title="class in com.guflimc.brick.regions.api.domain">PersistentRegion.RegionAttributeKey</a>&lt;T&gt;&nbsp;key)</span></div>
 </section>
 </li>
 <li>

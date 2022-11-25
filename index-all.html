@@ -82,7 +82,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/api/rules/RuleType.html#ATTACK_NEUTRAL_MOBS" class="member-name-link">ATTACK_NEUTRAL_MOBS</a> - Static variable in record class com.guflimc.brick.regions.api.rules.<a href="com/guflimc/brick/regions/api/rules/RuleType.html" title="class in com.guflimc.brick.regions.api.rules">RuleType</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html#attribute(com.guflimc.brick.orm.api.attributes.AttributeKey)" class="member-name-link">attribute(AttributeKey&lt;T&gt;)</a> - Method in interface com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a></dt>
+<dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html#attribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey)" class="member-name-link">attribute(PersistentRegion.RegionAttributeKey&lt;T&gt;)</a> - Method in interface com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:B">B</h2>
@@ -329,6 +329,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a> - Interface in <a href="com/guflimc/brick/regions/api/domain/package-summary.html">com.guflimc.brick.regions.api.domain</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.RegionAttributeKey.html" class="type-name-link" title="class in com.guflimc.brick.regions.api.domain">PersistentRegion.RegionAttributeKey</a>&lt;<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.RegionAttributeKey.html" title="type parameter in PersistentRegion.RegionAttributeKey">T</a>&gt; - Class in <a href="com/guflimc/brick/regions/api/domain/package-summary.html">com.guflimc.brick.regions.api.domain</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/api/RegionManager.html#persistentRegions()" class="member-name-link">persistentRegions()</a> - Method in interface com.guflimc.brick.regions.api.<a href="com/guflimc/brick/regions/api/RegionManager.html" title="interface in com.guflimc.brick.regions.api">RegionManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/api/RegionManager.html#persistentRegions(java.util.UUID)" class="member-name-link">persistentRegions(UUID)</a> - Method in interface com.guflimc.brick.regions.api.<a href="com/guflimc/brick/regions/api/RegionManager.html" title="interface in com.guflimc.brick.regions.api">RegionManager</a></dt>
@@ -456,6 +458,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/api/RegionAPI.html#%3Cinit%3E()" class="member-name-link">RegionAPI()</a> - Constructor for class com.guflimc.brick.regions.api.<a href="com/guflimc/brick/regions/api/RegionAPI.html" title="class in com.guflimc.brick.regions.api">RegionAPI</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.RegionAttributeKey.html#%3Cinit%3E(java.lang.String,java.lang.Class,java.util.function.Function,java.util.function.Function)" class="member-name-link">RegionAttributeKey(String, Class&lt;T&gt;, Function&lt;T, String&gt;, Function&lt;String, T&gt;)</a> - Constructor for class com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.RegionAttributeKey.html" title="class in com.guflimc.brick.regions.api.domain">PersistentRegion.RegionAttributeKey</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/spigot/api/events/RegionCreateEvent.html" class="type-name-link" title="class in com.guflimc.brick.regions.spigot.api.events">RegionCreateEvent</a> - Class in <a href="com/guflimc/brick/regions/spigot/api/events/package-summary.html">com.guflimc.brick.regions.spigot.api.events</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/spigot/api/events/RegionCreateEvent.html#%3Cinit%3E(com.guflimc.brick.regions.api.domain.Region)" class="member-name-link">RegionCreateEvent(Region)</a> - Constructor for class com.guflimc.brick.regions.spigot.api.events.<a href="com/guflimc/brick/regions/spigot/api/events/RegionCreateEvent.html" title="class in com.guflimc.brick.regions.spigot.api.events">RegionCreateEvent</a></dt>
@@ -496,7 +500,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/api/RegionManager.html#remove(com.guflimc.brick.regions.api.domain.Region)" class="member-name-link">remove(Region)</a> - Method in interface com.guflimc.brick.regions.api.<a href="com/guflimc/brick/regions/api/RegionManager.html" title="interface in com.guflimc.brick.regions.api">RegionManager</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html#removeAttribute(com.guflimc.brick.orm.api.attributes.AttributeKey)" class="member-name-link">removeAttribute(AttributeKey&lt;T&gt;)</a> - Method in interface com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a></dt>
+<dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html#removeAttribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey)" class="member-name-link">removeAttribute(PersistentRegion.RegionAttributeKey&lt;T&gt;)</a> - Method in interface com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html#removeRule(com.guflimc.brick.regions.api.domain.RegionProtectionRule)" class="member-name-link">removeRule(RegionProtectionRule)</a> - Method in interface com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a></dt>
 <dd>&nbsp;</dd>
@@ -529,7 +533,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/api/domain/PersistentAreaRegion.html#setArea(com.guflimc.brick.maths.api.geo.area.Area)" class="member-name-link">setArea(Area)</a> - Method in interface com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentAreaRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentAreaRegion</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html#setAttribute(com.guflimc.brick.orm.api.attributes.AttributeKey,T)" class="member-name-link">setAttribute(AttributeKey&lt;T&gt;, T)</a> - Method in interface com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a></dt>
+<dt><a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html#setAttribute(com.guflimc.brick.regions.api.domain.PersistentRegion.RegionAttributeKey,T)" class="member-name-link">setAttribute(PersistentRegion.RegionAttributeKey&lt;T&gt;, T)</a> - Method in interface com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/guflimc/brick/regions/spigot/api/events/PlayerRegionsEvent.html#setCancelled(boolean)" class="member-name-link">setCancelled(boolean)</a> - Method in class com.guflimc.brick.regions.spigot.api.events.<a href="com/guflimc/brick/regions/spigot/api/events/PlayerRegionsEvent.html" title="class in com.guflimc.brick.regions.spigot.api.events">PlayerRegionsEvent</a></dt>
 <dd>&nbsp;</dd>
