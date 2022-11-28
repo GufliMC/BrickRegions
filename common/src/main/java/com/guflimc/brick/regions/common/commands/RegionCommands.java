@@ -2,6 +2,7 @@ package com.guflimc.brick.regions.common.commands;
 
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.specifier.Greedy;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
@@ -32,7 +33,7 @@ public class RegionCommands {
     }
 
     @CommandMethod("br setdisplayname <region> <name>")
-    public void setdisplayname(Audience sender, @Argument("region") PersistentRegion region, @Argument("name") String name) {
+    public void setdisplayname(Audience sender, @Argument("region") PersistentRegion region, @Argument("name") @Greedy String name) {
         region.setDisplayName(MiniMessage.miniMessage().deserialize(name));
         RegionAPI.get().update(region);
         I18nAPI.get(this).send(sender, "cmd.region.setdisplayname", region.name(), region.displayName());
