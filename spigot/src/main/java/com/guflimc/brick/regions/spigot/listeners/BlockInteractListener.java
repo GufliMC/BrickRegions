@@ -49,7 +49,8 @@ public class BlockInteractListener implements Listener {
                     "COMMAND_BLOCK",
                     "CRAFTING_TABLE",
                     "ANVIL",
-                    "JUKEBOX" // not a container
+                    "JUKEBOX", // not a container
+                    "SWEET_BERRY_BUSH"
             ).contains(s)
     );
 
