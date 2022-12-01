@@ -45,10 +45,6 @@ public class EntityDamageListener implements Listener {
     }
 
     private <T extends EntityEvent & Cancellable> void attackEntityEvent(T e, Entity attacker) {
-        if (e.getEntity() instanceof Player) {
-            return;
-        }
-
         Player player;
         if (attacker instanceof Player p) {
             player = p;

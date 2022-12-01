@@ -129,13 +129,13 @@ public class RuleHandler implements Listener {
     // PVP
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onPlayerDamage(PlayerRegionsAttackedByEntityEvent event) {
-        if ( !(event.entity() instanceof Player attacker) ) {
+    public void onPlayerDamage(PlayerRegionsEntityDamageEvent event) {
+        if ( !(event.entity() instanceof Player) ) {
             return;
         }
         if (shouldCancel(event, RuleType.PVP)) {
             event.setCancelled(true);
-            SpigotI18nAPI.get(this).send(attacker, "protection.pvp");
+            SpigotI18nAPI.get(this).send(event.player(), "protection.pvp");
         }
     }
 

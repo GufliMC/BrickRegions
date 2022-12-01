@@ -105,7 +105,6 @@ public class SpigotBrickRegions extends JavaPlugin {
         pm.registerEvents(new ContainerListener(), this);
         pm.registerEvents(new BlockInteractListener(), this);
         pm.registerEvents(new DropItemsListener(), this);
-        pm.registerEvents(new PlayerDamageListener(), this);
 
         if ( config.showRegionTitles ) {
             pm.registerEvents(new PlayerMoveTitlesListener(this), this);
