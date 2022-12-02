@@ -1,3 +1,5 @@
+import java.util.jar.JarFile
+
 plugins {
     id 'net.minecrell.plugin-yml.bukkit' version '0.5.1'
 }
@@ -40,3 +42,7 @@ bukkit {
 
 // I want it nice like that
 generateBukkitPluginDescription.group = "minecraft"
+
+// relocate libs in shadow jar
+ext.set("excludeRelocation", ['io.ebean', 'org.slf4j'])
+apply from: 'https://guflimc.github.io/scripts/gradle/shadow-relocate.gradle'
