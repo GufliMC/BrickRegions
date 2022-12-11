@@ -6,6 +6,7 @@ import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.spigot.api.events.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -67,6 +68,13 @@ public class RuleHandler implements Listener {
     public void onBlockInteract(PlayerRegionsBlockInteractEvent event) {
         if (shouldCancel(event, RuleType.INTERACT)) {
             event.setCancelled(true);
+
+            Material type = event.block().getType();
+            if (type.name().contains("PRESSURE_PLATE")
+                    || type.name().contains("TRIPWIRE") ) {
+                return;
+            }
+
             SpigotI18nAPI.get(this).send(event.player(), "protection.interact");
         }
     }
@@ -130,7 +138,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerDamage(PlayerRegionsEntityDamageEvent event) {
-        if ( !(event.entity() instanceof Player) ) {
+        if (!(event.entity() instanceof Player)) {
             return;
         }
         if (shouldCancel(event, RuleType.PVP)) {
