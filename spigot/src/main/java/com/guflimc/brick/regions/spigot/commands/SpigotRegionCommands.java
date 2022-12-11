@@ -2,6 +2,7 @@ package com.guflimc.brick.regions.spigot.commands;
 
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.maths.api.geo.area.Area;
@@ -28,18 +29,21 @@ public class SpigotRegionCommands {
     }
 
     @CommandMethod("br benchmark start")
+    @CommandPermission("brick.regions.benchmark")
     public void benchmarkStart(Audience audience) {
         audience.sendMessage(Component.text("Benchmark started."));
         plugin.benchmark.start();
     }
 
     @CommandMethod("br benchmark stop")
+    @CommandPermission("brick.regions.benchmark.stop")
     public void benchmarkStop(Audience audience) {
         audience.sendMessage(Component.text("Benchmark stopped. Check console for results."));
         plugin.benchmark.stop();
     }
 
     @CommandMethod("br list")
+    @CommandPermission("brick.regions.list")
     public void list(Player sender) {
         SpigotI18nAPI.get(this).send(sender, "cmd.region.list",
                 RegionAPI.get().persistentRegions(sender.getWorld().getUID()).stream()
@@ -49,6 +53,7 @@ public class SpigotRegionCommands {
     }
 
     @CommandMethod("br list <world>")
+    @CommandPermission("brick.regions.list")
     public void listWorld(Audience sender, @Argument(value = "world") World world) {
         I18nAPI.get(this).send(sender, "cmd.region.list.world", world.getName(),
                 RegionAPI.get().persistentRegions(world.getUID()).stream()
@@ -58,6 +63,7 @@ public class SpigotRegionCommands {
     }
 
     @CommandMethod("br create <name>")
+    @CommandPermission("brick.regions.create")
     public void create(Player sender, @Argument(value = "name") String name) {
         if (RegionAPI.get().findRegion(sender.getWorld().getUID(), name).isPresent()) {
             SpigotI18nAPI.get(this).send(sender, "cmd.region.create.error.exists", name);

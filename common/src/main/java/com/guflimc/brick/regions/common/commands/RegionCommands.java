@@ -2,6 +2,7 @@ package com.guflimc.brick.regions.common.commands;
 
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.specifier.Greedy;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.RegionAPI;
@@ -23,6 +24,7 @@ import java.util.*;
 public class RegionCommands {
 
     @CommandMethod("br delete <region>")
+    @CommandPermission("brick.regions.delete")
     public void delete(Audience sender, @Argument("region") PersistentRegion region) {
         if ( region instanceof WorldRegion ) {
             I18nAPI.get(this).send(sender, "cmd.region.delete.error.global");
@@ -33,6 +35,7 @@ public class RegionCommands {
     }
 
     @CommandMethod("br setdisplayname <region> <name>")
+    @CommandPermission("brick.regions.setdisplayname")
     public void setdisplayname(Audience sender, @Argument("region") PersistentRegion region, @Argument("name") @Greedy String name) {
         region.setDisplayName(MiniMessage.miniMessage().deserialize(name));
         RegionAPI.get().update(region);
@@ -40,6 +43,7 @@ public class RegionCommands {
     }
 
     @CommandMethod("br rules list <region>")
+    @CommandPermission("brick.regions.rules.list")
     public void rulesList(Audience sender, @Argument("region") PersistentRegion region) {
         List<RegionProtectionRule> rules = region.rules();
         if ( rules.isEmpty() ) {
@@ -58,6 +62,7 @@ public class RegionCommands {
     }
 
     @CommandMethod("br rules add <region> <status> <target> <type>")
+    @CommandPermission("brick.regions.rules.add")
     public void rulesAdd(Audience sender,
                          @Argument("region") PersistentRegion region,
                          @Argument("status") RuleStatus status,
@@ -81,6 +86,7 @@ public class RegionCommands {
     }
 
     @CommandMethod("br rules remove <region> <index>")
+    @CommandPermission("brick.regions.rules.remove")
     public void rulesRemove(Audience sender,
                             @Argument("region") PersistentRegion region,
                             @Argument("index") int index) {
@@ -97,6 +103,7 @@ public class RegionCommands {
     }
 
     @CommandMethod("br rules clear <region>")
+    @CommandPermission("brick.regions.rules.clear")
     public void rulesClear(Audience sender,
                             @Argument("region") PersistentRegion region) {
 

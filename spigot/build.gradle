@@ -45,4 +45,4 @@ generateBukkitPluginDescription.group = "minecraft"
 
 // relocate libs in shadow jar
 ext.set("excludeRelocation", ['io.ebean', 'org.slf4j', 'com.guflimc.brick.maths'])
-apply from: 'https://guflimc.github.io/scripts/gradle/shadow-relocate.gradle'
+//apply from: 'https://guflimc.github.io/scripts/gradle/shadow-relocate.gradle'

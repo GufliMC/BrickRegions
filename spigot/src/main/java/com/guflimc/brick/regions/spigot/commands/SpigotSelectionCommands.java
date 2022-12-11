@@ -2,6 +2,7 @@ package com.guflimc.brick.regions.spigot.commands;
 
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.guflimc.brick.gui.spigot.item.ItemStackBuilder;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
@@ -27,6 +28,7 @@ public class SpigotSelectionCommands {
     }
 
     @CommandMethod("br select wand")
+    @CommandPermission("brick.regions.select.wand")
     public void wand(Player sender) {
         ItemStack item = ItemStackBuilder.of(Material.IRON_AXE)
                 .withName(SpigotI18nAPI.get(this).string(sender, "select.wand.name"))
@@ -39,18 +41,21 @@ public class SpigotSelectionCommands {
     }
 
     @CommandMethod("br select <type>")
+    @CommandPermission("brick.regions.select")
     public void type(Player sender, @Argument(value = "type") SelectionType type) {
         sender.getPersistentDataContainer().set(plugin.SELECTION_TYPE, PersistentDataType.INTEGER, type.ordinal());
         SpigotI18nAPI.get(this).send(sender, "cmd.select.type", type.name());
     }
 
     @CommandMethod("br select clear")
+    @CommandPermission("brick.regions.select.clear")
     public void clear(Player sender) {
         SpigotRegionAPI.get().clearSelection(sender);
         SpigotI18nAPI.get(this).send(sender, "cmd.select.clear");
     }
 
     @CommandMethod("br select undo")
+    @CommandPermission("brick.regions.select.undo")
     public void undo(Player sender) {
         Optional<Selection> sel = SpigotRegionAPI.get().selection(sender);
         if ( sel.isEmpty() || !sel.get().isValid() ) {
@@ -63,6 +68,7 @@ public class SpigotSelectionCommands {
     }
 
     @CommandMethod("br select expand")
+    @CommandPermission("brick.regions.select.expand")
     public void expand(Player sender) {
         Optional<Selection> sel = SpigotRegionAPI.get().selection(sender);
         if ( sel.isEmpty() || !sel.get().isValid() ) {
