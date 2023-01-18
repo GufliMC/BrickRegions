@@ -99,9 +99,9 @@ loadScripts(document, 'script');</script>
  @NotNull <a href="selection/Selection.html" title="interface in com.guflimc.brick.regions.api.selection">Selection</a>&nbsp;selection)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#create(java.lang.String,java.util.UUID,com.guflimc.brick.maths.api.geo.area.Area)" class="member-name-link">create</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#create(java.lang.String,java.util.UUID,com.guflimc.brick.math.common.geometry.shape3d.Shape3)" class="member-name-link">create</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId,
- @NotNull com.guflimc.brick.maths.api.geo.area.Area&nbsp;area)</code></div>
+ @NotNull com.guflimc.brick.math.common.geometry.shape3d.Shape3&nbsp;shape)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#findRegion(java.util.UUID)" class="member-name-link">findRegion</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;id)</code></div>
@@ -110,11 +110,18 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#findRegion(java.util.UUID,java.lang.String)" class="member-name-link">findRegion</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId,
  @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/AreaRegion.html" title="interface in com.guflimc.brick.regions.api.domain">AreaRegion</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#intersecting(com.guflimc.brick.maths.api.geo.area.Area)" class="member-name-link">intersecting</a><wbr>(com.guflimc.brick.maths.api.geo.area.Area&nbsp;area)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#intersecting(com.guflimc.brick.math.common.geometry.shape3d.Shape3)" class="member-name-link">intersecting</a><wbr>(com.guflimc.brick.math.common.geometry.shape3d.Shape3&nbsp;shape)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/AreaRegion.html" title="interface in com.guflimc.brick.regions.api.domain">AreaRegion</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#intersecting(com.guflimc.brick.regions.api.domain.AreaRegion)" class="member-name-link">intersecting</a><wbr>(<a href="domain/AreaRegion.html" title="interface in com.guflimc.brick.regions.api.domain">AreaRegion</a>&nbsp;region)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#intersecting(com.guflimc.brick.regions.api.domain.ShapeRegion)" class="member-name-link">intersecting</a><wbr>(<a href="domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>&nbsp;region)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#localitiesAt(com.guflimc.brick.math.common.geometry.pos3.Location)" class="member-name-link">localitiesAt</a><wbr>(@NotNull com.guflimc.brick.math.common.geometry.pos3.Location&nbsp;position)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#localitiesAt(java.util.UUID,com.guflimc.brick.math.common.geometry.pos3.Point3)" class="member-name-link">localitiesAt</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId,
+ @NotNull com.guflimc.brick.math.common.geometry.pos3.Point3&nbsp;position)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/PersistentRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#persistentRegions()" class="member-name-link">persistentRegions</a>()</code></div>
@@ -129,34 +136,37 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#regions(java.util.UUID)" class="member-name-link">regions</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#regionsAt(com.guflimc.brick.maths.api.geo.pos.Location)" class="member-name-link">regionsAt</a><wbr>(@NotNull com.guflimc.brick.maths.api.geo.pos.Location&nbsp;position)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#regionsAt(com.guflimc.brick.math.common.geometry.pos3.Location)" class="member-name-link">regionsAt</a><wbr>(@NotNull com.guflimc.brick.math.common.geometry.pos3.Location&nbsp;position)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#regionsAt(java.util.UUID,com.guflimc.brick.maths.api.geo.pos.Point)" class="member-name-link">regionsAt</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId,
- @NotNull com.guflimc.brick.maths.api.geo.pos.Point&nbsp;position)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#regionsAt(java.util.UUID,com.guflimc.brick.math.common.geometry.pos3.Point3)" class="member-name-link">regionsAt</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId,
+ @NotNull com.guflimc.brick.math.common.geometry.pos3.Point3&nbsp;position)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#register(com.guflimc.brick.regions.api.domain.Region)" class="member-name-link">register</a><wbr>(@NotNull <a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#remove(com.guflimc.brick.regions.api.domain.Region)" class="member-name-link">remove</a><wbr>(@NotNull <a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="selection/Selection.html" title="interface in com.guflimc.brick.regions.api.selection">Selection</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#selection(S)" class="member-name-link">selection</a><wbr>(<a href="RegionManager.html" title="type parameter in RegionManager">S</a>&nbsp;subject)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/TiledRegion.html" title="interface in com.guflimc.brick.regions.api.domain">TiledRegion</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#regionsTiledAt(com.guflimc.brick.math.common.geometry.pos3.Location)" class="member-name-link">regionsTiledAt</a><wbr>(@NotNull com.guflimc.brick.math.common.geometry.pos3.Location&nbsp;location)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setSelection(S,com.guflimc.brick.regions.api.selection.Selection)" class="member-name-link">setSelection</a><wbr>(<a href="RegionManager.html" title="type parameter in RegionManager">S</a>&nbsp;subject,
- @NotNull <a href="selection/Selection.html" title="interface in com.guflimc.brick.regions.api.selection">Selection</a>&nbsp;selection)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#register(com.guflimc.brick.regions.api.domain.Region)" class="member-name-link">register</a><wbr>(@NotNull <a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#remove(com.guflimc.brick.regions.api.domain.Locality)" class="member-name-link">remove</a><wbr>(@NotNull <a href="domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&nbsp;locality)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="selection/Selection.html" title="interface in com.guflimc.brick.regions.api.selection">Selection</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#selection(S)" class="member-name-link">selection</a><wbr>(<a href="RegionManager.html" title="type parameter in RegionManager">S</a>&nbsp;subject)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#unregister(com.guflimc.brick.regions.api.domain.Region)" class="member-name-link">unregister</a><wbr>(@NotNull <a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setSelection(S,com.guflimc.brick.regions.api.selection.Selection)" class="member-name-link">setSelection</a><wbr>(<a href="RegionManager.html" title="type parameter in RegionManager">S</a>&nbsp;subject,
+ @NotNull <a href="selection/Selection.html" title="interface in com.guflimc.brick.regions.api.selection">Selection</a>&nbsp;selection)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#update(com.guflimc.brick.regions.api.domain.Region)" class="member-name-link">update</a><wbr>(@NotNull <a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#unregister(com.guflimc.brick.regions.api.domain.Region)" class="member-name-link">unregister</a><wbr>(@NotNull <a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="domain/WorldRegion.html" title="interface in com.guflimc.brick.regions.api.domain">WorldRegion</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#worldRegion(java.util.UUID)" class="member-name-link">worldRegion</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#update(com.guflimc.brick.regions.api.domain.Locality)" class="member-name-link">update</a><wbr>(@NotNull <a href="domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&nbsp;locality)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="domain/PersistentWorldRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentWorldRegion</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#worldRegion(java.util.UUID)" class="member-name-link">worldRegion</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -239,50 +249,73 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="worldRegion(java.util.UUID)">
 <h3>worldRegion</h3>
-<div class="member-signature"><span class="return-type"><a href="domain/WorldRegion.html" title="interface in com.guflimc.brick.regions.api.domain">WorldRegion</a></span>&nbsp;<span class="element-name">worldRegion</span><wbr><span class="parameters">(@NotNull
+<div class="member-signature"><span class="return-type"><a href="domain/PersistentWorldRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentWorldRegion</a></span>&nbsp;<span class="element-name">worldRegion</span><wbr><span class="parameters">(@NotNull
  @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="intersecting(com.guflimc.brick.maths.api.geo.area.Area)">
+<section class="detail" id="intersecting(com.guflimc.brick.math.common.geometry.shape3d.Shape3)">
 <h3>intersecting</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/AreaRegion.html" title="interface in com.guflimc.brick.regions.api.domain">AreaRegion</a>&gt;</span>&nbsp;<span class="element-name">intersecting</span><wbr><span class="parameters">(com.guflimc.brick.maths.api.geo.area.Area&nbsp;area)</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>&gt;</span>&nbsp;<span class="element-name">intersecting</span><wbr><span class="parameters">(com.guflimc.brick.math.common.geometry.shape3d.Shape3&nbsp;shape)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="intersecting(com.guflimc.brick.regions.api.domain.AreaRegion)">
+<section class="detail" id="intersecting(com.guflimc.brick.regions.api.domain.ShapeRegion)">
 <h3>intersecting</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/AreaRegion.html" title="interface in com.guflimc.brick.regions.api.domain">AreaRegion</a>&gt;</span>&nbsp;<span class="element-name">intersecting</span><wbr><span class="parameters">(<a href="domain/AreaRegion.html" title="interface in com.guflimc.brick.regions.api.domain">AreaRegion</a>&nbsp;region)</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>&gt;</span>&nbsp;<span class="element-name">intersecting</span><wbr><span class="parameters">(<a href="domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>&nbsp;region)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="regionsAt(java.util.UUID,com.guflimc.brick.maths.api.geo.pos.Point)">
+<section class="detail" id="localitiesAt(java.util.UUID,com.guflimc.brick.math.common.geometry.pos3.Point3)">
+<h3>localitiesAt</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&gt;</span>&nbsp;<span class="element-name">localitiesAt</span><wbr><span class="parameters">(@NotNull
+ @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId,
+ @NotNull
+ @NotNull com.guflimc.brick.math.common.geometry.pos3.Point3&nbsp;position)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="localitiesAt(com.guflimc.brick.math.common.geometry.pos3.Location)">
+<h3>localitiesAt</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&gt;</span>&nbsp;<span class="element-name">localitiesAt</span><wbr><span class="parameters">(@NotNull
+ @NotNull com.guflimc.brick.math.common.geometry.pos3.Location&nbsp;position)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="regionsAt(java.util.UUID,com.guflimc.brick.math.common.geometry.pos3.Point3)">
 <h3>regionsAt</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</span>&nbsp;<span class="element-name">regionsAt</span><wbr><span class="parameters">(@NotNull
  @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId,
  @NotNull
- @NotNull com.guflimc.brick.maths.api.geo.pos.Point&nbsp;position)</span></div>
+ @NotNull com.guflimc.brick.math.common.geometry.pos3.Point3&nbsp;position)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="regionsAt(com.guflimc.brick.maths.api.geo.pos.Location)">
+<section class="detail" id="regionsAt(com.guflimc.brick.math.common.geometry.pos3.Location)">
 <h3>regionsAt</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</span>&nbsp;<span class="element-name">regionsAt</span><wbr><span class="parameters">(@NotNull
- @NotNull com.guflimc.brick.maths.api.geo.pos.Location&nbsp;position)</span></div>
+ @NotNull com.guflimc.brick.math.common.geometry.pos3.Location&nbsp;position)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="remove(com.guflimc.brick.regions.api.domain.Region)">
+<section class="detail" id="regionsTiledAt(com.guflimc.brick.math.common.geometry.pos3.Location)">
+<h3>regionsTiledAt</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="domain/TiledRegion.html" title="interface in com.guflimc.brick.regions.api.domain">TiledRegion</a>&gt;</span>&nbsp;<span class="element-name">regionsTiledAt</span><wbr><span class="parameters">(@NotNull
+ @NotNull com.guflimc.brick.math.common.geometry.pos3.Location&nbsp;location)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="remove(com.guflimc.brick.regions.api.domain.Locality)">
 <h3>remove</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(@NotNull
- @NotNull <a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</span></div>
+ @NotNull <a href="domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&nbsp;locality)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="update(com.guflimc.brick.regions.api.domain.Region)">
+<section class="detail" id="update(com.guflimc.brick.regions.api.domain.Locality)">
 <h3>update</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</span>&nbsp;<span class="element-name">update</span><wbr><span class="parameters">(@NotNull
- @NotNull <a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</span></div>
+ @NotNull <a href="domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&nbsp;locality)</span></div>
 </section>
 </li>
 <li>
@@ -300,14 +333,14 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="create(java.lang.String,java.util.UUID,com.guflimc.brick.maths.api.geo.area.Area)">
+<section class="detail" id="create(java.lang.String,java.util.UUID,com.guflimc.brick.math.common.geometry.shape3d.Shape3)">
 <h3>create</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;</span>&nbsp;<span class="element-name">create</span><wbr><span class="parameters">(@NotNull
  @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  @NotNull
  @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;worldId,
  @NotNull
- @NotNull com.guflimc.brick.maths.api.geo.area.Area&nbsp;area)</span></div>
+ @NotNull com.guflimc.brick.math.common.geometry.shape3d.Shape3&nbsp;shape)</span></div>
 </section>
 </li>
 <li>
