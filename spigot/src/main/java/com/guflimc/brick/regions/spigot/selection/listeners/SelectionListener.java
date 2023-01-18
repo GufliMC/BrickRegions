@@ -1,7 +1,7 @@
 package com.guflimc.brick.regions.spigot.selection.listeners;
 
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
-import com.guflimc.brick.maths.api.geo.pos.Vector;
+import com.guflimc.brick.math.common.geometry.pos3.Vector3;
 import com.guflimc.brick.regions.api.selection.CubeSelection;
 import com.guflimc.brick.regions.api.selection.PolySelection;
 import com.guflimc.brick.regions.api.selection.Selection;
@@ -40,17 +40,17 @@ public class SelectionListener implements Listener {
 
         Block b = event.getClickedBlock();
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            addLeftClick(event.getPlayer(), new Vector(b.getX(), b.getY(), b.getZ()));
+            addLeftClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()));
             event.setCancelled(true);
         } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            addRightClick(event.getPlayer(), new Vector(b.getX(), b.getY(), b.getZ()));
+            addRightClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()));
             event.setCancelled(true);
         }
     }
 
     //
 
-    private void addLeftClick(Player player, Vector pos) {
+    private void addLeftClick(Player player, Vector3 pos) {
         Selection selection = getOrCreateSelection(player);
         if (selection instanceof PolySelection ps) {
             ps.add(pos);
@@ -63,7 +63,7 @@ public class SelectionListener implements Listener {
 
     //
 
-    private void addRightClick(Player player, Vector pos) {
+    private void addRightClick(Player player, Vector3 pos) {
         Selection selection = getOrCreateSelection(player);
         if (selection instanceof PolySelection ps) {
             ps.add(pos);

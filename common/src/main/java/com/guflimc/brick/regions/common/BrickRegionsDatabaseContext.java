@@ -1,6 +1,8 @@
 package com.guflimc.brick.regions.common;
 
-import com.guflimc.brick.maths.database.api.AreaConverter;
+import com.guflimc.brick.math.database.Point2Converter;
+import com.guflimc.brick.math.database.Shape2Converter;
+import com.guflimc.brick.math.database.Shape3Converter;
 import com.guflimc.brick.orm.ebean.database.EbeanConfig;
 import com.guflimc.brick.orm.ebean.database.EbeanDatabaseContext;
 import com.guflimc.brick.orm.ebean.database.EbeanMigrations;
@@ -29,15 +31,19 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
     }
 
     private static final Class<?>[] APPLICABLE_CLASSES = new Class[]{
+            DLocality.class,
+            DLocalityAttribute.class,
+            DLocalityProtectionRule.class,
             DRegion.class,
-            DAreaRegion.class,
+            DShapeRegion.class,
+            DTile.class,
             DWorldRegion.class,
-            DRegionAttribute.class,
-            DRegionProtectionRule.class,
 
-            AreaConverter.class,
-            DRegionProtectionRule.RuleTargetConverter.class,
-            DRegionProtectionRule.RuleTypeSetConverter.class,
+            Shape3Converter.class,
+            Shape2Converter.class,
+            Point2Converter.class,
+            DLocalityProtectionRule.RuleTargetConverter.class,
+            DLocalityProtectionRule.RuleTypeSetConverter.class,
             ComponentConverter.class
     };
 

@@ -1,13 +1,13 @@
 package com.guflimc.brick.regions.common.domain;
 
-import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.regions.api.domain.WorldRegion;
-import javax.persistence.*;
+import com.guflimc.brick.math.common.geometry.pos3.Point3;
+import com.guflimc.brick.regions.api.domain.PersistentWorldRegion;
 
+import javax.persistence.Entity;
 import java.util.UUID;
 
 @Entity
-public class DWorldRegion extends DRegion implements WorldRegion {
+public class DWorldRegion extends DRegion implements PersistentWorldRegion {
 
     public DWorldRegion() {
         super();
@@ -19,7 +19,7 @@ public class DWorldRegion extends DRegion implements WorldRegion {
     }
 
     @Override
-    public boolean contains(Point point) {
-        return WorldRegion.super.contains(point);
+    public boolean contains(Point3 point) {
+        return PersistentWorldRegion.super.contains(point);
     }
 }

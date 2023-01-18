@@ -1,18 +1,16 @@
 package com.guflimc.brick.regions.common;
 
-import com.guflimc.brick.maths.api.geo.area.Area;
-import com.guflimc.brick.maths.api.geo.area.PolyArea;
-import com.guflimc.brick.maths.api.geo.pos.Location;
-import com.guflimc.brick.maths.api.geo.pos.Point;
+import com.guflimc.brick.math.common.geometry.pos3.Location;
+import com.guflimc.brick.math.common.geometry.pos3.Point3;
+import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
+import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.RegionManager;
-import com.guflimc.brick.regions.api.domain.AreaRegion;
-import com.guflimc.brick.regions.api.domain.PersistentRegion;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.WorldRegion;
+import com.guflimc.brick.regions.api.domain.*;
 import com.guflimc.brick.regions.api.selection.Selection;
-import com.guflimc.brick.regions.common.domain.DAreaRegion;
 import com.guflimc.brick.regions.common.domain.DRegion;
+import com.guflimc.brick.regions.common.domain.DShapeRegion;
 import com.guflimc.brick.regions.common.domain.DWorldRegion;
+import com.guflimc.brick.regions.common.domain.DLocality;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -25,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     private final Map<P, Selection> selections = new ConcurrentHashMap<>();
-    private final RegionEngine engine = new RegionEngine();
+    private final RegionEngine regionEngine = new RegionEngine();
 
     private final BrickRegionsDatabaseContext databaseContext;
 
@@ -37,8 +35,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         List<DRegion> regions = databaseContext
                 .findAllWhereAsync(DRegion.class, "worldId", worldId).join();
 
-        WorldRegion worldRegion = (WorldRegion) regions.stream()
-                .filter(rg -> rg instanceof WorldRegion)
+        PersistentWorldRegion worldRegion = (PersistentWorldRegion) regions.stream()
+                .filter(rg -> rg instanceof PersistentWorldRegion)
                 .findFirst().orElseGet(() -> {
                     DWorldRegion region = new DWorldRegion(worldId, "__global__");
                     region.setDisplayName(Component.text("Wilderness", NamedTextColor.GREEN));
@@ -48,11 +46,11 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
         regions.remove(worldRegion);
 
-        engine.addContainer(worldId, worldRegion);
-        regions.forEach(engine::add);
+        regionEngine.addContainer(worldId, worldRegion);
+        regions.forEach(regionEngine::add);
     }
 
-    //
+    // SELECTION
 
     @Override
     public void clearSelection(@NotNull P subject) {
@@ -69,21 +67,21 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         selections.put(subject, selection);
     }
 
-    //
+    // REGIONS
 
     @Override
     public Optional<Region> findRegion(@NotNull UUID id) {
-        return engine.findRegion(id);
+        return regionEngine.findRegion(id);
     }
 
     @Override
     public Optional<Region> findRegion(@NotNull UUID worldId, @NotNull String name) {
-        return engine.findRegion(worldId, name);
+        return regionEngine.findRegion(worldId, name);
     }
 
     @Override
     public Collection<Region> regions() {
-        return engine.regions();
+        return regionEngine.regions();
     }
 
     @Override
@@ -95,7 +93,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public Collection<PersistentRegion> persistentRegions() {
-        return engine.regions().stream()
+        return regionEngine.regions().stream()
                 .filter(PersistentRegion.class::isInstance)
                 .map(PersistentRegion.class::cast)
                 .toList();
@@ -109,49 +107,79 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public WorldRegion worldRegion(@NotNull UUID worldId) {
-        return engine.worldRegion(worldId);
+    public PersistentWorldRegion worldRegion(@NotNull UUID worldId) {
+        return regionEngine.worldRegion(worldId);
     }
 
     @Override
-    public Collection<AreaRegion> intersecting(Area area) {
+    public Collection<ShapeRegion> intersecting(Shape3 shape) {
         return regions().stream()
-                .filter(rg -> rg instanceof AreaRegion)
-                .map(rg -> (AreaRegion) rg)
-                .filter(rg -> area.intersects(rg.area()))
+                .filter(rg -> rg instanceof ShapeRegion)
+                .map(rg -> (ShapeRegion) rg)
+                .filter(rg -> shape.intersects(rg.shape()))
                 .toList();
     }
 
     @Override
-    public Collection<AreaRegion> intersecting(AreaRegion region) {
-        return intersecting(region.area());
+    public Collection<ShapeRegion> intersecting(ShapeRegion region) {
+        return intersecting(region.shape());
     }
 
     @Override
-    public Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point position) {
-        return engine.regionsAt(new Location(worldId, position));
+    public Collection<Locality> localitiesAt(@NotNull UUID worldId, @NotNull Point3 position) {
+        return localitiesAt(new Location(worldId, position));
     }
 
     @Override
-    public Collection<Region> regionsAt(@NotNull Location point) {
-        return engine.regionsAt(point);
+    public Collection<Locality> localitiesAt(@NotNull Location point) {
+        Collection<Region> regions = regionsAt(point);
+        List<Locality> localities = new ArrayList<>(regions);
+
+        // include tiles
+        regions.stream().filter(TiledRegion.class::isInstance)
+                .map(TiledRegion.class::cast)
+                .map(rg -> rg.tileAt(point))
+                .forEach(localities::add);
+
+        return localities;
     }
 
     @Override
-    public CompletableFuture<Void> remove(@NotNull Region region) {
-        if (!(region instanceof DRegion)) {
-            throw new IllegalArgumentException("Only persistent regions can be removed.");
+    public Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point3 position) {
+        return regionsAt(new Location(worldId, position));
+    }
+
+    @Override
+    public Collection<Region> regionsAt(@NotNull Location position) {
+        return regionEngine.regionsAt(position);
+    }
+
+    @Override
+    public Collection<TiledRegion> regionsTiledAt(@NotNull Location location) {
+        return regionsAt(location).stream()
+                .filter(TiledRegion.class::isInstance)
+                .map(TiledRegion.class::cast)
+                .filter(rg -> !rg.tiles().isEmpty())
+                .toList();
+    }
+
+    @Override
+    public CompletableFuture<Void> remove(@NotNull Locality locality) {
+        if (!(locality instanceof DLocality)) {
+            throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
         }
-        engine.remove(region);
-        return databaseContext.removeAsync(region);
+        if (locality instanceof DRegion region) {
+            regionEngine.remove(region);
+        }
+        return databaseContext.removeAsync(locality);
     }
 
     @Override
-    public CompletableFuture<Void> update(@NotNull Region region) {
-        if (!(region instanceof DRegion dr)) {
-            throw new IllegalArgumentException("Only persistent regions can be saved.");
+    public CompletableFuture<Void> update(@NotNull Locality locality) {
+        if (!(locality instanceof DLocality)) {
+            throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
         }
-        return databaseContext.persistAsync(region);
+        return databaseContext.persistAsync(locality);
     }
 
     @Override
@@ -159,11 +187,11 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         if (region instanceof DRegion) {
             throw new IllegalArgumentException("Only transient regions can be registered.");
         }
-        if ( engine.findRegion(region.id()).isPresent() ) {
+        if (regionEngine.findRegion(region.id()).isPresent()) {
             return;
         }
 
-        engine.add(region);
+        regionEngine.add(region);
     }
 
     @Override
@@ -172,26 +200,26 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
             throw new IllegalArgumentException("Only transient regions can be unregistered.");
         }
 
-        engine.remove(region);
+        regionEngine.remove(region);
     }
 
     //
 
     @Override
-    public CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Area area) {
-        if (area instanceof PolyArea pa && !pa.isConvex()) {
-            throw new IllegalArgumentException("A polygon area must be convex.");
+    public CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Shape3 shape) {
+        if (shape instanceof PolyPrism pa && !pa.polygon().isConvex()) {
+            throw new IllegalArgumentException("A polygon must be convex.");
         }
-        DAreaRegion region = new DAreaRegion(worldId, name, area);
+        DShapeRegion region = new DShapeRegion(worldId, name, shape);
         return databaseContext.persistAsync(region).thenApply((n) -> {
-            engine.add(region);
+            regionEngine.add(region);
             return region;
         });
     }
 
     @Override
     public CompletableFuture<Region> create(@NotNull String name, @NotNull Selection selection) {
-        return create(name, selection.worldId(), selection.area());
+        return create(name, selection.worldId(), selection.shape());
     }
 
 }

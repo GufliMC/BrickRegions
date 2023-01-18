@@ -18,7 +18,7 @@ dependencies {
     api 'com.guflimc.brick.orm:ebean:+'
 //    annotationProcessor 'io.ebean:querybean-generator:12.+'
 
-    api 'com.guflimc.brick.maths:database-converters:+'
+    api 'com.guflimc.brick.math:database:+'
     api 'com.guflimc.brick.orm:jpa-converters:+'
 
     api 'cloud.commandframework:cloud-core:+'

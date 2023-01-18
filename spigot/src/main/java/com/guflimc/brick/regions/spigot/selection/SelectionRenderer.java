@@ -1,11 +1,10 @@
 package com.guflimc.brick.regions.spigot.selection;
 
-import com.guflimc.brick.maths.api.geo.area.Contour;
-import com.guflimc.brick.maths.api.geo.pos.Vector2;
+import com.guflimc.brick.math.common.geometry.pos2.Vector2;
+import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.spigot.SpigotBrickRegions;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -53,14 +52,14 @@ public class SelectionRenderer {
         double minY = sel.minY();
         double maxY = sel.maxY();
 
-        if ( minY < player.getLocation().getY() - 15 ) {
+        if (minY < player.getLocation().getY() - 15) {
             minY = player.getLocation().getY() - 15;
         }
-        if ( maxY > player.getLocation().getY() + 15 ) {
+        if (maxY > player.getLocation().getY() + 15) {
             maxY = player.getLocation().getY() + 15;
         }
 
-        Contour contour = sel.area().contour();
+        Shape2 contour = sel.shape().contour();
 
         // borders
         Vector2 from = contour.vertices().get(0);
@@ -119,7 +118,7 @@ public class SelectionRenderer {
     private void sendParticle(Player player, Location location) {
         Vector diff = location.clone().subtract(player.getLocation()).toVector();
         double angle = player.getEyeLocation().getDirection().angle(diff);
-        if ( angle < 1.2 ) {
+        if (angle < 1.2) {
             player.spawnParticle(Particle.FLAME,
                     location, 1, 0, 0, 0, 0);
         }

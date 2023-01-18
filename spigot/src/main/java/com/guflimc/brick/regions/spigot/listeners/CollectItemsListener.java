@@ -1,9 +1,10 @@
 package com.guflimc.brick.regions.spigot.listeners;
 
-import com.guflimc.brick.maths.spigot.api.SpigotMaths;
+import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.RegionAPI;
+import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsCollectItemEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesCollectItemEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -18,12 +19,12 @@ import java.util.Collection;
 public class CollectItemsListener implements Listener {
 
     private void collectItem(Player player, Item entity, Cancellable e) {
-        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMaths.toBrickLocation(entity.getLocation()));
+        Collection<Locality> regions = RegionAPI.get().localitiesAt(SpigotMath.toBrickLocation(entity.getLocation()));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerRegionsCollectItemEvent event = new PlayerRegionsCollectItemEvent(player, regions, entity);
+        PlayerLocalitiesCollectItemEvent event = new PlayerLocalitiesCollectItemEvent(player, regions, entity);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }

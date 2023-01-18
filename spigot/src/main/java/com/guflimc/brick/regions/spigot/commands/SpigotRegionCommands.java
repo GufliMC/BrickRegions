@@ -5,11 +5,16 @@ import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
-import com.guflimc.brick.maths.api.geo.area.Area;
-import com.guflimc.brick.maths.api.geo.area.PolyArea;
+import com.guflimc.brick.math.common.geometry.pos3.Location;
+import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
+import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
+import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.Tile;
+import com.guflimc.brick.regions.api.domain.TiledRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
+import com.guflimc.brick.regions.common.domain.DShapeRegion;
 import com.guflimc.brick.regions.spigot.SpigotBrickRegions;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import net.kyori.adventure.audience.Audience;
@@ -17,6 +22,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.Objects;
 
 //@CommandContainer
@@ -71,13 +77,13 @@ public class SpigotRegionCommands {
         }
 
         Selection selection = SpigotRegionAPI.get().selection(sender).orElse(null);
-        if ( selection == null ) {
+        if (selection == null) {
             SpigotI18nAPI.get(this).send(sender, "cmd.select.invalid");
             return;
         }
 
-        Area area = selection.area();
-        if ( area instanceof PolyArea pa && !pa.isConvex() ) {
+        Shape3 shape = selection.shape();
+        if (shape instanceof PolyPrism pa && !pa.polygon().isConvex()) {
             SpigotI18nAPI.get(this).send(sender, "cmd.region.create.error.poly-invalid");
             return;
         }

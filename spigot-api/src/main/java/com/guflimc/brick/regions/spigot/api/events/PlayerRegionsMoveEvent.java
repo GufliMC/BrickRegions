@@ -1,6 +1,6 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
-import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.Locality;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -12,13 +12,13 @@ public class PlayerRegionsMoveEvent extends Event {
 
     private final Player player;
 
-    private final Collection<Region> from;
-    private final Collection<Region> to;
+    private final Collection<Locality> from;
+    private final Collection<Locality> to;
 
-    private final Collection<Region> uniqueFrom;
-    private final Collection<Region> uniqueTo;
+    private final Collection<Locality> uniqueFrom;
+    private final Collection<Locality> uniqueTo;
 
-    public PlayerRegionsMoveEvent(Player player, Collection<Region> from, Collection<Region> to, Collection<Region> uniqueFrom, Collection<Region> uniqueTo) {
+    public PlayerRegionsMoveEvent(Player player, Collection<Locality> from, Collection<Locality> to, Collection<Locality> uniqueFrom, Collection<Locality> uniqueTo) {
         super(true);
         this.player = player;
         this.from = from;
@@ -31,19 +31,19 @@ public class PlayerRegionsMoveEvent extends Event {
         return player;
     }
 
-    public Collection<Region> from() {
+    public Collection<Locality> from() {
         return from;
     }
 
-    public Collection<Region> to() {
+    public Collection<Locality> to() {
         return to;
     }
 
-    public Collection<Region> uniqueFrom() {
+    public Collection<Locality> uniqueFrom() {
         return uniqueFrom;
     }
 
-    public Collection<Region> uniqueTo() {
+    public Collection<Locality> uniqueTo() {
         return uniqueTo;
     }
 

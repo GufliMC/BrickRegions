@@ -2,7 +2,6 @@ package com.guflimc.brick.regions.spigot.listeners;
 
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.spigot.SpigotBrickRegions;
-import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsMoveEvent;
 import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsTitlesEvent;
 import net.kyori.adventure.audience.Audience;
@@ -13,13 +12,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 
 public class PlayerMoveTitlesListener implements Listener {
 
@@ -37,7 +34,9 @@ public class PlayerMoveTitlesListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerRegionsMoveEvent event) {
-        handle(event.player(), event.from(), event.to());
+        handle(event.player(),
+                event.from().stream().filter(Region.class::isInstance).map(Region.class::cast).toList(),
+                event.to().stream().filter(Region.class::isInstance).map(Region.class::cast).toList());
     }
 
 //    @EventHandler
@@ -60,24 +59,24 @@ public class PlayerMoveTitlesListener implements Listener {
                 .max(Comparator.comparingInt(Region::priority))
                 .map(Region::displayName).orElse(null);
 
-        if ( titleTo != null && titleTo.equals(titleFrom) ) {
+        if (titleTo != null && titleTo.equals(titleFrom)) {
             titleTo = null;
         }
 
         PlayerRegionsTitlesEvent e = new PlayerRegionsTitlesEvent(player, from, to, titleTo, null);
         Bukkit.getServer().getPluginManager().callEvent(e);
 
-        if ( e.title() == null && e.subtitle() == null ) {
+        if (e.title() == null && e.subtitle() == null) {
             return;
         }
 
         Audience audience = plugin.adventure.player(player);
-        if ( e.title() != null ) {
+        if (e.title() != null) {
             audience.sendTitlePart(TitlePart.TITLE, e.title());
         } else {
             audience.sendTitlePart(TitlePart.TITLE, Component.empty());
         }
-        if (e.subtitle() != null ) {
+        if (e.subtitle() != null) {
             audience.sendTitlePart(TitlePart.SUBTITLE, e.subtitle());
         } else {
             audience.sendTitlePart(TitlePart.SUBTITLE, Component.empty());

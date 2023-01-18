@@ -1,51 +1,50 @@
 package com.guflimc.brick.regions.api.selection;
 
-import com.guflimc.brick.maths.api.geo.area.Area;
-import com.guflimc.brick.maths.api.geo.area.Contour;
-import com.guflimc.brick.maths.api.geo.area.CuboidArea;
-import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.maths.api.geo.pos.Vector;
+import com.guflimc.brick.math.common.geometry.pos3.Point3;
+import com.guflimc.brick.math.common.geometry.pos3.Vector3;
+import com.guflimc.brick.math.common.geometry.shape3d.RectPrism;
+import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 
 import java.util.UUID;
 
 public class CubeSelection extends AbstractSelection {
 
     // is not the same as min/max: pos2 can have a lower x, y and/or z value than pos1
-    private Vector pos1;
-    private Vector pos2;
+    private Vector3 pos1;
+    private Vector3 pos2;
 
     public CubeSelection(UUID worldId) {
         super(worldId);
     }
 
-    public Vector pos1() {
+    public Vector3 pos1() {
         return pos1;
     }
 
-    public Vector pos2() {
+    public Vector3 pos2() {
         return pos2;
     }
 
-    public void setPos1(Point pos1) {
-        Vector oldPos = this.pos1;
+    public void setPos1(Point3 pos1) {
+        Vector3 oldPos = this.pos1;
         Runnable oldUndo = undo;
         this.undo = () -> {
             this.pos1 = oldPos;
             this.undo = oldUndo;
         };
 
-        this.pos1 = Vector.of(pos1);
+        this.pos1 = Vector3.of(pos1);
     }
 
-    public void setPos2(Point pos2) {
-        Vector oldPos = this.pos2;
+    public void setPos2(Point3 pos2) {
+        Vector3 oldPos = this.pos2;
         Runnable oldUndo = undo;
         this.undo = () -> {
             this.pos2 = oldPos;
             this.undo = oldUndo;
         };
 
-        this.pos2 = Vector.of(pos2);
+        this.pos2 = Vector3.of(pos2);
     }
 
     @Override
@@ -65,8 +64,8 @@ public class CubeSelection extends AbstractSelection {
 
     @Override
     public void expandY() {
-        Vector oldPos1 = this.pos1;
-        Vector oldPos2 = this.pos2;
+        Vector3 oldPos1 = this.pos1;
+        Vector3 oldPos2 = this.pos2;
         Runnable oldUndo = undo;
         this.undo = () -> {
             this.pos1 = oldPos1;
@@ -74,12 +73,12 @@ public class CubeSelection extends AbstractSelection {
             this.undo = oldUndo;
         };
 
-        pos1 = new Vector(pos1.x(), -64, pos1.z());
-        pos2 = new Vector(pos2.x(), 319, pos2.z());
+        pos1 = new Vector3(pos1.x(), -64, pos1.z());
+        pos2 = new Vector3(pos2.x(), 319, pos2.z());
     }
 
     @Override
-    public Area area() {
-        return CuboidArea.of(pos1, pos2);
+    public Shape3 shape() {
+        return RectPrism.of(pos1, pos2);
     }
 }

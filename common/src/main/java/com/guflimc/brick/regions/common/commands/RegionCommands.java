@@ -6,19 +6,22 @@ import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.specifier.Greedy;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.RegionAPI;
+import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
 import com.guflimc.brick.regions.api.domain.PersistentRegion;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.RegionProtectionRule;
-import com.guflimc.brick.regions.api.domain.WorldRegion;
+import com.guflimc.brick.regions.api.domain.PersistentWorldRegion;
+import com.guflimc.brick.regions.api.domain.TiledRegion;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.common.domain.DShapeRegion;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 //@CommandContainer
 public class RegionCommands {
@@ -26,7 +29,7 @@ public class RegionCommands {
     @CommandMethod("br delete <region>")
     @CommandPermission("brick.regions.delete")
     public void delete(Audience sender, @Argument("region") PersistentRegion region) {
-        if ( region instanceof WorldRegion ) {
+        if (region instanceof PersistentWorldRegion) {
             I18nAPI.get(this).send(sender, "cmd.region.delete.error.global");
         }
 
@@ -45,15 +48,15 @@ public class RegionCommands {
     @CommandMethod("br rules list <region>")
     @CommandPermission("brick.regions.rules.list")
     public void rulesList(Audience sender, @Argument("region") PersistentRegion region) {
-        List<RegionProtectionRule> rules = region.rules();
-        if ( rules.isEmpty() ) {
+        List<LocalityProtectionRule> rules = region.rules();
+        if (rules.isEmpty()) {
             I18nAPI.get(this).send(sender, "cmd.region.rules.list.error.empty", region.name());
             return;
         }
 
         List<Component> result = new ArrayList<>();
         for (int i = 0; i < rules.size(); i++) {
-            RegionProtectionRule rule = rules.get(i);
+            LocalityProtectionRule rule = rules.get(i);
             result.add(I18nAPI.get(this).translate(sender, "cmd.region.rules.list.format", (i + 1), rule));
         }
 
@@ -68,13 +71,13 @@ public class RegionCommands {
                          @Argument("status") RuleStatus status,
                          @Argument("target") RuleTarget target,
                          @Argument("type") RuleType type) {
-        RegionProtectionRule rule = region.rules().stream()
+        LocalityProtectionRule rule = region.rules().stream()
                 .filter(r -> r.status().equals(status))
                 .filter(r -> r.target().equals(target))
                 .filter(r -> Arrays.asList(r.types()).contains(type))
                 .findFirst().orElse(null);
 
-        if ( rule != null ) {
+        if (rule != null) {
             I18nAPI.get(this).send(sender, "cmd.region.rules.add.error.exists");
             return;
         }
@@ -90,12 +93,12 @@ public class RegionCommands {
     public void rulesRemove(Audience sender,
                             @Argument("region") PersistentRegion region,
                             @Argument("index") int index) {
-        if ( region.rules().size() < index || index < 1 ) {
+        if (region.rules().size() < index || index < 1) {
             I18nAPI.get(this).send(sender, "cmd.region.rules.remove.error.index");
             return;
         }
 
-        RegionProtectionRule rule = region.rules().get(index-1);
+        LocalityProtectionRule rule = region.rules().get(index - 1);
         region.removeRule(rule);
         RegionAPI.get().update(region);
 
@@ -105,7 +108,7 @@ public class RegionCommands {
     @CommandMethod("br rules clear <region>")
     @CommandPermission("brick.regions.rules.clear")
     public void rulesClear(Audience sender,
-                            @Argument("region") PersistentRegion region) {
+                           @Argument("region") PersistentRegion region) {
 
         region.clearRules();
         RegionAPI.get().update(region);
@@ -113,5 +116,21 @@ public class RegionCommands {
         I18nAPI.get(this).send(sender, "cmd.region.rules.clear", region.name());
     }
 
+    @CommandMethod("br tile <region> <radius>")
+    @CommandPermission("brick.regions.tile")
+    public void tile(Audience sender,
+                           @Argument("region") PersistentRegion region,
+                           @Argument("radius") int radius) {
+
+        if ( !(region instanceof DShapeRegion sr) ) {
+            // TODO message
+            return;
+        }
+
+        sr.generateTiles(radius);
+        RegionAPI.get().update(sr);
+
+        I18nAPI.get(this).send(sender, "cmd.region.tile", region.name(), sr.tiles().size());
+    }
 
 }

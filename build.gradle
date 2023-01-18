@@ -12,7 +12,7 @@ ext.set("javadocProjects", javadocProjects)
 def publishProjects = [project(':api'), project(':spigot-api')]
 ext.set("publishProjects", publishProjects)
 
-def shadowProjects = [project(':spigot')]
+def shadowProjects = [project(':spigot'), project(':squaremap')]
 ext.set("shadowProjects", shadowProjects)
 
 subprojects {
@@ -30,6 +30,6 @@ apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-shadow.gradle'
 apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-publish.gradle'
 
 if ( System.getProperty("os.name").toLowerCase().contains("windows") ) {
-    ext.set("shadowCopy", [(project(':spigot')): 'D:/Documents/testservers/1.19 - cob/plugins'])
+    ext.set("shadowCopy", [(project(':spigot')): 'D:/Documents/testservers/1.19/plugins', (project(':squaremap')): 'D:/Documents/testservers/1.19/plugins'])
     apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-shadow-copy.gradle'
 }

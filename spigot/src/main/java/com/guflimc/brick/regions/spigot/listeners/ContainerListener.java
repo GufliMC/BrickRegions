@@ -1,9 +1,10 @@
 package com.guflimc.brick.regions.spigot.listeners;
 
-import com.guflimc.brick.maths.spigot.api.SpigotMaths;
+import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.RegionAPI;
+import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsContainerOpenEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesContainerOpenEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,12 +28,12 @@ import java.util.Collection;
 public class ContainerListener implements Listener {
 
     private void containerOpen(Player player, Location loc, Inventory inventory, Cancellable e) {
-        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMaths.toBrickLocation(loc));
+        Collection<Locality> regions = RegionAPI.get().localitiesAt(SpigotMath.toBrickLocation(loc));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerRegionsContainerOpenEvent event = new PlayerRegionsContainerOpenEvent(player, regions, inventory);
+        PlayerLocalitiesContainerOpenEvent event = new PlayerLocalitiesContainerOpenEvent(player, regions, inventory);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }

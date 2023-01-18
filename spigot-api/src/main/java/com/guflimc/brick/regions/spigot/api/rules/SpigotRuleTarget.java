@@ -1,5 +1,6 @@
 package com.guflimc.brick.regions.spigot.api.rules;
 
+import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import org.bukkit.GameMode;
@@ -19,7 +20,7 @@ public class SpigotRuleTarget extends RuleTarget<Player> {
 
     //
 
-    public SpigotRuleTarget(String name, BiPredicate<Player, Region> predicate) {
+    public SpigotRuleTarget(String name, BiPredicate<Player, Locality> predicate) {
         super(name, Player.class, predicate);
     }
 

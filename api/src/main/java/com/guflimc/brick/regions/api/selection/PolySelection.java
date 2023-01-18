@@ -1,10 +1,11 @@
 package com.guflimc.brick.regions.api.selection;
 
-import com.guflimc.brick.maths.api.geo.area.Area;
-import com.guflimc.brick.maths.api.geo.area.Contour;
-import com.guflimc.brick.maths.api.geo.area.PolyArea;
-import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.maths.api.geo.pos.Vector2;
+
+import com.guflimc.brick.math.common.geometry.pos2.Vector2;
+import com.guflimc.brick.math.common.geometry.pos3.Point3;
+import com.guflimc.brick.math.common.geometry.shape2d.Polygon;
+import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
+import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 public class PolySelection extends AbstractSelection {
 
-    private final List<Vector2> points = new ArrayList<>();
+    private final List<Vector2> vertices = new ArrayList<>();
     private double minY = Double.POSITIVE_INFINITY;
     private double maxY = Double.NEGATIVE_INFINITY;
 
@@ -21,21 +22,21 @@ public class PolySelection extends AbstractSelection {
     }
 
     public int size() {
-        return points.size();
+        return vertices.size();
     }
 
-    public void add(Point point) {
+    public void add(Point3 point) {
         double oldMinY = minY;
         double oldMaxY = maxY;
         Runnable oldUndo = undo;
         undo = () -> {
             this.minY = oldMinY;
             this.maxY = oldMaxY;
-            points.remove(points.size() - 1);
+            vertices.remove(vertices.size() - 1);
             this.undo = oldUndo;
         };
 
-        points.add(new Vector2(point.x(), point.z()));
+        vertices.add(new Vector2(point.x(), point.z()));
 
         if (point.y() < minY) {
             minY = point.y();
@@ -46,12 +47,12 @@ public class PolySelection extends AbstractSelection {
     }
 
     public List<Vector2> points() {
-        return points;
+        return vertices;
     }
 
     @Override
     public boolean isValid() {
-        return points.size() >= 3;
+        return vertices.size() >= 3;
     }
 
     @Override
@@ -80,11 +81,11 @@ public class PolySelection extends AbstractSelection {
     }
 
     @Override
-    public Area area() {
+    public Shape3 shape() {
         if ( !isValid() ) {
             throw new IllegalStateException("PolySelection is not valid yet.");
         }
-        return new PolyArea(minY, maxY, points);
+        return new PolyPrism(minY, maxY, new Polygon(vertices));
     }
 
 }

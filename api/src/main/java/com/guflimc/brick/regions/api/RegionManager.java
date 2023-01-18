@@ -1,12 +1,9 @@
 package com.guflimc.brick.regions.api;
 
-import com.guflimc.brick.maths.api.geo.area.Area;
-import com.guflimc.brick.maths.api.geo.pos.Location;
-import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.regions.api.domain.AreaRegion;
-import com.guflimc.brick.regions.api.domain.PersistentRegion;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.WorldRegion;
+import com.guflimc.brick.math.common.geometry.pos3.Location;
+import com.guflimc.brick.math.common.geometry.pos3.Point3;
+import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
+import com.guflimc.brick.regions.api.domain.*;
 import com.guflimc.brick.regions.api.selection.Selection;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface RegionManager<S> {
 
-    //
+    // SELECTION
 
     void clearSelection(@NotNull S subject);
 
@@ -25,7 +22,7 @@ public interface RegionManager<S> {
 
     void setSelection(@NotNull S subject, @NotNull Selection selection);
 
-    //
+    // REGIONS
 
     Optional<Region> findRegion(@NotNull UUID id);
 
@@ -39,19 +36,25 @@ public interface RegionManager<S> {
 
     Collection<PersistentRegion> persistentRegions(@NotNull UUID worldId);
 
-    WorldRegion worldRegion(@NotNull UUID worldId);
+    PersistentWorldRegion worldRegion(@NotNull UUID worldId);
 
-    Collection<AreaRegion> intersecting(Area area);
+    Collection<ShapeRegion> intersecting(Shape3 shape);
 
-    Collection<AreaRegion> intersecting(AreaRegion region);
+    Collection<ShapeRegion> intersecting(ShapeRegion region);
 
-    Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point position);
+    Collection<Locality> localitiesAt(@NotNull UUID worldId, @NotNull Point3 position);
+
+    Collection<Locality> localitiesAt(@NotNull Location position);
+
+    Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point3 position);
 
     Collection<Region> regionsAt(@NotNull Location position);
 
-    CompletableFuture<Void> remove(@NotNull Region region);
+    Collection<TiledRegion> regionsTiledAt(@NotNull Location location);
 
-    CompletableFuture<Void> update(@NotNull Region region);
+    CompletableFuture<Void> remove(@NotNull Locality locality);
+
+    CompletableFuture<Void> update(@NotNull Locality locality);
 
     void register(@NotNull Region region);
 
@@ -59,7 +62,7 @@ public interface RegionManager<S> {
 
     //
 
-    CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Area area);
+    CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Shape3 shape);
 
     CompletableFuture<Region> create(@NotNull String name, @NotNull Selection selection);
 

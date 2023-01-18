@@ -1,7 +1,8 @@
 package com.guflimc.brick.regions.spigot;
 
-import com.guflimc.brick.maths.api.geo.area.Area;
-import com.guflimc.brick.maths.spigot.api.SpigotMaths;
+import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
+import com.guflimc.brick.math.spigot.SpigotMath;
+import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.common.AbstractRegionManager;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
@@ -12,7 +13,6 @@ import com.guflimc.brick.regions.spigot.api.events.RegionDeleteEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,23 +25,25 @@ public class SpigotBrickRegionManager extends AbstractRegionManager<Player> impl
     protected SpigotBrickRegionManager(BrickRegionsDatabaseContext databaseContext) {
         super(databaseContext);
 
-        for ( World world : Bukkit.getWorlds() ) {
-           loadWorld(world.getUID());
+        for (World world : Bukkit.getWorlds()) {
+            loadWorld(world.getUID());
         }
     }
 
     @Override
-    public CompletableFuture<Void> remove(@NotNull Region region) {
-        if ( region instanceof DWorldRegion) {
+    public CompletableFuture<Void> remove(@NotNull Locality locality) {
+        if (locality instanceof DWorldRegion) {
             throw new IllegalArgumentException("Cannot delete the global region.");
         }
-        Bukkit.getServer().getPluginManager().callEvent(new RegionDeleteEvent(region, !Bukkit.isPrimaryThread()));
-        return super.remove(region);
+        if (locality instanceof Region region) {
+            Bukkit.getServer().getPluginManager().callEvent(new RegionDeleteEvent(region, !Bukkit.isPrimaryThread()));
+        }
+        return super.remove(locality);
     }
 
     @Override
-    public CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Area area) {
-        return super.create(name, worldId, area).thenApply(rg -> {
+    public CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Shape3 shape) {
+        return super.create(name, worldId, shape).thenApply(rg -> {
             Bukkit.getServer().getPluginManager().callEvent(new RegionCreateEvent(rg));
             return rg;
         });
@@ -50,8 +52,13 @@ public class SpigotBrickRegionManager extends AbstractRegionManager<Player> impl
     //
 
     @Override
+    public Collection<Locality> localitiesAt(@NotNull Location position) {
+        return localitiesAt(SpigotMath.toBrickLocation(position));
+    }
+
+    @Override
     public Collection<Region> regionsAt(@NotNull Location position) {
-        return regionsAt(SpigotMaths.toBrickLocation(position));
+        return regionsAt(SpigotMath.toBrickLocation(position));
     }
 
     @Override

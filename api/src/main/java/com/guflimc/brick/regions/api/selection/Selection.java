@@ -1,7 +1,6 @@
 package com.guflimc.brick.regions.api.selection;
 
-import com.guflimc.brick.maths.api.geo.area.Area;
-import com.guflimc.brick.maths.api.geo.area.Contour;
+import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 
 import java.util.UUID;
 
@@ -19,6 +18,6 @@ public interface Selection {
 
     void undo();
 
-    Area area();
+    Shape3 shape();
 
 }

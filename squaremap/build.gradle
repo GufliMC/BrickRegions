@@ -1,0 +1,38 @@
+import java.util.jar.JarFile
+
+plugins {
+    id 'net.minecrell.plugin-yml.bukkit' version '0.5.1'
+}
+
+repositories {
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url 'https://jitpack.io' }
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly project(':spigot-api')
+
+    // provided by platform
+    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
+    compileOnly 'org.slf4j:slf4j-api:1.7.36'
+
+    compileOnly 'xyz.jpenilla:squaremap-api:+'
+}
+
+bukkit {
+    name = rootProject.name + "Squaremap"
+    main = project.group + '.squaremap.BrickRegionsSquaremap'
+    description = 'Render regions in squaremap'
+    author = 'GufliMC'
+    website = 'https://github.com/GufliMC/BrickRegions'
+    apiVersion = '1.13'
+    depend = ["BrickRegions", "squaremap"]
+}
+
+// I want it nice like that
+generateBukkitPluginDescription.group = "minecraft"
+
+// relocate libs in shadow jar
+ext.set("excludeRelocation", ['io.ebean', 'org.slf4j', 'com.guflimc.brick.maths'])
+//apply from: 'https://guflimc.github.io/scripts/gradle/shadow-relocate.gradle'

@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    api 'com.guflimc.brick.maths:api:+'
+    api 'com.guflimc.brick.math:common:+'
     api 'com.guflimc.brick.orm:api:+'
     api 'net.kyori:adventure-api:4.+'
 }

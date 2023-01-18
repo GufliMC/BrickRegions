@@ -1,8 +1,6 @@
 package com.guflimc.brick.regions.spigot.benchmark;
 
-import com.guflimc.brick.maths.api.geo.pos.Point;
-import com.guflimc.brick.maths.spigot.api.SpigotMaths;
-import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsBlockBreakEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesBlockBreakEvent;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,18 +29,18 @@ public class Benchmark implements Listener {
     //
 
     public void start() {
-        if ( running ) return;
+        if (running) return;
         running = true;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     public void stop() {
-        if ( !running ) return;
+        if (!running) return;
         running = false;
 
         HandlerList.unregisterAll(this);
 
-        if ( samples.size() < 20 ) {
+        if (samples.size() < 20) {
             plugin.getLogger().info("Benchmark: not enough samples, please break a lot of blocks while benchmarking.");
             return;
         }
@@ -71,8 +69,8 @@ public class Benchmark implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onBreak(PlayerRegionsBlockBreakEvent event) {
-        if ( timestamps.containsKey(event.block()) ) {
+    public void onBreak(PlayerLocalitiesBlockBreakEvent event) {
+        if (timestamps.containsKey(event.block())) {
             samples.add(System.nanoTime() - timestamps.remove(event.block()));
         }
     }
