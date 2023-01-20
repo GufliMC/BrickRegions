@@ -92,8 +92,14 @@ extends <a href="Region.html" title="interface in com.guflimc.brick.regions.api.
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain">Tile</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#tileAt(com.guflimc.brick.math.common.geometry.pos3.Point3)" class="member-name-link">tileAt</a><wbr>(com.guflimc.brick.math.common.geometry.pos3.Point3&nbsp;point)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain">Tile</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#findTile(java.util.UUID)" class="member-name-link">findTile</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;id)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain">Tile</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#tileAt(com.guflimc.brick.math.common.geometry.pos2.Point2)" class="member-name-link">tileAt</a><wbr>(@NotNull com.guflimc.brick.math.common.geometry.pos2.Point2&nbsp;point)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain">Tile</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#tileAt(com.guflimc.brick.math.common.geometry.pos3.Point3)" class="member-name-link">tileAt</a><wbr>(@NotNull com.guflimc.brick.math.common.geometry.pos3.Point3&nbsp;point)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain">Tile</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#tiles()" class="member-name-link">tiles</a>()</code></div>
@@ -121,7 +127,22 @@ extends <a href="Region.html" title="interface in com.guflimc.brick.regions.api.
 <li>
 <section class="detail" id="tileAt(com.guflimc.brick.math.common.geometry.pos3.Point3)">
 <h3>tileAt</h3>
-<div class="member-signature"><span class="return-type"><a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain">Tile</a></span>&nbsp;<span class="element-name">tileAt</span><wbr><span class="parameters">(com.guflimc.brick.math.common.geometry.pos3.Point3&nbsp;point)</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain">Tile</a>&gt;</span>&nbsp;<span class="element-name">tileAt</span><wbr><span class="parameters">(@NotNull
+ @NotNull com.guflimc.brick.math.common.geometry.pos3.Point3&nbsp;point)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="tileAt(com.guflimc.brick.math.common.geometry.pos2.Point2)">
+<h3>tileAt</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain">Tile</a>&gt;</span>&nbsp;<span class="element-name">tileAt</span><wbr><span class="parameters">(@NotNull
+ @NotNull com.guflimc.brick.math.common.geometry.pos2.Point2&nbsp;point)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="findTile(java.util.UUID)">
+<h3>findTile</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain">Tile</a>&gt;</span>&nbsp;<span class="element-name">findTile</span><wbr><span class="parameters">(@NotNull
+ @NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;id)</span></div>
 </section>
 </li>
 <li>
