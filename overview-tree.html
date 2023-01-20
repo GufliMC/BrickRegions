@@ -52,6 +52,7 @@ loadScripts(document, 'script');</script>
 <ul class="horizontal">
 <li><a href="com/guflimc/brick/regions/api/package-tree.html">com.guflimc.brick.regions.api</a>, </li>
 <li><a href="com/guflimc/brick/regions/api/domain/package-tree.html">com.guflimc.brick.regions.api.domain</a>, </li>
+<li><a href="com/guflimc/brick/regions/api/domain/modifiable/package-tree.html">com.guflimc.brick.regions.api.domain.modifiable</a>, </li>
 <li><a href="com/guflimc/brick/regions/api/rules/package-tree.html">com.guflimc.brick.regions.api.rules</a>, </li>
 <li><a href="com/guflimc/brick/regions/api/selection/package-tree.html">com.guflimc.brick.regions.api.selection</a>, </li>
 <li><a href="com/guflimc/brick/regions/spigot/api/package-tree.html">com.guflimc.brick.regions.spigot.api</a>, </li>
@@ -72,7 +73,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li class="circle">com.guflimc.brick.orm.api.attributes.AttributeKey&lt;T&gt;
 <ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentLocality.LocalityAttributeKey.html" class="type-name-link" title="class in com.guflimc.brick.regions.api.domain">PersistentLocality.LocalityAttributeKey</a>&lt;T&gt;</li>
+<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/LocalityAttributeKey.html" class="type-name-link" title="class in com.guflimc.brick.regions.api.domain">LocalityAttributeKey</a>&lt;T&gt;</li>
 </ul>
 </li>
 <li class="circle">org.bukkit.event.Event
@@ -141,51 +142,58 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Locality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>
 <ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentLocality</a>
+<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/AttributedLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">AttributedLocality</a>
 <ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentProtectedLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentProtectedLocality</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/ProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain">ProtectedLocality</a>)
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableAttributedLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableAttributedLocality</a> (also extends com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a>)
 <ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>)
-<ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentShapeRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentShapeRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>)</li>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentWorldRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentWorldRegion</a></li>
+<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Tile.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Tile</a> (also extends com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a>, com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableProtectedLocality</a>)</li>
 </ul>
 </li>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Tile.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Tile</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentLocality.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentLocality</a>)</li>
 </ul>
 </li>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Tile.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Tile</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentProtectedLocality</a>)</li>
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a>
+<ul>
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableAttributedLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableAttributedLocality</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/AttributedLocality.html" title="interface in com.guflimc.brick.regions.api.domain">AttributedLocality</a>)
+<ul>
+<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Tile.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Tile</a> (also extends com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a>, com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableProtectedLocality</a>)</li>
+</ul>
+</li>
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableProtectedLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableProtectedLocality</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/ProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain">ProtectedLocality</a>)
+<ul>
+<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Tile.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Tile</a> (also extends com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableAttributedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableAttributedLocality</a>, com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a>)</li>
+</ul>
+</li>
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>)
+<ul>
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableShapeRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableShapeRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>)</li>
+</ul>
+</li>
+<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Tile.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Tile</a> (also extends com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableAttributedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableAttributedLocality</a>, com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableProtectedLocality</a>)</li>
 </ul>
 </li>
 <li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/ProtectedLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">ProtectedLocality</a>
 <ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentProtectedLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentProtectedLocality</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentLocality.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentLocality</a>)
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableProtectedLocality.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableProtectedLocality</a> (also extends com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a>)
 <ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>)
-<ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentShapeRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentShapeRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>)</li>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentWorldRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentWorldRegion</a></li>
-</ul>
-</li>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Tile.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Tile</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentLocality.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentLocality</a>)</li>
+<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Tile.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Tile</a> (also extends com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableAttributedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableAttributedLocality</a>, com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a>)</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/Region.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">Region</a>
 <ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentProtectedLocality</a>)
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableRegion</a> (also extends com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a>)
 <ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentShapeRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentShapeRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>)</li>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentWorldRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentWorldRegion</a></li>
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableShapeRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableShapeRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/ShapeRegion.html" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>)</li>
 </ul>
 </li>
 <li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/ShapeRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">ShapeRegion</a>
 <ul>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentShapeRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">PersistentShapeRegion</a> (also extends com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/PersistentRegion.html" title="interface in com.guflimc.brick.regions.api.domain">PersistentRegion</a>)</li>
+<li class="circle">com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableShapeRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableShapeRegion</a> (also extends com.guflimc.brick.regions.api.domain.modifiable.<a href="com/guflimc/brick/regions/api/domain/modifiable/ModifiableRegion.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableRegion</a>)</li>
 </ul>
 </li>
-<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/TiledRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">TiledRegion</a></li>
+<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/TileRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">TileRegion</a></li>
+<li class="circle">com.guflimc.brick.regions.api.domain.<a href="com/guflimc/brick/regions/api/domain/WorldRegion.html" class="type-name-link" title="interface in com.guflimc.brick.regions.api.domain">WorldRegion</a></li>
 </ul>
 </li>
 </ul>
