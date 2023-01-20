@@ -4,6 +4,7 @@ import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.TileRegion;
 import com.guflimc.brick.regions.common.AbstractRegionManager;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
 import com.guflimc.brick.regions.common.domain.DWorldRegion;
@@ -59,6 +60,11 @@ public class SpigotBrickRegionManager extends AbstractRegionManager<Player> impl
     @Override
     public Collection<Region> regionsAt(@NotNull Location position) {
         return regionsAt(SpigotMath.toBrickLocation(position));
+    }
+
+    @Override
+    public Collection<TileRegion> regionsTiledAt(@NotNull Location location) {
+        return regionsTiledAt(SpigotMath.toBrickLocation(location));
     }
 
     @Override

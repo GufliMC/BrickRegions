@@ -1,6 +1,5 @@
 package com.guflimc.brick.regions.common.domain;
 
-import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Polygon;
@@ -9,16 +8,16 @@ import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
 import com.guflimc.brick.math.common.geometry.shape3d.RectPrism;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.math.database.Shape3Converter;
-import com.guflimc.brick.regions.api.domain.PersistentShapeRegion;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableShapeRegion;
 import com.guflimc.brick.regions.api.domain.Tile;
-import com.guflimc.brick.regions.api.domain.TiledRegion;
+import com.guflimc.brick.regions.api.domain.TileRegion;
 import io.ebean.annotation.DbDefault;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-public class DShapeRegion extends DRegion implements PersistentShapeRegion, TiledRegion {
+public class DShapeRegion extends DRegion implements ModifiableShapeRegion, TileRegion {
 
     @Convert(converter = Shape3Converter.class)
     @Column(name = "shaperegion_shape", length = 2048)
@@ -64,7 +63,7 @@ public class DShapeRegion extends DRegion implements PersistentShapeRegion, Tile
 
     @Override
     public boolean contains(Point3 point) {
-        return PersistentShapeRegion.super.contains(point);
+        return ModifiableShapeRegion.super.contains(point);
     }
 
     @Override

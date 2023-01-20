@@ -2,7 +2,7 @@ package com.guflimc.brick.regions.common.engine;
 
 import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.PersistentWorldRegion;
+import com.guflimc.brick.regions.api.domain.WorldRegion;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -14,7 +14,7 @@ public class RegionEngine {
     private final Map<UUID, Region> byId = new ConcurrentHashMap<>();
     private final Map<UUID, RegionContainer> containers = new ConcurrentHashMap<>();
 
-    public void addContainer(@NotNull UUID worldId, @NotNull PersistentWorldRegion worldRegion) {
+    public void addContainer(@NotNull UUID worldId, @NotNull WorldRegion worldRegion) {
         containers.put(worldId, new RegionContainer(worldId, worldRegion));
     }
 
@@ -54,7 +54,7 @@ public class RegionEngine {
         return containers.get(worldId).regions();
     }
 
-    public PersistentWorldRegion worldRegion(@NotNull UUID worldId) {
+    public WorldRegion worldRegion(@NotNull UUID worldId) {
         if (!containers.containsKey(worldId)) {
             throw new IllegalStateException("A region container for this world does not exist.");
         }

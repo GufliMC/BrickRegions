@@ -1,6 +1,9 @@
 package com.guflimc.brick.regions.spigot;
 
+import cloud.commandframework.CommandManager;
 import cloud.commandframework.annotations.AnnotationParser;
+import cloud.commandframework.arguments.parser.ArgumentParser;
+import cloud.commandframework.arguments.parser.ParserParameters;
 import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
@@ -10,14 +13,17 @@ import com.guflimc.brick.RuleTypes.common.commands.arguments.RuleTypeArgument;
 import com.guflimc.brick.gui.spigot.SpigotBrickGUI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.i18n.spigot.api.namespace.SpigotNamespace;
-import com.guflimc.brick.regions.api.domain.PersistentRegion;
+import com.guflimc.brick.math.common.geometry.pos3.Location;
+import com.guflimc.brick.math.spigot.SpigotMath;
+import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.common.BrickRegionsConfig;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
+import com.guflimc.brick.regions.common.commands.RegionAttributeCommands;
 import com.guflimc.brick.regions.common.commands.RegionCommands;
-import com.guflimc.brick.regions.common.commands.arguments.PersistentRegionArgument;
+import com.guflimc.brick.regions.common.commands.arguments.RegionArgument;
 import com.guflimc.brick.regions.common.commands.arguments.RuleStatusArgument;
 import com.guflimc.brick.regions.common.commands.arguments.RuleTargetArgument;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
@@ -31,6 +37,7 @@ import com.guflimc.brick.regions.spigot.rules.RuleHandler;
 import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
 import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
 import io.leangen.geantyref.TypeToken;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -106,7 +113,7 @@ public class SpigotBrickRegions extends JavaPlugin {
         pm.registerEvents(new BlockInteractListener(), this);
         pm.registerEvents(new DropItemsListener(), this);
 
-        if ( config.showRegionTitles ) {
+        if (config.showRegionTitles) {
             pm.registerEvents(new PlayerMoveTitlesListener(this), this);
         }
 
@@ -124,7 +131,7 @@ public class SpigotBrickRegions extends JavaPlugin {
         SpigotBrickGUI.register(this);
 
         // PLACEHOLDERS
-        if ( pm.isPluginEnabled("BrickPlaceholders") ) {
+        if (pm.isPluginEnabled("BrickPlaceholders")) {
             RegionPlaceholders.init();
         }
 
@@ -137,8 +144,11 @@ public class SpigotBrickRegions extends JavaPlugin {
                     Function.identity()
             );
 
-            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(PersistentRegion.class),
-                    ps -> new PersistentRegionArgument.PersistentRegionParser<>());
+            Function<ParserParameters, ArgumentParser<CommandSender, ?>> regionParserSupplier =
+                    ps -> new RegionArgument.RegionParser<>();
+
+            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(Region.class), regionParserSupplier);
+            commandManager.parserRegistry().registerNamedParserSupplier("region", regionParserSupplier);
 
             commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleType.class),
                     ps -> new RuleTypeArgument.RuleTypeParser<>());
@@ -151,9 +161,21 @@ public class SpigotBrickRegions extends JavaPlugin {
 
             commandManager.registerCommandPreProcessor(pctx -> {
                 CommandContext<CommandSender> ctx = pctx.getCommandContext();
-                if ( ctx.getSender() instanceof Player p ) {
-                    ctx.set("worldId", p.getWorld().getUID());
+                if (!(ctx.getSender() instanceof Player p)) {
+                    return;
                 }
+                ctx.set("worldId", p.getWorld().getUID());
+            });
+
+            commandManager.registerCommandPreProcessor(pctx -> {
+                CommandContext<CommandSender> ctx = pctx.getCommandContext();
+                if (!(ctx.getSender() instanceof Player p)) {
+                    return;
+                }
+
+                Location loc = SpigotMath.toBrickLocation(p.getLocation());
+                SpigotRegionAPI.get().regionsTiledAt(loc).stream().findFirst()
+                        .map(rg -> rg.tileAt(loc)).ifPresent(tile -> ctx.set("tile", tile));
             });
 
             AnnotationParser<CommandSender> annotationParser = new AnnotationParser<>(
@@ -165,6 +187,7 @@ public class SpigotBrickRegions extends JavaPlugin {
             annotationParser.parse(new RegionCommands());
             annotationParser.parse(new SpigotRegionCommands(this));
             annotationParser.parse(new SpigotSelectionCommands(this));
+            RegionAttributeCommands.register(commandManager);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -50,6 +50,9 @@
   "cmd.region.tile.error.region": "<red>This region cannot be tiled.",
   "cmd.region.tile": "<gray>Generated tiles <green>{1}</green> for <green>{0}</green>.",
 
+  "cmd.region.attribute": "<gray>Changed attribute <green>{1}</green> to <green>{2}</green> for <green>{0}</green>.",
+  "cmd.tile.attribute": "<gray>Changed attribute <green>{1}</green> to <green>{2}</green> for the tile at your position.",
+
   "protection.build": "<red>You cannot build here.",
   "protection.interact": "<red>You cannot do that here.",
   "protection.pvp": "<red>You cannot attack players here.",

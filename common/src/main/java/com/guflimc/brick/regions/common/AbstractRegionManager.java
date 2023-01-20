@@ -6,6 +6,8 @@ import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.RegionManager;
 import com.guflimc.brick.regions.api.domain.*;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
+import com.guflimc.brick.regions.api.domain.WorldRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.domain.DRegion;
 import com.guflimc.brick.regions.common.domain.DShapeRegion;
@@ -35,8 +37,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         List<DRegion> regions = databaseContext
                 .findAllWhereAsync(DRegion.class, "worldId", worldId).join();
 
-        PersistentWorldRegion worldRegion = (PersistentWorldRegion) regions.stream()
-                .filter(rg -> rg instanceof PersistentWorldRegion)
+        WorldRegion worldRegion = (WorldRegion) regions.stream()
+                .filter(rg -> rg instanceof WorldRegion)
                 .findFirst().orElseGet(() -> {
                     DWorldRegion region = new DWorldRegion(worldId, "__global__");
                     region.setDisplayName(Component.text("Wilderness", NamedTextColor.GREEN));
@@ -92,22 +94,22 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Collection<PersistentRegion> persistentRegions() {
+    public Collection<ModifiableRegion> persistentRegions() {
         return regionEngine.regions().stream()
-                .filter(PersistentRegion.class::isInstance)
-                .map(PersistentRegion.class::cast)
+                .filter(ModifiableRegion.class::isInstance)
+                .map(ModifiableRegion.class::cast)
                 .toList();
     }
 
     @Override
-    public Collection<PersistentRegion> persistentRegions(@NotNull UUID worldId) {
+    public Collection<ModifiableRegion> persistentRegions(@NotNull UUID worldId) {
         return persistentRegions().stream()
                 .filter(rg -> rg.worldId().equals(worldId))
                 .toList();
     }
 
     @Override
-    public PersistentWorldRegion worldRegion(@NotNull UUID worldId) {
+    public WorldRegion worldRegion(@NotNull UUID worldId) {
         return regionEngine.worldRegion(worldId);
     }
 
@@ -136,8 +138,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         List<Locality> localities = new ArrayList<>(regions);
 
         // include tiles
-        regions.stream().filter(TiledRegion.class::isInstance)
-                .map(TiledRegion.class::cast)
+        regions.stream().filter(TileRegion.class::isInstance)
+                .map(TileRegion.class::cast)
                 .map(rg -> rg.tileAt(point))
                 .forEach(localities::add);
 
@@ -155,10 +157,10 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Collection<TiledRegion> regionsTiledAt(@NotNull Location location) {
+    public Collection<TileRegion> regionsTiledAt(@NotNull Location location) {
         return regionsAt(location).stream()
-                .filter(TiledRegion.class::isInstance)
-                .map(TiledRegion.class::cast)
+                .filter(TileRegion.class::isInstance)
+                .map(TileRegion.class::cast)
                 .filter(rg -> !rg.tiles().isEmpty())
                 .toList();
     }

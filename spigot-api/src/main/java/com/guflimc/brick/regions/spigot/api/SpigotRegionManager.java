@@ -3,6 +3,7 @@ package com.guflimc.brick.regions.spigot.api;
 import com.guflimc.brick.regions.api.RegionManager;
 import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.TileRegion;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -34,6 +35,18 @@ public interface SpigotRegionManager extends RegionManager<Player> {
 
     default Collection<Region> regionsAt(@NotNull Entity entity) {
         return regionsAt(entity.getLocation());
+    }
+
+    //
+
+    Collection<TileRegion> regionsTiledAt(@NotNull Location location);
+
+    default Collection<TileRegion> regionsTiledAt(@NotNull Entity entity) {
+        return regionsTiledAt(entity.getLocation());
+    }
+
+    default Collection<TileRegion> regionsTiledAt(@NotNull Block block) {
+        return regionsTiledAt(block.getLocation());
     }
 
     //

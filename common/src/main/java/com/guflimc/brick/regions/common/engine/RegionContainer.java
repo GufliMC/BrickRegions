@@ -2,7 +2,7 @@ package com.guflimc.brick.regions.common.engine;
 
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.PersistentWorldRegion;
+import com.guflimc.brick.regions.api.domain.WorldRegion;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -13,9 +13,9 @@ public class RegionContainer {
 
     private final Map<String, Region> byName = new ConcurrentHashMap<>();
     private final UUID worldId;
-    private final PersistentWorldRegion worldRegion;
+    private final WorldRegion worldRegion;
 
-    public RegionContainer(UUID worldId, PersistentWorldRegion worldRegion) {
+    public RegionContainer(UUID worldId, WorldRegion worldRegion) {
         if (!worldRegion.worldId().equals(worldId)) {
             throw new IllegalArgumentException("The world region is not for this world.");
         }
@@ -29,7 +29,7 @@ public class RegionContainer {
         return worldId;
     }
 
-    public PersistentWorldRegion worldRegion() {
+    public WorldRegion worldRegion() {
         return worldRegion;
     }
 

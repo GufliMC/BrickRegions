@@ -43,7 +43,7 @@ public class DTile extends DLocality implements Tile {
     }
 
     @Override
-    public Polygon polygon() {
+    public Polygon shape() {
         return polygon;
     }
 

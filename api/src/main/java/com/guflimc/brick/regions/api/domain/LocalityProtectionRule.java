@@ -1,5 +1,6 @@
 package com.guflimc.brick.regions.api.domain;
 
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableProtectedLocality;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -60,10 +61,10 @@ public interface LocalityProtectionRule {
         return rule == null ? RuleStatus.ALLOW : rule.status();
     }
 
-    private static Stream<PersistentProtectedLocality> persistentRegions(Collection<Locality> regions) {
+    private static Stream<ModifiableProtectedLocality> persistentRegions(Collection<Locality> regions) {
         return regions.stream()
-                .filter(PersistentProtectedLocality.class::isInstance)
-                .map(PersistentProtectedLocality.class::cast);
+                .filter(ModifiableProtectedLocality.class::isInstance)
+                .map(ModifiableProtectedLocality.class::cast);
     }
 
 }

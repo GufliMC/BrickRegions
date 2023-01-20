@@ -7,9 +7,10 @@ import cloud.commandframework.annotations.specifier.Greedy;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
-import com.guflimc.brick.regions.api.domain.PersistentRegion;
-import com.guflimc.brick.regions.api.domain.PersistentWorldRegion;
-import com.guflimc.brick.regions.api.domain.TiledRegion;
+import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.WorldRegion;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableProtectedLocality;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -28,8 +29,8 @@ public class RegionCommands {
 
     @CommandMethod("br delete <region>")
     @CommandPermission("brick.regions.delete")
-    public void delete(Audience sender, @Argument("region") PersistentRegion region) {
-        if (region instanceof PersistentWorldRegion) {
+    public void delete(Audience sender, @Argument("region") Region region) {
+        if (region instanceof WorldRegion) {
             I18nAPI.get(this).send(sender, "cmd.region.delete.error.global");
         }
 
@@ -39,7 +40,9 @@ public class RegionCommands {
 
     @CommandMethod("br setdisplayname <region> <name>")
     @CommandPermission("brick.regions.setdisplayname")
-    public void setdisplayname(Audience sender, @Argument("region") PersistentRegion region, @Argument("name") @Greedy String name) {
+    public void setdisplayname(Audience sender,
+                               @Argument(value = "region", parserName = "region") ModifiableRegion region,
+                               @Argument("name") @Greedy String name) {
         region.setDisplayName(MiniMessage.miniMessage().deserialize(name));
         RegionAPI.get().update(region);
         I18nAPI.get(this).send(sender, "cmd.region.setdisplayname", region.name(), region.displayName());
@@ -47,7 +50,8 @@ public class RegionCommands {
 
     @CommandMethod("br rules list <region>")
     @CommandPermission("brick.regions.rules.list")
-    public void rulesList(Audience sender, @Argument("region") PersistentRegion region) {
+    public <T extends Region & ModifiableProtectedLocality> void rulesList(Audience sender,
+                                                                           @Argument(value = "region", parserName = "region") T region) {
         List<LocalityProtectionRule> rules = region.rules();
         if (rules.isEmpty()) {
             I18nAPI.get(this).send(sender, "cmd.region.rules.list.error.empty", region.name());
@@ -66,11 +70,11 @@ public class RegionCommands {
 
     @CommandMethod("br rules add <region> <status> <target> <type>")
     @CommandPermission("brick.regions.rules.add")
-    public void rulesAdd(Audience sender,
-                         @Argument("region") PersistentRegion region,
-                         @Argument("status") RuleStatus status,
-                         @Argument("target") RuleTarget target,
-                         @Argument("type") RuleType type) {
+    public <T extends Region & ModifiableProtectedLocality> void rulesAdd(Audience sender,
+                                                                          @Argument(value = "region", parserName = "region") T region,
+                                                                          @Argument("status") RuleStatus status,
+                                                                          @Argument("target") RuleTarget<?> target,
+                                                                          @Argument("type") RuleType type) {
         LocalityProtectionRule rule = region.rules().stream()
                 .filter(r -> r.status().equals(status))
                 .filter(r -> r.target().equals(target))
@@ -90,9 +94,9 @@ public class RegionCommands {
 
     @CommandMethod("br rules remove <region> <index>")
     @CommandPermission("brick.regions.rules.remove")
-    public void rulesRemove(Audience sender,
-                            @Argument("region") PersistentRegion region,
-                            @Argument("index") int index) {
+    public <T extends Region & ModifiableProtectedLocality> void rulesRemove(Audience sender,
+                                                                             @Argument(value = "region", parserName = "region") T region,
+                                                                             @Argument("index") int index) {
         if (region.rules().size() < index || index < 1) {
             I18nAPI.get(this).send(sender, "cmd.region.rules.remove.error.index");
             return;
@@ -107,10 +111,10 @@ public class RegionCommands {
 
     @CommandMethod("br rules clear <region>")
     @CommandPermission("brick.regions.rules.clear")
-    public void rulesClear(Audience sender,
-                           @Argument("region") PersistentRegion region) {
+    public <T extends Region & ModifiableProtectedLocality> void rulesClear(Audience sender,
+                                                                            @Argument(value = "region", parserName = "region") T region) {
 
-        region.clearRules();
+        region.removeRules();
         RegionAPI.get().update(region);
 
         I18nAPI.get(this).send(sender, "cmd.region.rules.clear", region.name());
@@ -118,11 +122,10 @@ public class RegionCommands {
 
     @CommandMethod("br tile <region> <radius>")
     @CommandPermission("brick.regions.tile")
-    public void tile(Audience sender,
-                           @Argument("region") PersistentRegion region,
-                           @Argument("radius") int radius) {
-
-        if ( !(region instanceof DShapeRegion sr) ) {
+    public <T extends Region & ModifiableProtectedLocality> void tile(Audience sender,
+                                                                      @Argument(value = "region", parserName = "region") T region,
+                                                                      @Argument("radius") int radius) {
+        if (!(region instanceof DShapeRegion sr)) {
             // TODO message
             return;
         }

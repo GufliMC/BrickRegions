@@ -4,6 +4,8 @@ import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.domain.*;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
+import com.guflimc.brick.regions.api.domain.WorldRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,11 +34,11 @@ public interface RegionManager<S> {
 
     Collection<Region> regions(@NotNull UUID worldId);
 
-    Collection<PersistentRegion> persistentRegions();
+    Collection<ModifiableRegion> persistentRegions();
 
-    Collection<PersistentRegion> persistentRegions(@NotNull UUID worldId);
+    Collection<ModifiableRegion> persistentRegions(@NotNull UUID worldId);
 
-    PersistentWorldRegion worldRegion(@NotNull UUID worldId);
+    WorldRegion worldRegion(@NotNull UUID worldId);
 
     Collection<ShapeRegion> intersecting(Shape3 shape);
 
@@ -50,7 +52,7 @@ public interface RegionManager<S> {
 
     Collection<Region> regionsAt(@NotNull Location position);
 
-    Collection<TiledRegion> regionsTiledAt(@NotNull Location location);
+    Collection<TileRegion> regionsTiledAt(@NotNull Location location);
 
     CompletableFuture<Void> remove(@NotNull Locality locality);
 

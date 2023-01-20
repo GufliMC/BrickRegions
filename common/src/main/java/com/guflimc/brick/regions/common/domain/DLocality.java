@@ -1,9 +1,11 @@
 package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
+import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
-import com.guflimc.brick.regions.api.domain.PersistentLocality;
-import com.guflimc.brick.regions.api.domain.PersistentProtectedLocality;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableAttributedLocality;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableLocality;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableProtectedLocality;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -15,7 +17,7 @@ import java.util.*;
 @Entity
 @Inheritance
 @Table(name = "localities")
-public abstract class DLocality implements PersistentProtectedLocality {
+public abstract class DLocality implements ModifiableProtectedLocality, ModifiableAttributedLocality {
 
     @Id
     @GeneratedValue
@@ -75,12 +77,12 @@ public abstract class DLocality implements PersistentProtectedLocality {
     // attributes
 
     @Override
-    public <U> void removeAttribute(PersistentLocality.LocalityAttributeKey<U> key) {
+    public <U> void removeAttribute(LocalityAttributeKey<U> key) {
         attributes.removeIf(attr -> attr.name().equals(key.name()));
     }
 
     @Override
-    public <U> void setAttribute(PersistentLocality.LocalityAttributeKey<U> key, U value) {
+    public <U> void setAttribute(LocalityAttributeKey<U> key, U value) {
         if (value == null) {
             removeAttribute(key);
             return;
@@ -99,7 +101,7 @@ public abstract class DLocality implements PersistentProtectedLocality {
     }
 
     @Override
-    public <U> Optional<U> attribute(PersistentLocality.LocalityAttributeKey<U> key) {
+    public <U> Optional<U> attribute(LocalityAttributeKey<U> key) {
         return attributes.stream()
                 .filter(attr -> attr.name().equals(key.name()))
                 .findFirst()
@@ -129,7 +131,7 @@ public abstract class DLocality implements PersistentProtectedLocality {
     }
 
     @Override
-    public void clearRules() {
+    public void removeRules() {
         rules.clear();
     }
 

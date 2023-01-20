@@ -1,7 +1,7 @@
 package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.orm.jpa.converters.ComponentConverter;
-import com.guflimc.brick.regions.api.domain.PersistentRegion;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
 import io.ebean.annotation.DbDefault;
 import io.ebean.annotation.Index;
 import net.kyori.adventure.text.Component;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Index(columnNames = {"world_id", "name"}, unique = true)
-public class DRegion extends DLocality implements PersistentRegion {
+public class DRegion extends DLocality implements ModifiableRegion {
 
     @Column(name = "region_name")
     private String name;
@@ -38,7 +38,7 @@ public class DRegion extends DLocality implements PersistentRegion {
 
     @Override
     public Component displayName() {
-        return displayName == null ? PersistentRegion.super.displayName() : displayName;
+        return displayName == null ? ModifiableRegion.super.displayName() : displayName;
     }
 
     @Override
