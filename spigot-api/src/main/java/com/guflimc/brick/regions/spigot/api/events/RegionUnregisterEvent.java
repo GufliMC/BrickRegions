@@ -4,13 +4,11 @@ import com.guflimc.brick.regions.api.domain.Region;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class RegionCreateEvent extends RegionEvent {
+public class RegionUnregisterEvent extends RegionEvent {
 
-    public RegionCreateEvent(Region region, boolean async) {
+    public RegionUnregisterEvent(Region region, boolean async) {
         super(region, async);
     }
-
-    //
 
     private static final HandlerList handlers = new HandlerList();
 

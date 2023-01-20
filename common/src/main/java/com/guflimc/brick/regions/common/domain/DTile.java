@@ -49,6 +49,10 @@ public class DTile extends DLocality implements Tile {
 
     @Override
     public boolean contains(Point3 point) {
-        return polygon.contains(new Vector2(point.x(), point.z()));
+        return contains(new Vector2(point.x(), point.z()));
+    }
+
+    public boolean contains(Point2 point) {
+        return polygon.contains(point);
     }
 }

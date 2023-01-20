@@ -4,11 +4,11 @@ import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableAttributedLocality;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableLocality;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableProtectedLocality;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.common.EventManager;
 import io.ebean.annotation.DbDefault;
 
 import javax.persistence.*;
@@ -65,20 +65,26 @@ public abstract class DLocality implements ModifiableProtectedLocality, Modifiab
     @Override
     public void setPriority(int priority) {
         this.priority = priority;
+        EventManager.INSTANCE.onPropertyChange(this);
     }
 
     @Override
     public boolean contains(Point3 point) {
         return false;
     }
-    
+
     //
 
     // attributes
 
     @Override
     public <U> void removeAttribute(LocalityAttributeKey<U> key) {
-        attributes.removeIf(attr -> attr.name().equals(key.name()));
+        attributes.stream()
+                .filter(attribute -> attribute.name().equals(key.name()))
+                .forEach(attribute -> {
+                    attributes.remove(attribute);
+                    EventManager.INSTANCE.onAttributeRemove(this, key, key.deserialize(attribute.value()));
+                });
     }
 
     @Override
@@ -94,10 +100,12 @@ public abstract class DLocality implements ModifiableProtectedLocality, Modifiab
 
         if (attribute == null) {
             attributes.add(new DLocalityAttribute(this, key.name(), key.serialize(value)));
+            EventManager.INSTANCE.onAttributeChange(this, key, null, value);
             return;
         }
 
         attribute.setValue(key.serialize(value));
+        EventManager.INSTANCE.onAttributeChange(this, key, key.deserialize(attribute.value()), value);
     }
 
     @Override
@@ -105,7 +113,7 @@ public abstract class DLocality implements ModifiableProtectedLocality, Modifiab
         return attributes.stream()
                 .filter(attr -> attr.name().equals(key.name()))
                 .findFirst()
-                .map(ra -> key.deserialize(ra.value()));
+                .flatMap(ra -> Optional.ofNullable(key.deserialize(ra.value())));
     }
 
     // rules
@@ -115,23 +123,29 @@ public abstract class DLocality implements ModifiableProtectedLocality, Modifiab
         return Collections.unmodifiableList(rules);
     }
 
-    public LocalityProtectionRule addProtectionRule(int priority, RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
+    public LocalityProtectionRule addProtectionRule(int priority, RuleStatus status, RuleTarget target, RuleType... ruleTypes) {
         DLocalityProtectionRule rule = new DLocalityProtectionRule(this, priority, status, target, ruleTypes);
         rules.add(rule);
+
+        EventManager.INSTANCE.onRuleAdd(rule);
         return rule;
     }
 
-    public LocalityProtectionRule addProtectionRule(RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
+    public LocalityProtectionRule addProtectionRule(RuleStatus status, RuleTarget target, RuleType... ruleTypes) {
         return addProtectionRule(0, status, target, ruleTypes);
     }
 
     @Override
     public void removeRule(LocalityProtectionRule rule) {
-        rules.remove((DLocalityProtectionRule) rule);
+        if (rule instanceof DLocalityProtectionRule && rules.contains(rule)) {
+            rules.remove(rule);
+            EventManager.INSTANCE.onRuleRemove(rule);
+        }
     }
 
     @Override
     public void removeRules() {
+        rules.forEach(EventManager.INSTANCE::onRuleRemove);
         rules.clear();
     }
 

@@ -47,7 +47,7 @@ public final class RuleTargetArgument<C> extends CommandArgument<C, RuleTarget> 
             }
             inputQueue.remove();
 
-            RuleTarget<?> ruleType = RuleTarget.valueOf(input);
+            RuleTarget ruleType = RuleTarget.valueOf(input);
 
             if (ruleType == null) {
                 return ArgumentParseResult.failure(new RuleTargetParseException(input, commandContext));

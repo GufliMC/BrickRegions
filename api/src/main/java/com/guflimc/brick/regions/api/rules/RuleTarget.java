@@ -1,36 +1,29 @@
 package com.guflimc.brick.regions.api.rules;
 
 import com.guflimc.brick.regions.api.domain.Locality;
-import com.guflimc.brick.regions.api.domain.Region;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiPredicate;
 
-public abstract class RuleTarget<S> {
+public abstract class RuleTarget {
 
-    private final static Map<String, RuleTarget<?>> targets = new ConcurrentHashMap<>();
+    private static final Map<String, RuleTarget> REGISTRY = new ConcurrentHashMap<>();
+
+    //
+
+    public static final RuleTarget ANY = register("ANY", Object.class, (s, r) -> true);
 
     //
 
     private final String name;
     private final int priority;
 
-    private final Class<S> type;
-    private final BiPredicate<S, Locality> predicate;
-
-    public RuleTarget(String name, int priority, Class<S> type, BiPredicate<S, Locality> predicate) {
+    private RuleTarget(String name, int priority) {
         this.name = name;
         this.priority = priority;
-        this.type = type;
-        this.predicate = predicate;
-        targets.put(name, this);
-    }
-
-    public RuleTarget(String name, Class<S> type, BiPredicate<S, Locality> predicate) {
-        this(name, 0, type, predicate);
+        REGISTRY.put(name(), this);
     }
 
     public final String name() {
@@ -41,22 +34,45 @@ public abstract class RuleTarget<S> {
         return priority;
     }
 
-    public final boolean test(S subject, Locality locality) {
-        return predicate.test(subject, locality);
+    public abstract boolean test(Object subject, Locality locality);
+
+    //
+
+    public static @Nullable RuleTarget valueOf(String name) {
+        return REGISTRY.get(name);
     }
 
-    public final boolean testAny(Object subject, Locality locality) {
-        return type.isAssignableFrom(subject.getClass()) && test((S) subject, locality);
+    public static RuleTarget[] values() {
+        return REGISTRY.values().toArray(RuleTarget[]::new);
     }
 
     //
 
-    public static @Nullable RuleTarget<?> valueOf(String name) {
-        return targets.get(name);
+    public static <T> RuleTarget register(String name, int priority, Class<T> type, BiPredicate<T, Locality> predicate) {
+        return new SimpleRuleTarget<>(name, priority, type, predicate);
     }
 
-    public static RuleTarget<?>[] values() {
-        return targets.values().toArray(RuleTarget[]::new);
+    public static <T> RuleTarget register(String name, Class<T> type, BiPredicate<T, Locality> predicate) {
+        return register(name, 0, type, predicate);
     }
 
+    private static class SimpleRuleTarget<S> extends RuleTarget {
+
+        //
+
+        private final Class<S> type;
+        private final BiPredicate<S, Locality> predicate;
+
+        SimpleRuleTarget(String name, int priority, Class<S> type, BiPredicate<S, Locality> predicate) {
+            super(name, priority);
+            this.type = type;
+            this.predicate = predicate;
+        }
+
+        @Override
+        public boolean test(Object subject, Locality locality) {
+            return type.isInstance(subject) && predicate.test(type.cast(subject), locality);
+        }
+
+    }
 }

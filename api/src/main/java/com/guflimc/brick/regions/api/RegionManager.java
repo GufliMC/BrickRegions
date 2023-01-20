@@ -1,5 +1,6 @@
 package com.guflimc.brick.regions.api;
 
+import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;

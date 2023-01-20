@@ -1,5 +1,6 @@
 package com.guflimc.brick.regions.common.domain;
 
+import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Polygon;
@@ -8,10 +9,11 @@ import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
 import com.guflimc.brick.math.common.geometry.shape3d.RectPrism;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.math.database.Shape3Converter;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableShapeRegion;
 import com.guflimc.brick.regions.api.domain.Tile;
 import com.guflimc.brick.regions.api.domain.TileRegion;
+import com.guflimc.brick.regions.api.domain.modifiable.ModifiableShapeRegion;
 import io.ebean.annotation.DbDefault;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.*;
@@ -67,35 +69,48 @@ public class DShapeRegion extends DRegion implements ModifiableShapeRegion, Tile
     }
 
     @Override
-    public Tile tileAt(Point3 point) {
-        int tileZ = (int) Math.round(point.z() / (int) (tileRadius / 2d * 3));
+    public Optional<Tile> tileAt(@NotNull Point2 point) {
+        int tileZ = (int) Math.round(point.y() / (int) (tileRadius / 2d * 3));
         double x = point.x();
-        if ( tileZ % 2 != 0 ) {
+        if (tileZ % 2 != 0) {
             x -= tileWidth / 2d;
         }
         int tileX = (int) Math.round(x / tileWidth);
 
-        Tile tile = tileMap.get(new Vector2(tileX, tileZ));;
-        if ( point.z() < tileZ * (tileRadius / 2d) || point.z() > tileZ * tileRadius ) {
-            return tile;
+        DTile tile = tileMap.get(new Vector2(tileX, tileZ));
+
+        if (point.y() < tileZ * (tileRadius / 2d) || point.y() > tileZ * tileRadius) {
+            return Optional.of(tile);
         }
 
         // correct guess
-        if ( tile != null && tile.contains(point) ) {
-            return tile;
+        if (tile != null && tile.contains(point)) {
+            return Optional.of(tile);
         }
 
-        Tile left = tileMap.get(new Vector2(tileX, tileZ - 1));
-        if ( left != null && left.contains(point) ) {
-            return left;
+        DTile left = tileMap.get(new Vector2(tileX, tileZ - 1));
+        if (left != null && left.contains(point)) {
+            return Optional.of(left);
         }
 
-        Tile right = tileMap.get(new Vector2(tileX + 1, tileZ - 1));
-        if ( right != null && right.contains(point) ) {
-            return right;
+        DTile right = tileMap.get(new Vector2(tileX + 1, tileZ - 1));
+        if (right != null && right.contains(point)) {
+            return Optional.of(right);
         }
 
-        return null;
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Tile> tileAt(@NotNull Point3 point) {
+        return tileAt(new Vector2(point.x(), point.z()));
+    }
+
+    @Override
+    public Optional<Tile> findTile(@NotNull UUID id) {
+        return tiles.stream()
+                .filter(tile -> tile.id().equals(id))
+                .findFirst().map(tile -> tile);
     }
 
     @Override
@@ -129,7 +144,7 @@ public class DShapeRegion extends DRegion implements ModifiableShapeRegion, Tile
             for (int tileZ = minTileZ; tileZ <= maxTileZ; tileZ++) {
                 double x = tileX * tileWidth;
                 double z = tileZ * tileRadiusOffset;
-                if ( tileZ % 2 != 0 ) {
+                if (tileZ % 2 != 0) {
                     x += tileWidth / 2d;
                 }
 

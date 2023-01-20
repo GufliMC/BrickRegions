@@ -73,7 +73,7 @@ public class RegionCommands {
     public <T extends Region & ModifiableProtectedLocality> void rulesAdd(Audience sender,
                                                                           @Argument(value = "region", parserName = "region") T region,
                                                                           @Argument("status") RuleStatus status,
-                                                                          @Argument("target") RuleTarget<?> target,
+                                                                          @Argument("target") RuleTarget target,
                                                                           @Argument("type") RuleType type) {
         LocalityProtectionRule rule = region.rules().stream()
                 .filter(r -> r.status().equals(status))

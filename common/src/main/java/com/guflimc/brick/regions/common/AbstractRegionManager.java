@@ -1,5 +1,6 @@
 package com.guflimc.brick.regions.common;
 
+import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
@@ -140,7 +141,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         // include tiles
         regions.stream().filter(TileRegion.class::isInstance)
                 .map(TileRegion.class::cast)
-                .map(rg -> rg.tileAt(point))
+                .map(rg -> rg.tileAt(point).orElse(null))
+                .filter(Objects::nonNull)
                 .forEach(localities::add);
 
         return localities;
@@ -170,8 +172,12 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         if (!(locality instanceof DLocality)) {
             throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
         }
+        if ( locality instanceof DWorldRegion) {
+            throw new IllegalArgumentException("Cannot delete the global region.");
+        }
         if (locality instanceof DRegion region) {
             regionEngine.remove(region);
+            EventManager.INSTANCE.onDelete(region);
         }
         return databaseContext.removeAsync(locality);
     }
@@ -194,6 +200,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         }
 
         regionEngine.add(region);
+        EventManager.INSTANCE.onRegister(region);
     }
 
     @Override
@@ -203,6 +210,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         }
 
         regionEngine.remove(region);
+        EventManager.INSTANCE.onUnregister(region);
     }
 
     //
@@ -215,6 +223,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         DShapeRegion region = new DShapeRegion(worldId, name, shape);
         return databaseContext.persistAsync(region).thenApply((n) -> {
             regionEngine.add(region);
+            EventManager.INSTANCE.onCreate(region);
             return region;
         });
     }

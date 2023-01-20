@@ -35,7 +35,7 @@ public class DLocalityProtectionRule implements LocalityProtectionRule {
 
     @Column(nullable = false)
     @Convert(converter = RuleTargetConverter.class)
-    private RuleTarget<?> target;
+    private RuleTarget target;
 
     @Column(nullable = false)
     @Convert(converter = RuleTypeSetConverter.class)
@@ -48,7 +48,7 @@ public class DLocalityProtectionRule implements LocalityProtectionRule {
     public DLocalityProtectionRule() {
     }
 
-    public DLocalityProtectionRule(DLocality locality, int priority, RuleStatus status, RuleTarget<?> target, RuleType... types) {
+    public DLocalityProtectionRule(DLocality locality, int priority, RuleStatus status, RuleTarget target, RuleType... types) {
         this.locality = locality;
         this.priority = priority;
         this.status = status;
@@ -56,7 +56,7 @@ public class DLocalityProtectionRule implements LocalityProtectionRule {
         this.typeSet = new RuleTypeSet(types);
     }
 
-    public DLocalityProtectionRule(DLocality locality, RuleStatus status, RuleTarget<?> target, RuleType... types) {
+    public DLocalityProtectionRule(DLocality locality, RuleStatus status, RuleTarget target, RuleType... types) {
         this(locality, 0, status, target, types);
     }
 
@@ -75,7 +75,7 @@ public class DLocalityProtectionRule implements LocalityProtectionRule {
     }
 
     @Override
-    public RuleTarget<?> target() {
+    public RuleTarget target() {
         return target;
     }
 
@@ -113,14 +113,14 @@ public class DLocalityProtectionRule implements LocalityProtectionRule {
         }
     }
 
-    public static class RuleTargetConverter implements AttributeConverter<RuleTarget<?>, String> {
+    public static class RuleTargetConverter implements AttributeConverter<RuleTarget, String> {
         @Override
-        public String convertToDatabaseColumn(RuleTarget<?> attribute) {
+        public String convertToDatabaseColumn(RuleTarget attribute) {
             return attribute.name();
         }
 
         @Override
-        public RuleTarget<?> convertToEntityAttribute(String dbData) {
+        public RuleTarget convertToEntityAttribute(String dbData) {
             return RuleTarget.valueOf(dbData);
         }
     }

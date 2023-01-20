@@ -1,6 +1,5 @@
 package com.guflimc.brick.regions.spigot;
 
-import cloud.commandframework.CommandManager;
 import cloud.commandframework.annotations.AnnotationParser;
 import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.arguments.parser.ParserParameters;
@@ -27,7 +26,6 @@ import com.guflimc.brick.regions.common.commands.arguments.RegionArgument;
 import com.guflimc.brick.regions.common.commands.arguments.RuleStatusArgument;
 import com.guflimc.brick.regions.common.commands.arguments.RuleTargetArgument;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
-import com.guflimc.brick.regions.spigot.api.rules.SpigotRuleTarget;
 import com.guflimc.brick.regions.spigot.benchmark.Benchmark;
 import com.guflimc.brick.regions.spigot.commands.SpigotRegionCommands;
 import com.guflimc.brick.regions.spigot.commands.SpigotSelectionCommands;
@@ -37,7 +35,6 @@ import com.guflimc.brick.regions.spigot.rules.RuleHandler;
 import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
 import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
 import io.leangen.geantyref.TypeToken;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -66,11 +63,6 @@ public class SpigotBrickRegions extends JavaPlugin {
     public final Benchmark benchmark = new Benchmark(this);
 
     //
-
-    @Override
-    public void onLoad() {
-        SpigotRuleTarget.load();
-    }
 
     @Override
     public void onEnable() {

@@ -1,9 +1,9 @@
 package com.guflimc.brick.regions.squaremap;
 
+import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.ShapeRegion;
 import com.guflimc.brick.regions.api.domain.TileRegion;
-import com.guflimc.brick.regions.spigot.api.events.RegionCreateEvent;
-import com.guflimc.brick.regions.spigot.api.events.RegionDeleteEvent;
+import com.guflimc.brick.regions.spigot.api.events.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
@@ -32,19 +32,39 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onRegionCreate(RegionCreateEvent event) {
-        if ( !(event.region() instanceof ShapeRegion) && !(event.region() instanceof TileRegion) ) {
-            return;
-        }
-
-        renderer.render(event.region().worldId());
+        render(event.region());
     }
 
     @EventHandler
     public void onRegionCreate(RegionDeleteEvent event) {
-        if ( !(event.region() instanceof ShapeRegion) && !(event.region() instanceof TileRegion) ) {
+        render(event.region());
+    }
+
+    @EventHandler
+    public void onRegister(RegionRegisterEvent event) {
+        render(event.region());
+    }
+
+    @EventHandler
+    public void onUnregister(RegionUnregisterEvent event) {
+        render(event.region());
+    }
+
+    @EventHandler
+    public void onAttributeChange(LocalityAttributeChangeEvent<?> event) {
+        render(event.locality());
+    }
+
+    @EventHandler
+    public void onAttributeRemove(LocalityAttributeRemoveEvent<?> event) {
+        render(event.locality());
+    }
+
+    private void render(Locality locality) {
+        if (!(locality instanceof ShapeRegion) && !(locality instanceof TileRegion)) {
             return;
         }
 
-        renderer.render(event.region().worldId());
+        renderer.render(locality.worldId());
     }
 }

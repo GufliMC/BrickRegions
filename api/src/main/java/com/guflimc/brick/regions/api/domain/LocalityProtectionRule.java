@@ -16,7 +16,7 @@ public interface LocalityProtectionRule {
 
     RuleStatus status();
 
-    RuleTarget<?> target();
+    RuleTarget target();
 
     RuleType[] types();
 
@@ -29,7 +29,7 @@ public interface LocalityProtectionRule {
         return match(persistentRegions(regions)
                 .flatMap(rg -> rg.rules().stream()) // flat map to all rules
                 .filter(rule -> Arrays.stream(rule.types()).anyMatch(t -> t == type || t == RuleType.ALL)) // filter by correct type
-                .filter(rule -> rule.target().testAny(subject, rule.locality()))// filter by predicate
+                .filter(rule -> rule.target().test(subject, rule.locality()))// filter by predicate
                 .toList());
     }
 

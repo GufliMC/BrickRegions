@@ -1,16 +1,14 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
-import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.Locality;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class RegionCreateEvent extends RegionEvent {
+public class LocalityPropertyChangeEvent extends LocalityEvent {
 
-    public RegionCreateEvent(Region region, boolean async) {
-        super(region, async);
+    public LocalityPropertyChangeEvent(Locality locality, boolean async) {
+        super(locality, async);
     }
-
-    //
 
     private static final HandlerList handlers = new HandlerList();
 

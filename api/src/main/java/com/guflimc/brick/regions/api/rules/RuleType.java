@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public record RuleType(String name) {
 
-    private final static Map<String, RuleType> types = new ConcurrentHashMap<>();
+    private final static Map<String, RuleType> REGISTRY = new ConcurrentHashMap<>();
 
     //
 
@@ -31,14 +31,14 @@ public record RuleType(String name) {
 
     public RuleType(String name) {
         this.name = name.toUpperCase();
-        types.put(this.name, this);
+        REGISTRY.put(this.name, this);
     }
 
     public static @Nullable RuleType valueOf(String name) {
-        return types.get(name.toUpperCase());
+        return REGISTRY.get(name.toUpperCase());
     }
 
     public static RuleType[] values() {
-        return types.values().toArray(RuleType[]::new);
+        return REGISTRY.values().toArray(RuleType[]::new);
     }
 }

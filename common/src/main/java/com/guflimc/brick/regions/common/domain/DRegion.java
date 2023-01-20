@@ -2,6 +2,7 @@ package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.orm.jpa.converters.ComponentConverter;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
+import com.guflimc.brick.regions.common.EventManager;
 import io.ebean.annotation.DbDefault;
 import io.ebean.annotation.Index;
 import net.kyori.adventure.text.Component;
@@ -44,6 +45,7 @@ public class DRegion extends DLocality implements ModifiableRegion {
     @Override
     public void setDisplayName(Component displayName) {
         this.displayName = displayName;
+        EventManager.INSTANCE.onPropertyChange(this);
     }
 
 }

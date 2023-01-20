@@ -8,9 +8,9 @@ import com.guflimc.brick.regions.api.rules.RuleType;
 
 public interface ModifiableProtectedLocality extends ModifiableLocality, ProtectedLocality {
 
-    LocalityProtectionRule addProtectionRule(int priority, RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes);
+    LocalityProtectionRule addProtectionRule(int priority, RuleStatus status, RuleTarget target, RuleType... ruleTypes);
 
-    default LocalityProtectionRule addProtectionRule(RuleStatus status, RuleTarget<?> target, RuleType... ruleTypes) {
+    default LocalityProtectionRule addProtectionRule(RuleStatus status, RuleTarget target, RuleType... ruleTypes) {
         return addProtectionRule(0, status, target, ruleTypes);
     }
 
