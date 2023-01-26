@@ -10,6 +10,7 @@ import com.guflimc.brick.regions.api.domain.Tile;
 import com.guflimc.brick.regions.api.domain.TileRegion;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class DTile extends DLocality implements Tile {
@@ -49,6 +50,11 @@ public class DTile extends DLocality implements Tile {
     @Override
     public TileRegion parent() {
         return parent;
+    }
+
+    @Override
+    public Collection<Tile> adjacent() {
+        return parent.adjacent(this);
     }
 
     @Override

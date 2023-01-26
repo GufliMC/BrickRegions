@@ -6,6 +6,8 @@ import com.guflimc.brick.regions.api.domain.modifiable.ModifiableAttributedLocal
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableLocality;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableProtectedLocality;
 
+import java.util.Collection;
+
 public interface Tile extends ModifiableLocality, ModifiableProtectedLocality, ModifiableAttributedLocality {
 
     Point2 position();
@@ -13,5 +15,7 @@ public interface Tile extends ModifiableLocality, ModifiableProtectedLocality, M
     Shape2 shape();
 
     TileRegion parent();
+
+    Collection<Tile> adjacent();
 
 }

@@ -164,4 +164,19 @@ public class DTileRegion extends DRegion implements TileRegion {
         return Collections.unmodifiableList(tiles);
     }
 
+    //
+
+    Collection<Tile> adjacent(@NotNull DTile tile) {
+        Vector2 vec = new Vector2(tile.position().x(), tile.position().y());
+        Set<Tile> tiles = new HashSet<>();
+        tiles.add(tilemap.get(vec.add(0, 1)));
+        tiles.add(tilemap.get(vec.add(1, 1)));
+        tiles.add(tilemap.get(vec.add(0, -1)));
+        tiles.add(tilemap.get(vec.add(1, -1)));
+        tiles.add(tilemap.get(vec.add(-1, 0)));
+        tiles.add(tilemap.get(vec.add(1, 0)));
+        tiles.remove(null);
+        return tiles;
+    }
+
 }
