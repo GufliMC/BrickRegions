@@ -42,34 +42,57 @@ public class SpigotRegionCommands {
         plugin.benchmark.stop();
     }
 
-    @CommandMethod("br list")
+    @CommandMethod("br regions list")
     @CommandPermission("brick.regions.list")
     public void list(Player sender) {
-        SpigotI18nAPI.get(this).send(sender, "cmd.region.list",
+        SpigotI18nAPI.get(this).send(sender, "cmd.regions.list",
                 RegionAPI.get().persistentRegions(sender.getWorld().getUID()).stream()
                         .map(Region::name)
                         .filter(Objects::nonNull).toList()
         );
     }
 
-    @CommandMethod("br list <world>")
+    @CommandMethod("br regions list <world>")
     @CommandPermission("brick.regions.list")
     public void listWorld(Audience sender, @Argument(value = "world") World world) {
-        I18nAPI.get(this).send(sender, "cmd.region.list.world", world.getName(),
+        I18nAPI.get(this).send(sender, "cmd.regions.list.world", world.getName(),
                 RegionAPI.get().persistentRegions(world.getUID()).stream()
                         .map(Region::name)
                         .filter(Objects::nonNull).toList()
         );
     }
 
-    @CommandMethod("br create <name>")
+    @CommandMethod("br regions create <name>")
     @CommandPermission("brick.regions.create")
     public void create(Player sender, @Argument(value = "name") String name) {
         if (RegionAPI.get().findRegion(sender.getWorld().getUID(), name).isPresent()) {
-            SpigotI18nAPI.get(this).send(sender, "cmd.region.create.error.exists", name);
+            SpigotI18nAPI.get(this).send(sender, "cmd.regions.create.error.exists", name);
             return;
         }
 
+        Selection selection = SpigotRegionAPI.get().selection(sender).orElse(null);
+        if (selection == null) {
+            SpigotI18nAPI.get(this).send(sender, "cmd.select.invalid");
+            return;
+        }
+
+        Shape3 shape = selection.shape();
+        if (shape instanceof PolyPrism pa && !pa.polygon().isConvex()) {
+            SpigotI18nAPI.get(this).send(sender, "cmd.regions.create.error.poly-invalid");
+            return;
+        }
+
+        SpigotRegionAPI.get().create(name, selection);
+        SpigotRegionAPI.get().clearSelection(sender);
+
+        SpigotI18nAPI.get(this).send(sender, "cmd.regions.create", name);
+    }
+
+    @CommandMethod("br tiles create <name> <radius>")
+    @CommandPermission("brick.tiles.create")
+    public void createTiles(Player sender,
+                            @Argument("name") String name,
+                            @Argument("radius") int radius) {
         Selection selection = SpigotRegionAPI.get().selection(sender).orElse(null);
         if (selection == null) {
             SpigotI18nAPI.get(this).send(sender, "cmd.select.invalid");
@@ -82,10 +105,12 @@ public class SpigotRegionCommands {
             return;
         }
 
-        SpigotRegionAPI.get().create(name, selection);
-        SpigotRegionAPI.get().clearSelection(sender);
-
-        SpigotI18nAPI.get(this).send(sender, "cmd.region.create", name);
+        try {
+            RegionAPI.get().createTiles(name, radius, selection).thenAccept((region) -> {
+                SpigotI18nAPI.get(this).send(sender, "cmd.tiles.create", name, region.tiles().size());
+            });
+        } catch (Exception ex) {
+            SpigotI18nAPI.get(this).send(sender, "cmd.tiles.create.error.intersect");
+        }
     }
-
 }

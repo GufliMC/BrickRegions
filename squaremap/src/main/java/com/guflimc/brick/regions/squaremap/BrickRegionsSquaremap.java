@@ -14,7 +14,7 @@ public class BrickRegionsSquaremap extends JavaPlugin implements Listener {
         SquaremapRenderer renderer = new SquaremapRenderer(squaremap);
 
         // register event listener
-        getServer().getPluginManager().registerEvents(new EventListener(renderer), this);
+        getServer().getPluginManager().registerEvents(new EventListener(this, renderer), this);
 
         // render already loaded worlds
         Bukkit.getWorlds().forEach(renderer::render);

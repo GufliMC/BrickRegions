@@ -22,6 +22,7 @@ public class SquaremapRenderer {
 
     private final Squaremap squaremap;
     private final Map<MapWorld, SimpleLayerProvider> worlds = new HashMap<>();
+    private final Map<TileRegion, SimpleLayerProvider> tileLayers = new HashMap<>();
 
     public SquaremapRenderer(Squaremap squaremap) {
         this.squaremap = squaremap;
@@ -29,16 +30,25 @@ public class SquaremapRenderer {
 
     private SimpleLayerProvider defaultLayer(@NotNull MapWorld world) {
         worlds.computeIfAbsent(world, (w) -> {
-            SimpleLayerProvider layer = SimpleLayerProvider.builder("Brick Regions")
+            SimpleLayerProvider layer = SimpleLayerProvider.builder("BrickRegions")
                     .showControls(true)
                     .defaultHidden(false)
                     .layerPriority(0)
                     .zIndex(200)
                     .build();
-            world.layerRegistry().register(Key.of("BrickRegions:" + layer.getLabel()), layer);
+            world.layerRegistry().register(Key.of(layer.getLabel()), layer);
             return layer;
         });
         return worlds.get(world);
+    }
+
+    private Optional<MapWorld> mapWorld(@NotNull World world) {
+        MapWorld mapWorld = squaremap.getWorldIfEnabled(BukkitAdapter.worldIdentifier(world)).orElse(null);
+        return Optional.ofNullable(mapWorld);
+    }
+
+    private Optional<MapWorld> mapWorld(@NotNull UUID worldId) {
+        return Optional.ofNullable(Bukkit.getWorld(worldId)).flatMap(this::mapWorld);
     }
 
     public void clear(@NotNull World world) {
@@ -57,24 +67,23 @@ public class SquaremapRenderer {
         worlds.keySet().forEach(this::render);
     }
 
-    public void render(@NotNull UUID worldId) {
-        World world = Bukkit.getWorld(worldId);
-        if ( world == null ) {
-            return;
-        }
-
-        render(world);
-    }
-
     public void render(@NotNull World world) {
-        MapWorld mapWorld = squaremap.getWorldIfEnabled(BukkitAdapter.worldIdentifier(world)).orElse(null);
-        if (mapWorld == null) {
-            return;
-        }
-        render(mapWorld);
+        mapWorld(world).ifPresent(this::render);
     }
 
-    public void render(@NotNull MapWorld mapWorld) {
+    public void render(@NotNull Locality locality) {
+        if ( locality instanceof Tile tile ) {
+            render(tile);
+            return;
+        }
+
+        if ( locality instanceof ShapeRegion sr ) {
+            mapWorld(locality.worldId()).ifPresent(mw -> render(mw, sr));
+            return;
+        }
+    }
+
+    private void render(@NotNull MapWorld mapWorld) {
         World world = BukkitAdapter.bukkitWorld(mapWorld);
         render(world, mapWorld);
     }
@@ -97,21 +106,37 @@ public class SquaremapRenderer {
                 .forEach(rg -> this.render(mapWorld, rg));
     }
 
+    private void render(@NotNull MapWorld world, @NotNull ShapeRegion region) {
+        SimpleLayerProvider layer = defaultLayer(world);
+        render(layer, region);
+    }
+
     private void render(@NotNull SimpleLayerProvider layer, @NotNull ShapeRegion region) {
         render(layer, region, region.shape().contour());
     }
 
     private void render(@NotNull MapWorld mapWorld, @NotNull TileRegion tileRegion) {
-        SimpleLayerProvider layer = SimpleLayerProvider.builder("tiledregion:" + tileRegion.name())
-                .showControls(true)
-                .defaultHidden(false)
-                .layerPriority(1 + tileRegion.priority())
-                .zIndex(250 + tileRegion.priority())
-                .build();
-        mapWorld.layerRegistry().register(Key.of("BrickRegions:" + layer.getLabel()), layer);
+        tileLayers.computeIfAbsent(tileRegion, tr -> {
+            SimpleLayerProvider layer = SimpleLayerProvider.builder("Tiles-" + tileRegion.name())
+                    .showControls(true)
+                    .defaultHidden(false)
+                    .layerPriority(1 + tileRegion.priority())
+                    .zIndex(250 + tileRegion.priority())
+                    .build();
+            mapWorld.layerRegistry().register(Key.of(layer.getLabel()), layer);
+            return layer;
+        });
 
         // render tiles in layer
+        SimpleLayerProvider layer = tileLayers.get(tileRegion);
+        layer.clearMarkers();
         tileRegion.tiles().forEach(tile -> render(layer, tile, tile.shape()));
+    }
+
+    private void render(@NotNull Tile tile) {
+        SimpleLayerProvider layer = tileLayers.get(tile.parent());
+        layer.removeMarker(Key.of(tile.id().toString()));
+        render(layer, tile, tile.shape());
     }
 
     private void render(@NotNull SimpleLayerProvider layer, @NotNull Locality locality, @NotNull Shape2 shape) {
@@ -130,6 +155,10 @@ public class SquaremapRenderer {
             }
 
             MarkerOptions.Builder builder = options.asBuilder();
+            if ( locality instanceof Tile ) {
+                builder.strokeWeight(1); // default for tiles
+            }
+
             al.attribute(LocalityAttributeKey.MAP_CLICK_TEXT).ifPresent(builder::clickTooltip);
             al.attribute(LocalityAttributeKey.MAP_HOVER_TEXT).ifPresent(builder::hoverTooltip);
             al.attribute(LocalityAttributeKey.MAP_FILL_COLOR).ifPresent(builder::fillColor);

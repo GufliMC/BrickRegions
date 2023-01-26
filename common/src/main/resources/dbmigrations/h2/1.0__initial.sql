@@ -7,8 +7,10 @@ create table localities (
   region_name                   varchar(255),
   region_displayname            varchar(2048) default null,
   shaperegion_shape             varchar(2048) default null,
-  tiledregion_tile_radius       integer default 0 not null,
-  region_id                     uuid,
+  tileregion_tile_radius        integer default 0 not null,
+  tileregion_tile_width         integer default 0 not null,
+  tileregion_offset             varchar(255),
+  parent_id                     uuid,
   tile_position                 varchar(1024),
   tile_polygon                  varchar(2048),
   constraint pk_localities primary key (id)
@@ -36,8 +38,8 @@ create table locality_rules (
 );
 
 -- foreign keys and indices
-create index ix_localities_region_id on localities (region_id);
-alter table localities add constraint fk_localities_region_id foreign key (region_id) references localities (id) on delete restrict on update restrict;
+create index ix_localities_parent_id on localities (parent_id);
+alter table localities add constraint fk_localities_parent_id foreign key (parent_id) references localities (id) on delete restrict on update restrict;
 
 create index ix_locality_attributes_locality_id on locality_attributes (locality_id);
 alter table locality_attributes add constraint fk_locality_attributes_locality_id foreign key (locality_id) references localities (id) on delete cascade on update restrict;

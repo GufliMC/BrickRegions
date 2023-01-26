@@ -81,6 +81,7 @@ public abstract class DLocality implements ModifiableProtectedLocality, Modifiab
     public <U> void removeAttribute(LocalityAttributeKey<U> key) {
         attributes.stream()
                 .filter(attribute -> attribute.name().equals(key.name()))
+                .toList()
                 .forEach(attribute -> {
                     attributes.remove(attribute);
                     EventManager.INSTANCE.onAttributeRemove(this, key, key.deserialize(attribute.value()));

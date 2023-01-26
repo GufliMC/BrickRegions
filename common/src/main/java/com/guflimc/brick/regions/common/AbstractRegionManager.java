@@ -10,10 +10,7 @@ import com.guflimc.brick.regions.api.domain.*;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
 import com.guflimc.brick.regions.api.domain.WorldRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
-import com.guflimc.brick.regions.common.domain.DRegion;
-import com.guflimc.brick.regions.common.domain.DShapeRegion;
-import com.guflimc.brick.regions.common.domain.DWorldRegion;
-import com.guflimc.brick.regions.common.domain.DLocality;
+import com.guflimc.brick.regions.common.domain.*;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -115,8 +112,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Collection<ShapeRegion> intersecting(Shape3 shape) {
-        return regions().stream()
+    public Collection<ShapeRegion> intersecting(@NotNull UUID worldId, @NotNull Shape3 shape) {
+        return regions(worldId).stream()
                 .filter(rg -> rg instanceof ShapeRegion)
                 .map(rg -> (ShapeRegion) rg)
                 .filter(rg -> shape.intersects(rg.shape()))
@@ -124,8 +121,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Collection<ShapeRegion> intersecting(ShapeRegion region) {
-        return intersecting(region.shape());
+    public Collection<ShapeRegion> intersecting(@NotNull ShapeRegion region) {
+        return intersecting(region.worldId(), region.shape());
     }
 
     @Override
@@ -159,16 +156,20 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Collection<TileRegion> regionsTiledAt(@NotNull Location location) {
+    public Optional<TileRegion> tileRegionAt(@NotNull Location location) {
         return regionsAt(location).stream()
                 .filter(TileRegion.class::isInstance)
                 .map(TileRegion.class::cast)
-                .filter(rg -> !rg.tiles().isEmpty())
-                .toList();
+                .findFirst();
     }
 
     @Override
-    public CompletableFuture<Void> remove(@NotNull Locality locality) {
+    public Optional<Tile> tileAt(@NotNull Location location) {
+        return tileRegionAt(location).flatMap(tr -> tr.tileAt(location));
+    }
+
+    @Override
+    public CompletableFuture<Void> delete(@NotNull Locality locality) {
         if (!(locality instanceof DLocality)) {
             throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
         }
@@ -183,7 +184,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public CompletableFuture<Void> update(@NotNull Locality locality) {
+    public CompletableFuture<Void> save(@NotNull Locality locality) {
         if (!(locality instanceof DLocality)) {
             throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
         }
@@ -233,4 +234,24 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         return create(name, selection.worldId(), selection.shape());
     }
 
+    @Override
+    public CompletableFuture<TileRegion> createTiles(@NotNull String name, int tileRadius, @NotNull UUID worldId, @NotNull Shape3 shape) {
+        if (shape instanceof PolyPrism pa && !pa.polygon().isConvex()) {
+            throw new IllegalArgumentException("A polygon must be convex.");
+        }
+        if ( intersecting(worldId, shape).stream().anyMatch(TileRegion.class::isInstance) ) {
+            throw new IllegalArgumentException("There can only be one tile region at the same location.");
+        }
+        DTileRegion region = new DTileRegion(worldId, name, shape, tileRadius);
+        return databaseContext.persistAsync(region).thenApply((n) -> {
+            regionEngine.add(region);
+            EventManager.INSTANCE.onCreate(region);
+            return region;
+        });
+    }
+
+    @Override
+    public CompletableFuture<TileRegion> createTiles(@NotNull String name, int tileRadius, @NotNull Selection selection) {
+        return createTiles(name, tileRadius, selection.worldId(), selection.shape());
+    }
 }

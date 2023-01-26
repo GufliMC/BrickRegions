@@ -166,8 +166,7 @@ public class SpigotBrickRegions extends JavaPlugin {
                 }
 
                 Location loc = SpigotMath.toBrickLocation(p.getLocation());
-                SpigotRegionAPI.get().regionsTiledAt(loc).stream().findFirst()
-                        .map(rg -> rg.tileAt(loc)).ifPresent(tile -> ctx.set("tile", tile));
+                SpigotRegionAPI.get().tileAt(loc).ifPresent(tile -> ctx.set("tile", tile));
             });
 
             AnnotationParser<CommandSender> annotationParser = new AnnotationParser<>(
@@ -179,7 +178,8 @@ public class SpigotBrickRegions extends JavaPlugin {
             annotationParser.parse(new RegionCommands());
             annotationParser.parse(new SpigotRegionCommands(this));
             annotationParser.parse(new SpigotSelectionCommands(this));
-            RegionAttributeCommands.register(commandManager);
+            annotationParser.parse(new RegionAttributeCommands());
+//            RegionAttributeCommands.register(commandManager);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

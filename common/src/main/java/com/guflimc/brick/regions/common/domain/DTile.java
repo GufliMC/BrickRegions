@@ -7,15 +7,16 @@ import com.guflimc.brick.math.common.geometry.shape2d.Polygon;
 import com.guflimc.brick.math.database.Point2Converter;
 import com.guflimc.brick.math.database.Shape2Converter;
 import com.guflimc.brick.regions.api.domain.Tile;
+import com.guflimc.brick.regions.api.domain.TileRegion;
 
 import javax.persistence.*;
 
 @Entity
 public class DTile extends DLocality implements Tile {
 
-    @Column(name = "tile_region_id")
-    @ManyToOne(targetEntity = DShapeRegion.class, fetch = FetchType.EAGER)
-    private DShapeRegion region;
+    @Column(name = "tile_parent_id")
+    @ManyToOne(targetEntity = DTileRegion.class, fetch = FetchType.EAGER)
+    private DTileRegion parent;
 
     @Column(name = "tile_position", length = 1024)
     @Convert(converter = Point2Converter.class)
@@ -28,13 +29,11 @@ public class DTile extends DLocality implements Tile {
     public DTile() {
     }
 
-    public DTile(DShapeRegion region, Point2 position, Polygon polygon) {
+    DTile(DTileRegion region, Point2 position, Polygon polygon) {
         super(region.worldId());
-        this.region = region;
+        this.parent = region;
         this.position = position;
         this.polygon = polygon;
-
-        this.region.tiles.add(this);
     }
 
     @Override
@@ -45,6 +44,11 @@ public class DTile extends DLocality implements Tile {
     @Override
     public Polygon shape() {
         return polygon;
+    }
+
+    @Override
+    public TileRegion parent() {
+        return parent;
     }
 
     @Override

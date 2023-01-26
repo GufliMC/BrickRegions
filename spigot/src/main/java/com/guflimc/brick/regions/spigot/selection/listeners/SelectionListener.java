@@ -19,6 +19,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Objects;
+
 public class SelectionListener implements Listener {
 
     private final SpigotBrickRegions plugin;
@@ -39,11 +41,15 @@ public class SelectionListener implements Listener {
         }
 
         Block b = event.getClickedBlock();
+        if ( b == null ) {
+            return;
+        }
+
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            addLeftClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()));
+            addLeftClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()).add(0.5));
             event.setCancelled(true);
         } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            addRightClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()));
+            addRightClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()).add(0.5));
             event.setCancelled(true);
         }
     }
@@ -79,13 +85,13 @@ public class SelectionListener implements Listener {
         PersistentDataContainer pdc = player.getPersistentDataContainer();
         if (selection == null) {
             if (pdc.has(plugin.SELECTION_TYPE, PersistentDataType.INTEGER)
-                    && pdc.get(plugin.SELECTION_TYPE, PersistentDataType.INTEGER) == SelectionType.POLY.ordinal()) {
+                    && Objects.equals(pdc.get(plugin.SELECTION_TYPE, PersistentDataType.INTEGER), SelectionType.POLY.ordinal())) {
                 selection = new PolySelection(player.getWorld().getUID());
             } else {
                 selection = new CubeSelection(player.getWorld().getUID());
             }
         } else if (pdc.has(plugin.SELECTION_TYPE, PersistentDataType.INTEGER)
-                && pdc.get(plugin.SELECTION_TYPE, PersistentDataType.INTEGER) == SelectionType.POLY.ordinal()) {
+                && Objects.equals(pdc.get(plugin.SELECTION_TYPE, PersistentDataType.INTEGER), SelectionType.POLY.ordinal())) {
             if (selection instanceof CubeSelection) {
                 selection = new PolySelection(player.getWorld().getUID());
             }

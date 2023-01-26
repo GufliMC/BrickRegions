@@ -9,8 +9,10 @@
             <column name="region_name" type="varchar"/>
             <column name="region_displayname" type="varchar(2048)" defaultValue="null"/>
             <column name="shaperegion_shape" type="varchar(2048)" defaultValue="null"/>
-            <column name="tiledregion_tile_radius" type="integer" defaultValue="0" notnull="true"/>
-            <column name="region_id" type="uuid" references="localities.id" foreignKeyName="fk_localities_region_id" foreignKeyIndex="ix_localities_region_id"/>
+            <column name="tileregion_tile_radius" type="integer" defaultValue="0" notnull="true"/>
+            <column name="tileregion_tile_width" type="integer" defaultValue="0" notnull="true"/>
+            <column name="tileregion_offset" type="varchar"/>
+            <column name="parent_id" type="uuid" references="localities.id" foreignKeyName="fk_localities_parent_id" foreignKeyIndex="ix_localities_parent_id"/>
             <column name="tile_position" type="varchar(1024)"/>
             <column name="tile_polygon" type="varchar(2048)"/>
         </createTable>

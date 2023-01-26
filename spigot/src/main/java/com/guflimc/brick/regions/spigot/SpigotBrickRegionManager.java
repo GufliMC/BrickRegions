@@ -3,6 +3,7 @@ package com.guflimc.brick.regions.spigot;
 import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.Tile;
 import com.guflimc.brick.regions.api.domain.TileRegion;
 import com.guflimc.brick.regions.common.AbstractRegionManager;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
@@ -15,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class SpigotBrickRegionManager extends AbstractRegionManager<Player> implements SpigotRegionManager {
 
@@ -41,8 +43,13 @@ public class SpigotBrickRegionManager extends AbstractRegionManager<Player> impl
     }
 
     @Override
-    public Collection<TileRegion> regionsTiledAt(@NotNull Location location) {
-        return regionsTiledAt(SpigotMath.toBrickLocation(location));
+    public Optional<TileRegion> tileRegionAt(@NotNull Location location) {
+        return tileRegionAt(SpigotMath.toBrickLocation(location));
+    }
+
+    @Override
+    public Optional<Tile> tileAt(@NotNull Location location) {
+        return tileAt(SpigotMath.toBrickLocation(location));
     }
 
     @Override

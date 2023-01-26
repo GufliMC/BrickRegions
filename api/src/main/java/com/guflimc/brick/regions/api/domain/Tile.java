@@ -12,4 +12,6 @@ public interface Tile extends ModifiableLocality, ModifiableProtectedLocality, M
 
     Shape2 shape();
 
+    TileRegion parent();
+
 }

@@ -15,43 +15,47 @@
   "cmd.select.undo": "<gray>Your last selection action has been undone",
   "cmd.select.wand": "<gray>The selection wand has been added to your inventory",
 
-  "cmd.region.create.error.poly-invalid": "<red>A polygon selection must be convex.",
-  "cmd.region.create.error.exists": "<red>A region with that name already exists.",
-  "cmd.region.create.usage": "<red>Invalid usage, try this: /br region create <name>",
-  "cmd.region.create": "<gray>You created a region named <green>{0}</green>.",
-
-  "cmd.region.delete.usage": "<red>Invalid usage, try this: <dark_red>/br region delete <region></dark_red>.",
-  "cmd.region.delete": "<gray>Deleted <green>{0}</green>.",
-  "cmd.region.delete.error.global": "<red>You can't delete the global region.",
-
-  "cmd.region.setdisplayname": "<gray>Changed the display name of <green>{0}</green> to <white>{1}</white><gray>.",
-
-  "cmd.region.list": "<gray>List of regions in your current world: <green>{0}</green>.</gray>",
-  "cmd.region.list.world": "<gray>List of regions in <dark_gray>{0}<gray>: <green>{1}</green>.",
-
   "select.wand.name": "<yellow>Selection Wand",
-
   "select.cuboid.primary": "<gray>Changed primary position.",
   "select.cuboid.secondary": "<gray>Changed secondary position.",
   "select.poly": "<gray>Added position to the selection.",
 
-  "cmd.region.rules.list": "<gray>List of rules for <green>{0}</green>: {1}",
-  "cmd.region.rules.list.format": "<yellow>{0} <gray>- <green>{1}",
-  "cmd.region.rules.list.error.empty": "<gray>The region <green>{0}</green> has no rules.",
+  "cmd.regions.create.error.poly-invalid": "<red>A polygon selection must be convex.",
+  "cmd.regions.create.error.exists": "<red>A region with that name already exists.",
+  "cmd.regions.create.usage": "<red>Invalid usage, try this: /br region create <name>",
+  "cmd.regions.create": "<gray>You created a region named <green>{0}</green>.",
 
-  "cmd.region.rules.add": "<gray>Added rule <green>{0}</green> to <green>{1}</green>.",
-  "cmd.region.rules.add.error.exists": "<red>A rule that does the same already exists.",
+  "cmd.regions.delete.usage": "<red>Invalid usage, try this: <dark_red>/br region delete <region></dark_red>.",
+  "cmd.regions.delete": "<gray>Deleted <green>{0}</green>.",
+  "cmd.regions.delete.error.global": "<red>You can't delete the global region.",
 
-  "cmd.region.rules.remove": "<gray>Removed rule <green>{0}</green> to <green>{1}</green>.",
-  "cmd.region.rules.remove.error.index": "<red>A rule with that index does not exist.",
+  "cmd.regions.setdisplayname": "<gray>Changed the display name of <green>{0}</green> to <white>{1}</white><gray>.",
 
-  "cmd.region.rules.clear": "<gray>Removed all rules from <green>{0}</green>.",
+  "cmd.regions.list": "<gray>List of regions in your current world: <green>{0}</green>.</gray>",
+  "cmd.regions.list.world": "<gray>List of regions in <dark_gray>{0}<gray>: <green>{1}</green>.",
 
-  "cmd.region.tile.error.region": "<red>This region cannot be tiled.",
-  "cmd.region.tile": "<gray>Generated tiles <green>{1}</green> for <green>{0}</green>.",
+  "cmd.regions.rules.list": "<gray>List of rules for <green>{0}</green>: {1}",
+  "cmd.regions.rules.list.format": "<yellow>{0} <gray>- <green>{1}",
+  "cmd.regions.rules.list.error.empty": "<gray>The region <green>{0}</green> has no rules.",
 
-  "cmd.region.attribute": "<gray>Changed attribute <green>{1}</green> to <green>{2}</green> for <green>{0}</green>.",
-  "cmd.tile.attribute": "<gray>Changed attribute <green>{1}</green> to <green>{2}</green> for the tile at your position.",
+  "cmd.regions.rules.add": "<gray>Added rule <green>{0}</green> to <green>{1}</green>.",
+  "cmd.regions.rules.add.error.exists": "<red>A rule that does the same already exists.",
+
+  "cmd.regions.rules.remove": "<gray>Removed rule <green>{0}</green> to <green>{1}</green>.",
+  "cmd.regions.rules.remove.error.index": "<red>A rule with that index does not exist.",
+
+  "cmd.regions.rules.clear": "<gray>Removed all rules from <green>{0}</green>.",
+
+  "cmd.regions.tile.error.region": "<red>This region cannot be tiled.",
+  "cmd.regions.tile": "<gray>Generated tiles <green>{1}</green> for <green>{0}</green>.",
+
+  "cmd.regions.attribute.set.error.parse": "<red>Invalid value <dark_red>{1}</dark_red> for <dark_red>{0}</dark_red>.",
+  "cmd.regions.attribute.set": "<gray>Changed attribute <green>{1}</green> to <green>{2}</green> for <green>{0}</green>.",
+
+  "cmd.tiles.create": "<gray>Created region <green>{0}</green> with <green>{1}</green> tiles.",
+  "cmd.tiles.create.error.intersect": "<red>There can only be one tile region at a given location.",
+
+  "cmd.tiles.attribute.set": "<gray>Changed attribute <green>{1}</green> to <green>{2}</green> for the tile at your position.",
 
   "protection.build": "<red>You cannot build here.",
   "protection.interact": "<red>You cannot do that here.",

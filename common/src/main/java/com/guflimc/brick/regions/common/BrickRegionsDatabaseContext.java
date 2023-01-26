@@ -38,6 +38,7 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
             DShapeRegion.class,
             DTile.class,
             DWorldRegion.class,
+            DTileRegion.class,
 
             Shape3Converter.class,
             Shape2Converter.class,

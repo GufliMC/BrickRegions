@@ -3,6 +3,7 @@ package com.guflimc.brick.regions.spigot.api;
 import com.guflimc.brick.regions.api.RegionManager;
 import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.Tile;
 import com.guflimc.brick.regions.api.domain.TileRegion;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface SpigotRegionManager extends RegionManager<Player> {
 
@@ -39,14 +41,26 @@ public interface SpigotRegionManager extends RegionManager<Player> {
 
     //
 
-    Collection<TileRegion> regionsTiledAt(@NotNull Location location);
+    Optional<TileRegion> tileRegionAt(@NotNull Location location);
 
-    default Collection<TileRegion> regionsTiledAt(@NotNull Entity entity) {
-        return regionsTiledAt(entity.getLocation());
+    default Optional<TileRegion> tileRegionAt(@NotNull Entity entity) {
+        return tileRegionAt(entity.getLocation());
     }
 
-    default Collection<TileRegion> regionsTiledAt(@NotNull Block block) {
-        return regionsTiledAt(block.getLocation());
+    default Optional<TileRegion> tileRegionAt(@NotNull Block block) {
+        return tileRegionAt(block.getLocation());
+    }
+
+    //
+
+    Optional<Tile> tileAt(@NotNull Location location);
+
+    default Optional<Tile> tileAt(@NotNull Entity entity) {
+        return tileAt(entity.getLocation());
+    }
+
+    default Optional<Tile> tileAt(@NotNull Block block) {
+        return tileAt(block.getLocation());
     }
 
     //

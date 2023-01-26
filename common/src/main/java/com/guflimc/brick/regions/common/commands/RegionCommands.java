@@ -27,48 +27,48 @@ import java.util.List;
 //@CommandContainer
 public class RegionCommands {
 
-    @CommandMethod("br delete <region>")
+    @CommandMethod("br regions delete <region>")
     @CommandPermission("brick.regions.delete")
     public void delete(Audience sender, @Argument("region") Region region) {
         if (region instanceof WorldRegion) {
-            I18nAPI.get(this).send(sender, "cmd.region.delete.error.global");
+            I18nAPI.get(this).send(sender, "cmd.regions.delete.error.global");
         }
 
-        RegionAPI.get().remove(region);
+        RegionAPI.get().delete(region);
         I18nAPI.get(this).send(sender, "cmd.region.delete", region.name());
     }
 
-    @CommandMethod("br setdisplayname <region> <name>")
+    @CommandMethod("br regions setdisplayname <region> <name>")
     @CommandPermission("brick.regions.setdisplayname")
     public void setdisplayname(Audience sender,
                                @Argument(value = "region", parserName = "region") ModifiableRegion region,
                                @Argument("name") @Greedy String name) {
         region.setDisplayName(MiniMessage.miniMessage().deserialize(name));
-        RegionAPI.get().update(region);
-        I18nAPI.get(this).send(sender, "cmd.region.setdisplayname", region.name(), region.displayName());
+        RegionAPI.get().save(region);
+        I18nAPI.get(this).send(sender, "cmd.regions.setdisplayname", region.name(), region.displayName());
     }
 
-    @CommandMethod("br rules list <region>")
+    @CommandMethod("br regions rules list <region>")
     @CommandPermission("brick.regions.rules.list")
     public <T extends Region & ModifiableProtectedLocality> void rulesList(Audience sender,
                                                                            @Argument(value = "region", parserName = "region") T region) {
         List<LocalityProtectionRule> rules = region.rules();
         if (rules.isEmpty()) {
-            I18nAPI.get(this).send(sender, "cmd.region.rules.list.error.empty", region.name());
+            I18nAPI.get(this).send(sender, "cmd.regions.rules.list.error.empty", region.name());
             return;
         }
 
         List<Component> result = new ArrayList<>();
         for (int i = 0; i < rules.size(); i++) {
             LocalityProtectionRule rule = rules.get(i);
-            result.add(I18nAPI.get(this).translate(sender, "cmd.region.rules.list.format", (i + 1), rule));
+            result.add(I18nAPI.get(this).translate(sender, "cmd.regions.rules.list.format", (i + 1), rule));
         }
 
-        I18nAPI.get(this).send(sender, "cmd.region.rules.list", region.name(),
+        I18nAPI.get(this).send(sender, "cmd.regions.rules.list", region.name(),
                 Component.newline().append(Component.join(JoinConfiguration.newlines(), result)));
     }
 
-    @CommandMethod("br rules add <region> <status> <target> <type>")
+    @CommandMethod("br regions rules add <region> <status> <target> <type>")
     @CommandPermission("brick.regions.rules.add")
     public <T extends Region & ModifiableProtectedLocality> void rulesAdd(Audience sender,
                                                                           @Argument(value = "region", parserName = "region") T region,
@@ -82,58 +82,41 @@ public class RegionCommands {
                 .findFirst().orElse(null);
 
         if (rule != null) {
-            I18nAPI.get(this).send(sender, "cmd.region.rules.add.error.exists");
+            I18nAPI.get(this).send(sender, "cmd.regions.rules.add.error.exists");
             return;
         }
 
         rule = region.addProtectionRule(status, target, type);
-        RegionAPI.get().update(region);
+        RegionAPI.get().save(region);
 
-        I18nAPI.get(this).send(sender, "cmd.region.rules.add", rule, region.name());
+        I18nAPI.get(this).send(sender, "cmd.regions.rules.add", rule, region.name());
     }
 
-    @CommandMethod("br rules remove <region> <index>")
+    @CommandMethod("br regions rules remove <region> <index>")
     @CommandPermission("brick.regions.rules.remove")
     public <T extends Region & ModifiableProtectedLocality> void rulesRemove(Audience sender,
                                                                              @Argument(value = "region", parserName = "region") T region,
                                                                              @Argument("index") int index) {
         if (region.rules().size() < index || index < 1) {
-            I18nAPI.get(this).send(sender, "cmd.region.rules.remove.error.index");
+            I18nAPI.get(this).send(sender, "cmd.regions.rules.remove.error.index");
             return;
         }
 
         LocalityProtectionRule rule = region.rules().get(index - 1);
         region.removeRule(rule);
-        RegionAPI.get().update(region);
+        RegionAPI.get().save(region);
 
-        I18nAPI.get(this).send(sender, "cmd.region.rules.remove", rule, region.name());
+        I18nAPI.get(this).send(sender, "cmd.regions.rules.remove", rule, region.name());
     }
 
-    @CommandMethod("br rules clear <region>")
+    @CommandMethod("br regions rules clear <region>")
     @CommandPermission("brick.regions.rules.clear")
     public <T extends Region & ModifiableProtectedLocality> void rulesClear(Audience sender,
                                                                             @Argument(value = "region", parserName = "region") T region) {
-
         region.removeRules();
-        RegionAPI.get().update(region);
+        RegionAPI.get().save(region);
 
-        I18nAPI.get(this).send(sender, "cmd.region.rules.clear", region.name());
-    }
-
-    @CommandMethod("br tile <region> <radius>")
-    @CommandPermission("brick.regions.tile")
-    public <T extends Region & ModifiableProtectedLocality> void tile(Audience sender,
-                                                                      @Argument(value = "region", parserName = "region") T region,
-                                                                      @Argument("radius") int radius) {
-        if (!(region instanceof DShapeRegion sr)) {
-            // TODO message
-            return;
-        }
-
-        sr.generateTiles(radius);
-        RegionAPI.get().update(sr);
-
-        I18nAPI.get(this).send(sender, "cmd.region.tile", region.name(), sr.tiles().size());
+        I18nAPI.get(this).send(sender, "cmd.regions.rules.clear", region.name());
     }
 
 }
