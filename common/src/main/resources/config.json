@@ -1,10 +1,10 @@
 
 {
   "database": {
-    "dsn": "jdbc:mysql://localhost/brickregions",
-    "driver": "com.mysql.cj.jdbc.Driver",
-    "username": "root",
-    "password": "root"
+    "dsn": "jdbc:h2:file:./plugins/BrickRegions/data/database.h2;MODE=MySQL",
+    "driver": "org.h2.Driver",
+    "username": "user",
+    "password": ""
   },
   "showRegionTitles": true
 }
