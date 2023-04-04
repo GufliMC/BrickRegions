@@ -62,6 +62,8 @@ public class SpigotBrickRegions extends JavaPlugin {
 
     public final Benchmark benchmark = new Benchmark(this);
 
+    private BrickRegionsDatabaseContext databaseContext;
+
     //
 
     @Override
@@ -78,7 +80,7 @@ public class SpigotBrickRegions extends JavaPlugin {
         }
 
         // DATABASE
-        BrickRegionsDatabaseContext databaseContext = new BrickRegionsDatabaseContext(config.database);
+        databaseContext = new BrickRegionsDatabaseContext(config.database);
 
         // REGION MANAGER
         SpigotBrickRegionManager manager = new SpigotBrickRegionManager(databaseContext);
@@ -189,6 +191,10 @@ public class SpigotBrickRegions extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if ( databaseContext != null ) {
+            databaseContext.shutdown();
+        }
+
         getLogger().info("Disabled " + nameAndVersion() + ".");
     }
 
