@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -31,12 +32,17 @@ public class SelectionListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        if ( event.getHand() == EquipmentSlot.OFF_HAND) {
+            return;
+        }
+
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         if (item.getType() == Material.AIR) {
             return;
         }
 
-        if (!item.getItemMeta().getPersistentDataContainer().has(plugin.SELECTION_WAND_KEY, PersistentDataType.BYTE)) {
+        if ( item.getItemMeta() == null || !item.getItemMeta().getPersistentDataContainer()
+                .has(plugin.SELECTION_WAND_KEY, PersistentDataType.BYTE)) {
             return;
         }
 
