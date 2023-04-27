@@ -1,27 +1,6 @@
 package com.guflimc.brick.regions.common.commands;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.CommandManager;
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.meta.CommandMeta;
-import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.Tile;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableAttributedLocality;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
-import net.kyori.adventure.audience.Audience;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
-import java.util.stream.Collectors;
 
 public class RegionAttributeCommands {
 
@@ -39,52 +18,52 @@ public class RegionAttributeCommands {
     public RegionAttributeCommands() {
     }
 
-    public static <S> void register(CommandManager<S> commandManager) {
-        for (LocalityAttributeKey<?> attribute : KEYS) {
-            register(commandManager, attribute);
-        }
-    }
-
-    private static <T, S> void register(CommandManager<S> commandManager, LocalityAttributeKey<T> attribute) {
-        // for regions
-        commandManager.command(Command.<S>newBuilder(
-                        "attribute_" + attribute.name(), CommandMeta.simple().build())
-                .literal("br")
-                .literal("attribute")
-                .literal(attribute.name())
-                .argument(CommandArgument.ofType(Region.class, "region"))
-                .argument(CommandArgument.ofType(attribute.type(), "value"))
-                .handler(ctx -> {
-                    Audience sender = ctx.get("audience");
-                    Region region = ctx.get("region");
-                    ModifiableAttributedLocality mr = ctx.get("region");
-                    T value = ctx.get("value");
-
-                    mr.setAttribute(attribute, value);
-                    I18nAPI.get(RegionAttributeCommands.class)
-                            .send(sender, "cmd.region.attribute", region.name(), attribute.name(), value.toString());
-                })
-        );
-
-        // for tiles
-        commandManager.command(Command.<S>newBuilder(
-                        "attribute_" + attribute.name(), CommandMeta.simple().build())
-                .literal("br")
-                .literal("tile")
-                .literal("attribute")
-                .literal(attribute.name())
-                .argument(CommandArgument.ofType(attribute.type(), "value"))
-                .handler(ctx -> {
-                    Audience sender = ctx.get("audience");
-                    ModifiableAttributedLocality tile = ctx.get("tile");
-                    T value = ctx.get("value");
-
-                    tile.setAttribute(attribute, value);
-                    I18nAPI.get(RegionAttributeCommands.class)
-                            .send(sender, "cmd.tile.attribute", attribute.name(), value.toString());
-                })
-        );
-    }
+//    public static <S> void register(CommandManager<S> commandManager) {
+//        for (LocalityAttributeKey<?> attribute : KEYS) {
+//            register(commandManager, attribute);
+//        }
+//    }
+//
+//    private static <T, S> void register(CommandManager<S> commandManager, LocalityAttributeKey<T> attribute) {
+//        // for regions
+//        commandManager.command(Command.<S>newBuilder(
+//                        "attribute_" + attribute.name(), CommandMeta.simple().build())
+//                .literal("br")
+//                .literal("attribute")
+//                .literal(attribute.name())
+//                .argument(CommandArgument.ofType(Region.class, "region"))
+//                .argument(CommandArgument.ofType(attribute.type(), "value"))
+//                .handler(ctx -> {
+//                    Audience sender = ctx.get("audience");
+//                    Region region = ctx.get("region");
+//                    ModifiableAttributedLocality mr = ctx.get("region");
+//                    T value = ctx.get("value");
+//
+//                    mr.setAttribute(attribute, value);
+//                    I18nAPI.get(RegionAttributeCommands.class)
+//                            .send(sender, "cmd.region.attribute", region.name(), attribute.name(), value.toString());
+//                })
+//        );
+//
+//        // for tiles
+//        commandManager.command(Command.<S>newBuilder(
+//                        "attribute_" + attribute.name(), CommandMeta.simple().build())
+//                .literal("br")
+//                .literal("tile")
+//                .literal("attribute")
+//                .literal(attribute.name())
+//                .argument(CommandArgument.ofType(attribute.type(), "value"))
+//                .handler(ctx -> {
+//                    Audience sender = ctx.get("audience");
+//                    ModifiableAttributedLocality tile = ctx.get("tile");
+//                    T value = ctx.get("value");
+//
+//                    tile.setAttribute(attribute, value);
+//                    I18nAPI.get(RegionAttributeCommands.class)
+//                            .send(sender, "cmd.tile.attribute", attribute.name(), value.toString());
+//                })
+//        );
+//    }
 
 
 
@@ -108,7 +87,7 @@ public class RegionAttributeCommands {
 //                .orElseThrow(() -> new IllegalArgumentException("Unknown attribute: " + input));
 //    }
 //
-//    @CommandMethod("br attribute set <region> <attribute> <value>")
+//    @Command("br attribute set <region> <attribute> <value>")
 //    @CommandPermission("brick.attribute.set")
 //    public <T, R extends Region & ModifiableAttributedLocality> void attributeSet(Audience sender,
 //                             @Argument(value = "region", parserName = "region") R region,

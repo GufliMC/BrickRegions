@@ -22,12 +22,14 @@ dependencies {
     compileOnly 'com.guflimc.brick.placeholders:spigot-api:+'
 
     // shade
-    implementation 'cloud.commandframework:cloud-bukkit:+'
+    implementation 'com.guflimc.colonel:minecraft-paper:+'
     implementation 'net.kyori:adventure-platform-bukkit:4.+'
 
     implementation 'com.guflimc.brick.math:spigot:+'
     implementation 'com.guflimc.brick.gui:spigot-api:+'
 }
+
+compileJava.options.compilerArgs.add '-parameters'
 
 bukkit {
     name = rootProject.name

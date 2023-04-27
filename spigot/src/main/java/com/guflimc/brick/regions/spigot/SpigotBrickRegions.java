@@ -1,30 +1,13 @@
 package com.guflimc.brick.regions.spigot;
 
-import cloud.commandframework.annotations.AnnotationParser;
-import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.arguments.parser.ParserParameters;
-import cloud.commandframework.bukkit.BukkitCommandManager;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.execution.CommandExecutionCoordinator;
-import cloud.commandframework.meta.SimpleCommandMeta;
 import com.google.gson.Gson;
-import com.guflimc.brick.RuleTypes.common.commands.arguments.RuleTypeArgument;
 import com.guflimc.brick.gui.spigot.SpigotBrickGUI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.i18n.spigot.api.namespace.SpigotNamespace;
-import com.guflimc.brick.math.common.geometry.pos3.Location;
-import com.guflimc.brick.math.spigot.SpigotMath;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleTarget;
-import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.common.BrickRegionsConfig;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
-import com.guflimc.brick.regions.common.commands.RegionAttributeCommands;
+import com.guflimc.brick.regions.common.commands.Arguments;
 import com.guflimc.brick.regions.common.commands.RegionCommands;
-import com.guflimc.brick.regions.common.commands.arguments.RegionArgument;
-import com.guflimc.brick.regions.common.commands.arguments.RuleStatusArgument;
-import com.guflimc.brick.regions.common.commands.arguments.RuleTargetArgument;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import com.guflimc.brick.regions.spigot.benchmark.Benchmark;
 import com.guflimc.brick.regions.spigot.commands.SpigotRegionCommands;
@@ -34,10 +17,9 @@ import com.guflimc.brick.regions.spigot.placeholders.RegionPlaceholders;
 import com.guflimc.brick.regions.spigot.rules.RuleHandler;
 import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
 import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
-import io.leangen.geantyref.TypeToken;
+import com.guflimc.colonel.minecraft.paper.PaperColonel;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Locale;
-import java.util.function.Function;
+import java.util.UUID;
 
 public class SpigotBrickRegions extends JavaPlugin {
 
@@ -130,68 +112,25 @@ public class SpigotBrickRegions extends JavaPlugin {
         }
 
         // COMMANDS
-        try {
-            BukkitCommandManager<CommandSender> commandManager = new BukkitCommandManager<>(
-                    this,
-                    CommandExecutionCoordinator.simpleCoordinator(),
-                    Function.identity(),
-                    Function.identity()
-            );
+        PaperColonel colonel = new PaperColonel(this);
 
-            Function<ParserParameters, ArgumentParser<CommandSender, ?>> regionParserSupplier =
-                    ps -> new RegionArgument.RegionParser<>();
+        // SOURCE MAPPER
+        colonel.registry().registerSourceMapper(UUID.class, "worldId", s -> ((Player) s).getWorld().getUID());
 
-            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(Region.class), regionParserSupplier);
-            commandManager.parserRegistry().registerNamedParserSupplier("region", regionParserSupplier);
+        // CUSTOM ARGUMENTS
+        colonel.registerAll(new Arguments());
 
-            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleType.class),
-                    ps -> new RuleTypeArgument.RuleTypeParser<>());
-
-            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleTarget.class),
-                    ps -> new RuleTargetArgument.RuleTargetParser<>());
-
-            commandManager.parserRegistry().registerParserSupplier(TypeToken.get(RuleStatus.class),
-                    ps -> new RuleStatusArgument.RuleStatusParser<>());
-
-            commandManager.registerCommandPreProcessor(pctx -> {
-                CommandContext<CommandSender> ctx = pctx.getCommandContext();
-                if (!(ctx.getSender() instanceof Player p)) {
-                    return;
-                }
-                ctx.set("worldId", p.getWorld().getUID());
-            });
-
-            commandManager.registerCommandPreProcessor(pctx -> {
-                CommandContext<CommandSender> ctx = pctx.getCommandContext();
-                if (!(ctx.getSender() instanceof Player p)) {
-                    return;
-                }
-
-                Location loc = SpigotMath.toBrickLocation(p.getLocation());
-                SpigotRegionAPI.get().tileAt(loc).ifPresent(tile -> ctx.set("tile", tile));
-            });
-
-            AnnotationParser<CommandSender> annotationParser = new AnnotationParser<>(
-                    commandManager,
-                    CommandSender.class,
-                    parameters -> SimpleCommandMeta.empty()
-            );
-
-            annotationParser.parse(new RegionCommands());
-            annotationParser.parse(new SpigotRegionCommands(this));
-            annotationParser.parse(new SpigotSelectionCommands(this));
-            annotationParser.parse(new RegionAttributeCommands());
-//            RegionAttributeCommands.register(commandManager);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        // ACTUAL COMMANDS
+        colonel.registerAll(new RegionCommands());
+        colonel.registerAll(new SpigotRegionCommands(this));
+        colonel.registerAll(new SpigotSelectionCommands(this));
 
         getLogger().info("Enabled " + nameAndVersion() + ".");
     }
 
     @Override
     public void onDisable() {
-        if ( databaseContext != null ) {
+        if (databaseContext != null) {
             databaseContext.shutdown();
         }
 

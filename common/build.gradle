@@ -21,6 +21,7 @@ dependencies {
     api 'com.guflimc.brick.math:database:+'
     api 'com.guflimc.brick.orm:jpa-converters:+'
 
-    api 'cloud.commandframework:cloud-core:+'
-    api 'cloud.commandframework:cloud-annotations:+'
+    api 'com.guflimc.colonel:minecraft-common:+'
 }
+
+compileJava.options.compilerArgs.add '-parameters'

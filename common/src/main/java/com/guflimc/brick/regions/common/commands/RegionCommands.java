@@ -1,9 +1,5 @@
 package com.guflimc.brick.regions.common.commands;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Greedy;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
@@ -14,7 +10,11 @@ import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
-import com.guflimc.brick.regions.common.domain.DShapeRegion;
+import com.guflimc.colonel.annotation.annotations.Command;
+import com.guflimc.colonel.annotation.annotations.parameter.Parameter;
+import com.guflimc.colonel.annotation.annotations.parameter.Source;
+import com.guflimc.colonel.common.definition.CommandParameter;
+import com.guflimc.colonel.minecraft.common.annotations.Permission;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
@@ -27,9 +27,9 @@ import java.util.List;
 //@CommandContainer
 public class RegionCommands {
 
-    @CommandMethod("br regions delete <region>")
-    @CommandPermission("brick.regions.delete")
-    public void delete(Audience sender, @Argument("region") Region region) {
+    @Command("br regions delete")
+    @Permission("brick.regions.delete")
+    public void delete(@Source Audience sender, Region region) {
         if (region instanceof WorldRegion) {
             I18nAPI.get(this).send(sender, "cmd.regions.delete.error.global");
         }
@@ -38,20 +38,20 @@ public class RegionCommands {
         I18nAPI.get(this).send(sender, "cmd.region.delete", region.name());
     }
 
-    @CommandMethod("br regions setdisplayname <region> <name>")
-    @CommandPermission("brick.regions.setdisplayname")
-    public void setdisplayname(Audience sender,
-                               @Argument(value = "region", parserName = "region") ModifiableRegion region,
-                               @Argument("name") @Greedy String name) {
+    @Command("br regions setdisplayname")
+    @Permission("brick.regions.setdisplayname")
+    public void setdisplayname(@Source Audience sender,
+                               @Parameter ModifiableRegion region,
+                               @Parameter(read = CommandParameter.ReadMode.GREEDY) String name) {
         region.setDisplayName(MiniMessage.miniMessage().deserialize(name));
         RegionAPI.get().save(region);
         I18nAPI.get(this).send(sender, "cmd.regions.setdisplayname", region.name(), region.displayName());
     }
 
-    @CommandMethod("br regions rules list <region>")
-    @CommandPermission("brick.regions.rules.list")
-    public <T extends Region & ModifiableProtectedLocality> void rulesList(Audience sender,
-                                                                           @Argument(value = "region", parserName = "region") T region) {
+    @Command("br regions rules list")
+    @Permission("brick.regions.rules.list")
+    public <T extends Region & ModifiableProtectedLocality> void rulesList(@Source Audience sender,
+                                                                           @Parameter T region) {
         List<LocalityProtectionRule> rules = region.rules();
         if (rules.isEmpty()) {
             I18nAPI.get(this).send(sender, "cmd.regions.rules.list.error.empty", region.name());
@@ -68,13 +68,13 @@ public class RegionCommands {
                 Component.newline().append(Component.join(JoinConfiguration.newlines(), result)));
     }
 
-    @CommandMethod("br regions rules add <region> <status> <target> <type>")
-    @CommandPermission("brick.regions.rules.add")
-    public <T extends Region & ModifiableProtectedLocality> void rulesAdd(Audience sender,
-                                                                          @Argument(value = "region", parserName = "region") T region,
-                                                                          @Argument("status") RuleStatus status,
-                                                                          @Argument("target") RuleTarget target,
-                                                                          @Argument("type") RuleType type) {
+    @Command("br regions rules add")
+    @Permission("brick.regions.rules.add")
+    public <T extends Region & ModifiableProtectedLocality> void rulesAdd(@Source Audience sender,
+                                                                          @Parameter T region,
+                                                                          @Parameter RuleStatus status,
+                                                                          @Parameter RuleTarget target,
+                                                                          @Parameter RuleType type) {
         LocalityProtectionRule rule = region.rules().stream()
                 .filter(r -> r.status().equals(status))
                 .filter(r -> r.target().equals(target))
@@ -92,11 +92,11 @@ public class RegionCommands {
         I18nAPI.get(this).send(sender, "cmd.regions.rules.add", rule, region.name());
     }
 
-    @CommandMethod("br regions rules remove <region> <index>")
-    @CommandPermission("brick.regions.rules.remove")
-    public <T extends Region & ModifiableProtectedLocality> void rulesRemove(Audience sender,
-                                                                             @Argument(value = "region", parserName = "region") T region,
-                                                                             @Argument("index") int index) {
+    @Command("br regions rules remove")
+    @Permission("brick.regions.rules.remove")
+    public <T extends Region & ModifiableProtectedLocality> void rulesRemove(@Source Audience sender,
+                                                                             @Parameter T region,
+                                                                             @Parameter int index) {
         if (region.rules().size() < index || index < 1) {
             I18nAPI.get(this).send(sender, "cmd.regions.rules.remove.error.index");
             return;
@@ -109,10 +109,10 @@ public class RegionCommands {
         I18nAPI.get(this).send(sender, "cmd.regions.rules.remove", rule, region.name());
     }
 
-    @CommandMethod("br regions rules clear <region>")
-    @CommandPermission("brick.regions.rules.clear")
-    public <T extends Region & ModifiableProtectedLocality> void rulesClear(Audience sender,
-                                                                            @Argument(value = "region", parserName = "region") T region) {
+    @Command("br regions rules clear")
+    @Permission("brick.regions.rules.clear")
+    public <T extends Region & ModifiableProtectedLocality> void rulesClear(@Source Audience sender,
+                                                                            @Parameter T region) {
         region.removeRules();
         RegionAPI.get().save(region);
 
