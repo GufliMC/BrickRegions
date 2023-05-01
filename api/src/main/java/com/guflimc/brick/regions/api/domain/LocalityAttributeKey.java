@@ -3,9 +3,14 @@ package com.guflimc.brick.regions.api.domain;
 import com.guflimc.brick.orm.api.attributes.AttributeKey;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class LocalityAttributeKey<T> extends AttributeKey<T> {
+
+    private final static Map<String, LocalityAttributeKey<?>> KEYS = new ConcurrentHashMap<>();
 
     // Modify the settings when this locality is rendered on a map.
 
@@ -13,13 +18,13 @@ public class LocalityAttributeKey<T> extends AttributeKey<T> {
             Object::toString, Boolean::parseBoolean);
 
     public static final LocalityAttributeKey<Color> MAP_FILL_COLOR = new LocalityAttributeKey<>("map_fill_color", Color.class,
-             c -> c.getRGB() + "", Color::decode);
+             c -> String.valueOf(c.getRGB()), Color::decode);
 
     public static final LocalityAttributeKey<Double> MAP_FILL_OPACITY = new LocalityAttributeKey<>("map_fill_opacity", Double.class,
             Object::toString, Double::parseDouble);
 
     public static final LocalityAttributeKey<Color> MAP_STROKE_COLOR = new LocalityAttributeKey<>("map_stroke_color", Color.class,
-            c -> c.getRGB() + "", Color::decode);
+            c -> String.valueOf(c.getRGB()), Color::decode);
 
     public static final LocalityAttributeKey<Double> MAP_STROKE_OPACITY = new LocalityAttributeKey<>("map_stroke_opacity", Double.class,
             Object::toString, Double::parseDouble);
@@ -36,6 +41,20 @@ public class LocalityAttributeKey<T> extends AttributeKey<T> {
 
     public LocalityAttributeKey(String name, Class<T> type, Function<T, String> serializer, Function<String, T> deserializer) {
         super(name, type, serializer, deserializer);
+
+        if ( KEYS.containsKey(name) ) {
+            throw new IllegalArgumentException("An attribute key with that name already exists.");
+        }
+
+        KEYS.put(name, this);
+    }
+
+    public static LocalityAttributeKey<?>[] values() {
+        return KEYS.values().toArray(LocalityAttributeKey<?>[]::new);
+    }
+
+    public static LocalityAttributeKey<?> valueOf(String name) {
+        return KEYS.get(name);
     }
 
 }

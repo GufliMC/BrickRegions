@@ -5,7 +5,12 @@
 
   "cmd.error.args": "<dark_red>{1} <red>is not a valid <dark_red>{0}<red>.",
   "cmd.error.args.player": "<red>The player <dark_red>{0} <red>is not online.",
-  "cmd.error.args.region": "<red>A region with that name does not exist.",
+  "cmd.error.args.region": "<red>The region <dark_red>{0} <red>does not exist.",
+  "cmd.error.args.ruletype": "<red>The rule type <dark_red>{0} <red>does not exist.",
+  "cmd.error.args.ruletarget": "<red>The rule target <dark_red>{0} <red>does not exist.",
+  "cmd.error.args.rulestatus": "<dark_red>{0}<red> is not a valid rule status, try <dark_red>ALLOW <red>or <dark_red>DENY<red>.",
+  "cmd.error.args.selectiontype": "<dark_red>{0}<red> is not a valid selection type, try <dark_red>CUBOID <red>or <dark_red>POLY<red>.",
+  "cmd.error.args.attribute": "<red>The attribute <dark_red>{0} <red>does not exist.",
 
   "cmd.select.invalid": "<red>Please make a valid selection first.",
   "cmd.select.expand": "<gray>Selection has been expanded on the vertical axis.",

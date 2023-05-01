@@ -6,7 +6,8 @@ import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.i18n.spigot.api.namespace.SpigotNamespace;
 import com.guflimc.brick.regions.common.BrickRegionsConfig;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
-import com.guflimc.brick.regions.common.commands.Arguments;
+import com.guflimc.brick.regions.common.commands.RegionArguments;
+import com.guflimc.brick.regions.common.commands.RegionAttributeCommands;
 import com.guflimc.brick.regions.common.commands.RegionCommands;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import com.guflimc.brick.regions.spigot.benchmark.Benchmark;
@@ -118,12 +119,14 @@ public class SpigotBrickRegions extends JavaPlugin {
         colonel.registry().registerSourceMapper(UUID.class, "worldId", s -> ((Player) s).getWorld().getUID());
 
         // CUSTOM ARGUMENTS
-        colonel.registerAll(new Arguments());
+        colonel.registerAll(new RegionArguments());
 
         // ACTUAL COMMANDS
         colonel.registerAll(new RegionCommands());
         colonel.registerAll(new SpigotRegionCommands(this));
         colonel.registerAll(new SpigotSelectionCommands(this));
+
+        RegionAttributeCommands.register(colonel);
 
         getLogger().info("Enabled " + nameAndVersion() + ".");
     }
