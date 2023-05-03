@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class PlayerRegionsTitlesEvent extends Event {
+public class PlayerRegionsMoveDisplayEvent extends Event {
 
     private final Player player;
     private final Collection<Region> from;
@@ -17,14 +17,18 @@ public class PlayerRegionsTitlesEvent extends Event {
 
     private Component title;
     private Component subtitle;
+    private Component actionbar;
 
-    public PlayerRegionsTitlesEvent(Player player, Collection<Region> from, Collection<Region> to, Component title, Component subtitle) {
+    public PlayerRegionsMoveDisplayEvent(Player player, Collection<Region> from, Collection<Region> to,
+                                         Component title, Component subtitle, Component actionbar) {
         super(true);
         this.player = player;
         this.from = from;
         this.to = to;
+
         this.title = title;
         this.subtitle = subtitle;
+        this.actionbar = actionbar;
     }
 
     public Player player() {
@@ -47,12 +51,20 @@ public class PlayerRegionsTitlesEvent extends Event {
         return subtitle;
     }
 
+    public Component actionbar() {
+        return actionbar;
+    }
+
     public void setTitle(Component title) {
         this.title = title;
     }
 
     public void setSubtitle(Component subtitle) {
         this.subtitle = subtitle;
+    }
+
+    public void setActionbar(Component actionbar) {
+        this.actionbar = actionbar;
     }
 
     //

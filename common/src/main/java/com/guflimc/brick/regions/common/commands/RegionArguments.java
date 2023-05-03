@@ -2,9 +2,9 @@ package com.guflimc.brick.regions.common.commands;
 
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.WorldRegion;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -12,7 +12,7 @@ import com.guflimc.brick.regions.api.selection.SelectionType;
 import com.guflimc.colonel.annotation.annotations.Completer;
 import com.guflimc.colonel.annotation.annotations.Parser;
 import com.guflimc.colonel.annotation.annotations.parameter.Source;
-import com.guflimc.colonel.common.build.Argument;
+import com.guflimc.colonel.common.ext.Argument;
 import net.kyori.adventure.audience.Audience;
 
 import java.util.Arrays;
@@ -39,6 +39,26 @@ public class RegionArguments {
                 .stream().map(Region::name).toList();
     }
 
+    // REGION NOT GLOBAL
+
+    @Parser(type = Region.class, value = "not-global")
+    public Argument regionNotGlobal(@Source Audience audience, @Source("worldId") UUID worldId, String input) {
+        return RegionAPI.get()
+                .findRegion(worldId, input)
+                .filter(region -> !(region instanceof WorldRegion))
+                .map(Argument::success)
+                .orElse(Argument.fail(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
+    }
+
+    @Completer(type = Region.class, value = "not-global")
+    public List<String> regionNotGlobal(@Source("worldId") UUID worldId) {
+        return RegionAPI.get()
+                .regions(worldId)
+                .stream()
+                .filter(region -> !(region instanceof WorldRegion))
+                .map(Region::name).toList();
+    }
+
     // ATTRIBUTE
 
     @Completer(type = LocalityAttributeKey.class)
@@ -52,7 +72,7 @@ public class RegionArguments {
     public Argument attribute(@Source Audience sender, String input) {
         LocalityAttributeKey<?> attribute = LocalityAttributeKey.valueOf(input);
         if ( attribute == null ) {
-            return Argument.fail(() -> I18nAPI.get(RegionAttributeCommands.class).send(sender, "cmd.error.args.attribute", input));
+            return Argument.fail(() -> I18nAPI.get(this).send(sender, "cmd.error.args.attribute", input));
         }
         return Argument.success(attribute);
     }

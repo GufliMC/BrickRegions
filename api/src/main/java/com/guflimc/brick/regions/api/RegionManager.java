@@ -2,6 +2,7 @@ package com.guflimc.brick.regions.api;
 
 import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
+import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.domain.*;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
@@ -44,6 +45,8 @@ public interface RegionManager<S> {
 
     Collection<ShapeRegion> intersecting(@NotNull ShapeRegion region);
 
+    Collection<Tile> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape);
+
     Collection<Locality> localitiesAt(@NotNull UUID worldId, @NotNull Point3 position);
 
     Collection<Locality> localitiesAt(@NotNull Location position);
@@ -59,6 +62,8 @@ public interface RegionManager<S> {
     CompletableFuture<Void> delete(@NotNull Locality locality);
 
     CompletableFuture<Void> save(@NotNull Locality locality);
+
+    <T extends Locality> CompletableFuture<Void> save(@NotNull Collection<T> localities);
 
     void register(@NotNull Region region);
 

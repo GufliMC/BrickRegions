@@ -4,37 +4,40 @@ import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Polygon;
+import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.database.Point2Converter;
 import com.guflimc.brick.math.database.Shape2Converter;
+import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.Tile;
 import com.guflimc.brick.regions.api.domain.TileRegion;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Optional;
 
 @Entity
 public class DTile extends DLocality implements Tile {
 
     @Column(name = "tile_parent_id")
-    @ManyToOne(targetEntity = DTileRegion.class, fetch = FetchType.EAGER)
-    private DTileRegion parent;
+    @ManyToOne(targetEntity = DHexagonTileRegion.class, fetch = FetchType.EAGER)
+    private DHexagonTileRegion parent;
 
     @Column(name = "tile_position", length = 1024)
     @Convert(converter = Point2Converter.class)
     private Point2 position;
 
-    @Column(name = "tile_polygon", length = 2048)
+    @Column(name = "tile_shape", length = 2048)
     @Convert(converter = Shape2Converter.class)
-    private Polygon polygon;
+    private Shape2 shape;
 
     public DTile() {
     }
 
-    DTile(DTileRegion region, Point2 position, Polygon polygon) {
+    DTile(DHexagonTileRegion region, Point2 position, Shape2 shape) {
         super(region.worldId());
         this.parent = region;
         this.position = position;
-        this.polygon = polygon;
+        this.shape = shape;
     }
 
     @Override
@@ -43,8 +46,8 @@ public class DTile extends DLocality implements Tile {
     }
 
     @Override
-    public Polygon shape() {
-        return polygon;
+    public Shape2 shape() {
+        return shape;
     }
 
     @Override
@@ -63,6 +66,15 @@ public class DTile extends DLocality implements Tile {
     }
 
     public boolean contains(Point2 point) {
-        return polygon.contains(point);
+        return shape.contains(point);
+    }
+
+    @Override
+    public <U> Optional<U> attribute(LocalityAttributeKey<U> key) {
+        Optional<U> opt = super.attribute(key);
+        if ( opt.isPresent() ) {
+            return opt;
+        }
+        return parent.attribute(key);
     }
 }

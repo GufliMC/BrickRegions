@@ -1,8 +1,8 @@
 package com.guflimc.brick.regions.common;
 
-import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
+import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.RegionManager;
@@ -126,6 +126,20 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
+    public Collection<Tile> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape) {
+        return regions(worldId).stream()
+                .filter(rg -> rg instanceof TileRegion)
+                .map(rg -> (TileRegion) rg)
+                .flatMap(rg -> rg.intersecting(shape).stream())
+                .toList();
+    }
+
+    @Override
+    public <T extends Locality> CompletableFuture<Void> save(@NotNull Collection<T> localities) {
+        return null;
+    }
+
+    @Override
     public Collection<Locality> localitiesAt(@NotNull UUID worldId, @NotNull Point3 position) {
         return localitiesAt(new Location(worldId, position));
     }
@@ -218,9 +232,6 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Shape3 shape) {
-        if (shape instanceof PolyPrism pa && !pa.polygon().isConvex()) {
-            throw new IllegalArgumentException("A polygon must be convex.");
-        }
         DShapeRegion region = new DShapeRegion(worldId, name, shape);
         return databaseContext.persistAsync(region).thenApply((n) -> {
             regionEngine.add(region);
@@ -236,13 +247,10 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<TileRegion> createTiles(@NotNull String name, int tileRadius, @NotNull UUID worldId, @NotNull Shape3 shape) {
-        if (shape instanceof PolyPrism pa && !pa.polygon().isConvex()) {
-            throw new IllegalArgumentException("A polygon must be convex.");
-        }
         if ( intersecting(worldId, shape).stream().anyMatch(TileRegion.class::isInstance) ) {
             throw new IllegalArgumentException("There can only be one tile region at the same location.");
         }
-        DTileRegion region = new DTileRegion(worldId, name, shape, tileRadius);
+        DHexagonTileRegion region = new DHexagonTileRegion(worldId, name, shape, tileRadius);
         return databaseContext.persistAsync(region).thenApply((n) -> {
             regionEngine.add(region);
             EventManager.INSTANCE.onCreate(region);

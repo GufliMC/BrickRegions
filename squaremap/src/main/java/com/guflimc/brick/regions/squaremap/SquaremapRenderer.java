@@ -37,6 +37,7 @@ public class SquaremapRenderer {
                     .zIndex(200)
                     .build();
             world.layerRegistry().register(Key.of(layer.getLabel()), layer);
+            layer.clearMarkers();
             return layer;
         });
         return worlds.get(world);
@@ -57,10 +58,13 @@ public class SquaremapRenderer {
             return;
         }
 
-        if ( worlds.containsKey(mapWorld) ) {
-            worlds.get(mapWorld).clearMarkers();
-            worlds.remove(mapWorld);
+        if ( !worlds.containsKey(mapWorld) ) {
+            return;
         }
+
+        SimpleLayerProvider layer = worlds.remove(mapWorld);
+        layer.clearMarkers();
+        mapWorld.layerRegistry().unregister(Key.of(layer.getLabel()));
     }
 
     public void render() {
@@ -79,6 +83,11 @@ public class SquaremapRenderer {
 
         if ( locality instanceof ShapeRegion sr ) {
             mapWorld(locality.worldId()).ifPresent(mw -> render(mw, sr));
+            return;
+        }
+
+        if ( locality instanceof TileRegion tr ) {
+            mapWorld(locality.worldId()).ifPresent(mw -> render(mw, tr));
             return;
         }
     }
@@ -155,10 +164,6 @@ public class SquaremapRenderer {
             }
 
             MarkerOptions.Builder builder = options.asBuilder();
-            if ( locality instanceof Tile ) {
-                builder.strokeWeight(1); // default for tiles
-            }
-
             al.attribute(LocalityAttributeKey.MAP_CLICK_TEXT).ifPresent(builder::clickTooltip);
             al.attribute(LocalityAttributeKey.MAP_HOVER_TEXT).ifPresent(builder::hoverTooltip);
             al.attribute(LocalityAttributeKey.MAP_FILL_COLOR).ifPresent(builder::fillColor);
@@ -179,4 +184,37 @@ public class SquaremapRenderer {
         marker.markerOptions(options);
         layer.addMarker(Key.of(locality.id().toString()), marker);
     }
+
+    //
+
+    public void delete(@NotNull Locality locality) {
+        if ( locality instanceof Tile tile ) {
+            delete(tile);
+            return;
+        }
+
+        if ( locality instanceof TileRegion tr ) {
+            mapWorld(locality.worldId()).ifPresent(mw -> delete(mw, tr));
+            return;
+        }
+
+        mapWorld(locality.worldId()).ifPresent(mw -> delete(mw, locality));
+    }
+
+    private void delete(@NotNull TileRegion region) {
+        SimpleLayerProvider layer = tileLayers.get(region);
+        layer.clearMarkers();
+        mapWorld(region.worldId()).ifPresent(mw -> mw.layerRegistry().unregister(Key.of(layer.getLabel())));
+    }
+
+    private void delete(@NotNull Tile tile) {
+        SimpleLayerProvider layer = tileLayers.get(tile.parent());
+        layer.removeMarker(Key.of(tile.id().toString()));
+    }
+
+    private void delete(@NotNull MapWorld world, @NotNull Locality locality) {
+        SimpleLayerProvider layer = defaultLayer(world);
+        layer.removeMarker(Key.of(locality.id().toString()));
+    }
+
 }

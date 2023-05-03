@@ -42,8 +42,8 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onRegionCreate(RegionDeleteEvent event) {
-        render(event.region());
+    public void onRegionDelete(RegionDeleteEvent event) {
+        renderer.delete(event.region());
     }
 
     @EventHandler
@@ -53,7 +53,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onUnregister(RegionUnregisterEvent event) {
-        render(event.region());
+        renderer.delete(event.region());
     }
 
     @EventHandler

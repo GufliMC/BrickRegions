@@ -4,10 +4,13 @@ import com.google.gson.Gson;
 import com.guflimc.brick.gui.spigot.SpigotBrickGUI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.i18n.spigot.api.namespace.SpigotNamespace;
+import com.guflimc.brick.regions.api.RegionAPI;
+import com.guflimc.brick.regions.api.domain.Tile;
+import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.BrickRegionsConfig;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
 import com.guflimc.brick.regions.common.commands.RegionArguments;
-import com.guflimc.brick.regions.common.commands.RegionAttributeCommands;
+import com.guflimc.brick.regions.spigot.commands.RegionAttributeCommands;
 import com.guflimc.brick.regions.common.commands.RegionCommands;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import com.guflimc.brick.regions.spigot.benchmark.Benchmark;
@@ -89,10 +92,7 @@ public class SpigotBrickRegions extends JavaPlugin {
         pm.registerEvents(new ContainerListener(), this);
         pm.registerEvents(new BlockInteractListener(), this);
         pm.registerEvents(new DropItemsListener(), this);
-
-        if (config.showRegionTitles) {
-            pm.registerEvents(new PlayerMoveTitlesListener(this), this);
-        }
+        pm.registerEvents(new PlayerMoveTitlesListener(this), this);
 
         // WORLD LOADING
         pm.registerEvents(new WorldListener(manager), this);
@@ -117,6 +117,8 @@ public class SpigotBrickRegions extends JavaPlugin {
 
         // SOURCE MAPPER
         colonel.registry().registerSourceMapper(UUID.class, "worldId", s -> ((Player) s).getWorld().getUID());
+        colonel.registry().registerSourceMapper(Tile.class, s -> SpigotRegionAPI.get().tileAt((Player) s).orElseThrow());
+        colonel.registry().registerSourceMapper(Selection.class, s -> SpigotRegionAPI.get().selection((Player) s).orElseThrow());
 
         // CUSTOM ARGUMENTS
         colonel.registerAll(new RegionArguments());

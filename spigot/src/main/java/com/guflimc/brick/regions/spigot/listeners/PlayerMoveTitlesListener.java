@@ -1,9 +1,11 @@
 package com.guflimc.brick.regions.spigot.listeners;
 
+import com.guflimc.brick.regions.api.domain.AttributedLocality;
+import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.spigot.SpigotBrickRegions;
 import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsMoveEvent;
-import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsTitlesEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsMoveDisplayEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -17,6 +19,8 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class PlayerMoveTitlesListener implements Listener {
 
@@ -35,8 +39,8 @@ public class PlayerMoveTitlesListener implements Listener {
     @EventHandler
     public void onMove(PlayerRegionsMoveEvent event) {
         handle(event.player(),
-                event.from().stream().filter(Region.class::isInstance).map(Region.class::cast).toList(),
-                event.to().stream().filter(Region.class::isInstance).map(Region.class::cast).toList());
+                event.uniqueFrom().stream().filter(Region.class::isInstance).map(Region.class::cast).toList(),
+                event.uniqueFrom().stream().filter(Region.class::isInstance).map(Region.class::cast).toList());
     }
 
 //    @EventHandler
@@ -49,26 +53,43 @@ public class PlayerMoveTitlesListener implements Listener {
 
     //
 
-    private void handle(Player player, Collection<Region> from, Collection<Region> to) {
-
-        Component titleFrom = from.stream()
+    private <T> T get(Collection<Region> ca, LocalityAttributeKey<T> la, Collection<Region> cb, LocalityAttributeKey<T> lb) {
+        Region ra = ca.stream()
+                .filter(rg -> rg instanceof AttributedLocality al && al.attribute(la).isPresent())
                 .max(Comparator.comparingInt(Region::priority))
-                .map(Region::displayName).orElse(null);
+                .orElse(null);
 
-        Component titleTo = to.stream()
-                .max(Comparator.comparingInt(Region::priority))
-                .map(Region::displayName).orElse(null);
+        T result = null;
+        int priority = Integer.MIN_VALUE;
 
-        if (titleTo != null && titleTo.equals(titleFrom)) {
-            titleTo = null;
+        if ( ra != null ) {
+            result = ((AttributedLocality) ra).attribute(la).orElse(null);
+            priority = ra.priority();
         }
 
-        PlayerRegionsTitlesEvent e = new PlayerRegionsTitlesEvent(player, from, to, titleTo, null);
-        Bukkit.getServer().getPluginManager().callEvent(e);
+        Region rb = ca.stream()
+                .filter(rg -> rg instanceof AttributedLocality al && al.attribute(lb).isPresent())
+                .max(Comparator.comparingInt(Region::priority))
+                .orElse(null);
 
-        if (e.title() == null && e.subtitle() == null) {
+        if ( rb != null && rb.priority() > priority ) {
+            result = ((AttributedLocality) rb).attribute(lb).orElse(null);
+        }
+
+        return result;
+    }
+
+    private void handle(Player player, Collection<Region> from, Collection<Region> to) {
+        if ( from.isEmpty() && to.isEmpty() ) {
             return;
         }
+
+        Component title = get(to, LocalityAttributeKey.ENTRANCE_TITLE, from, LocalityAttributeKey.EXIT_TITLE);
+        Component subtitle = get(to, LocalityAttributeKey.ENTRANCE_SUBTITLE, from, LocalityAttributeKey.EXIT_SUBTITLE);
+        Component actionbar = get(to, LocalityAttributeKey.ENTRANCE_ACTIONBAR, from, LocalityAttributeKey.EXIT_ACTIONBAR);
+
+        PlayerRegionsMoveDisplayEvent e = new PlayerRegionsMoveDisplayEvent(player, from, to, title, subtitle, actionbar);
+        Bukkit.getServer().getPluginManager().callEvent(e);
 
         Audience audience = plugin.adventure.player(player);
         if (e.title() != null) {
@@ -76,11 +97,17 @@ public class PlayerMoveTitlesListener implements Listener {
         } else {
             audience.sendTitlePart(TitlePart.TITLE, Component.empty());
         }
+
         if (e.subtitle() != null) {
             audience.sendTitlePart(TitlePart.SUBTITLE, e.subtitle());
         } else {
             audience.sendTitlePart(TitlePart.SUBTITLE, Component.empty());
         }
+
+        if ( e.actionbar() != null ) {
+            audience.sendActionBar(e.actionbar());
+        }
+
         audience.sendTitlePart(TitlePart.TIMES, DEFAULT_TIMES);
     }
 

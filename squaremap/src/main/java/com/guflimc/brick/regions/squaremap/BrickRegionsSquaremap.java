@@ -8,10 +8,12 @@ import xyz.jpenilla.squaremap.api.SquaremapProvider;
 
 public class BrickRegionsSquaremap extends JavaPlugin implements Listener {
 
+    private SquaremapRenderer renderer;
+
     @Override
     public void onEnable() {
         Squaremap squaremap = SquaremapProvider.get();
-        SquaremapRenderer renderer = new SquaremapRenderer(squaremap);
+        renderer = new SquaremapRenderer(squaremap);
 
         // register event listener
         getServer().getPluginManager().registerEvents(new EventListener(this, renderer), this);
@@ -24,6 +26,9 @@ public class BrickRegionsSquaremap extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        if ( renderer != null ) {
+            Bukkit.getWorlds().forEach(world -> renderer.clear(world));
+        }
         getLogger().info("Disabled " + nameAndVersion() + ".");
     }
 

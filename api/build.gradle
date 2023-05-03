@@ -6,4 +6,6 @@ dependencies {
     api 'com.guflimc.brick.math:common:+'
     api 'com.guflimc.brick.orm:api:+'
     api 'net.kyori:adventure-api:4.+'
+
+    implementation 'com.guflimc.adventure:adventure-mixed-legacy-serializer:+'
 }

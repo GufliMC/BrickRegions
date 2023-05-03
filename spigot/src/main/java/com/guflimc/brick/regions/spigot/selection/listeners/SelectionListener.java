@@ -52,10 +52,10 @@ public class SelectionListener implements Listener {
         }
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            addLeftClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()).add(0.5));
+            addLeftClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()));
             event.setCancelled(true);
         } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            addRightClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()).add(0.5));
+            addRightClick(event.getPlayer(), new Vector3(b.getX(), b.getY(), b.getZ()));
             event.setCancelled(true);
         }
     }

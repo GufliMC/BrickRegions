@@ -2,6 +2,8 @@ package com.guflimc.brick.regions.spigot.commands;
 
 import com.guflimc.brick.gui.spigot.item.ItemStackBuilder;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
+import com.guflimc.brick.math.spigot.SpigotMath;
+import com.guflimc.brick.regions.api.selection.CubeSelection;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.api.selection.SelectionType;
 import com.guflimc.brick.regions.spigot.SpigotBrickRegions;
@@ -11,6 +13,7 @@ import com.guflimc.colonel.annotation.annotations.parameter.Parameter;
 import com.guflimc.colonel.annotation.annotations.parameter.Source;
 import com.guflimc.colonel.minecraft.common.annotations.Permission;
 import org.bukkit.Material;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -39,11 +42,27 @@ public class SpigotSelectionCommands {
         SpigotI18nAPI.get(this).send(sender, "cmd.select.wand");
     }
 
-    @Command("br select")
+    @Command("br select type")
     @Permission("brick.regions.select")
-    public void type(@Source Player sender, @Parameter SelectionType type) {
+    public void mode(@Source Player sender, @Parameter SelectionType type) {
         sender.getPersistentDataContainer().set(plugin.SELECTION_TYPE, PersistentDataType.INTEGER, type.ordinal());
         SpigotI18nAPI.get(this).send(sender, "cmd.select.type", type.name());
+    }
+
+    @Command("br select worldborder")
+    @Permission("brick.regions.select")
+    public void worldborder(@Source Player sender) {
+        WorldBorder wb = sender.getWorld().getWorldBorder();
+
+        double min = sender.getWorld().getMinHeight();
+        double max = sender.getWorld().getMaxHeight();
+
+        CubeSelection sel = new CubeSelection(sender.getWorld().getUID());
+        sel.setPos1(SpigotMath.toBrickVector(wb.getCenter().add(-wb.getSize(), min, -wb.getSize())));
+        sel.setPos2(SpigotMath.toBrickVector(wb.getCenter().add(wb.getSize(), max, wb.getSize())));
+
+        SpigotRegionAPI.get().setSelection(sender, sel);
+        SpigotI18nAPI.get(this).send(sender, "cmd.select.worldborder");
     }
 
     @Command("br select clear")

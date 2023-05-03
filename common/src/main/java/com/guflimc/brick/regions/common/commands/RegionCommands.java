@@ -13,7 +13,7 @@ import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.colonel.annotation.annotations.Command;
 import com.guflimc.colonel.annotation.annotations.parameter.Parameter;
 import com.guflimc.colonel.annotation.annotations.parameter.Source;
-import com.guflimc.colonel.common.definition.CommandParameter;
+import com.guflimc.colonel.common.dispatch.definition.ReadMode;
 import com.guflimc.colonel.minecraft.common.annotations.Permission;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -29,20 +29,20 @@ public class RegionCommands {
 
     @Command("br regions delete")
     @Permission("brick.regions.delete")
-    public void delete(@Source Audience sender, Region region) {
+    public void delete(@Source Audience sender, @Parameter(parser = "not-global", completer = "not-global") Region region) {
         if (region instanceof WorldRegion) {
             I18nAPI.get(this).send(sender, "cmd.regions.delete.error.global");
         }
 
         RegionAPI.get().delete(region);
-        I18nAPI.get(this).send(sender, "cmd.region.delete", region.name());
+        I18nAPI.get(this).send(sender, "cmd.regions.delete", region.name());
     }
 
     @Command("br regions setdisplayname")
     @Permission("brick.regions.setdisplayname")
     public void setdisplayname(@Source Audience sender,
                                @Parameter ModifiableRegion region,
-                               @Parameter(read = CommandParameter.ReadMode.GREEDY) String name) {
+                               @Parameter(read = ReadMode.GREEDY) String name) {
         region.setDisplayName(MiniMessage.miniMessage().deserialize(name));
         RegionAPI.get().save(region);
         I18nAPI.get(this).send(sender, "cmd.regions.setdisplayname", region.name(), region.displayName());

@@ -1,6 +1,8 @@
 package com.guflimc.brick.regions.api.domain;
 
+import com.guflimc.adventure.MixedLegacyComponentSerializer;
 import com.guflimc.brick.orm.api.attributes.AttributeKey;
+import net.kyori.adventure.text.Component;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -37,6 +39,28 @@ public class LocalityAttributeKey<T> extends AttributeKey<T> {
 
     public static final LocalityAttributeKey<String> MAP_CLICK_TEXT = new LocalityAttributeKey<>("map_click_text", String.class,
             Function.identity(), Function.identity());
+
+    //
+
+    public static final LocalityAttributeKey<Component> ENTRANCE_TITLE = new LocalityAttributeKey<>("entrance_title", Component.class,
+            MixedLegacyComponentSerializer::serialize, MixedLegacyComponentSerializer::deserialize);
+
+    public static final LocalityAttributeKey<Component> ENTRANCE_SUBTITLE = new LocalityAttributeKey<>("entrance_subtitle", Component.class,
+            MixedLegacyComponentSerializer::serialize, MixedLegacyComponentSerializer::deserialize);
+
+    public static final LocalityAttributeKey<Component> ENTRANCE_ACTIONBAR = new LocalityAttributeKey<>("entrance_actionbar", Component.class,
+            MixedLegacyComponentSerializer::serialize, MixedLegacyComponentSerializer::deserialize);
+
+    public static final LocalityAttributeKey<Component> EXIT_TITLE = new LocalityAttributeKey<>("exit_title", Component.class,
+            MixedLegacyComponentSerializer::serialize, MixedLegacyComponentSerializer::deserialize);
+
+    public static final LocalityAttributeKey<Component> EXIT_SUBTITLE = new LocalityAttributeKey<>("exit_subtitle", Component.class,
+            MixedLegacyComponentSerializer::serialize, MixedLegacyComponentSerializer::deserialize);
+
+    public static final LocalityAttributeKey<Component> EXIT_ACTIONBAR = new LocalityAttributeKey<>("exit_actionbar", Component.class,
+            MixedLegacyComponentSerializer::serialize, MixedLegacyComponentSerializer::deserialize);
+
+    //
 
 
     public LocalityAttributeKey(String name, Class<T> type, Function<T, String> serializer, Function<String, T> deserializer) {

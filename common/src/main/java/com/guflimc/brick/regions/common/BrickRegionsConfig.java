@@ -6,6 +6,4 @@ public class BrickRegionsConfig {
 
     public EbeanConfig database;
 
-    public boolean showRegionTitles;
-
 }
