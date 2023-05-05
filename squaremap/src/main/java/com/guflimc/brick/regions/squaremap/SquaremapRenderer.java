@@ -201,10 +201,10 @@ public class SquaremapRenderer {
         mapWorld(locality.worldId()).ifPresent(mw -> delete(mw, locality));
     }
 
-    private void delete(@NotNull TileRegion region) {
+    private void delete(@NotNull MapWorld world, @NotNull TileRegion region) {
         SimpleLayerProvider layer = tileLayers.get(region);
         layer.clearMarkers();
-        mapWorld(region.worldId()).ifPresent(mw -> mw.layerRegistry().unregister(Key.of(layer.getLabel())));
+        world.layerRegistry().unregister(Key.of(layer.getLabel()));
     }
 
     private void delete(@NotNull Tile tile) {

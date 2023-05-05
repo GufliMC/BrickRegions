@@ -123,8 +123,8 @@ public class SpigotRegionCommands {
         SpigotI18nAPI.get(this).send(sender, "cmd.regions.create", name);
     }
 
-    @Command("br tiles create")
-    @Permission("brick.tiles.create")
+    @Command("br tiles generate")
+    @Permission("brick.tiles.generate")
     public void createTiles(@Source Player sender,
                             @Parameter String name,
                             @Parameter int radius) {
