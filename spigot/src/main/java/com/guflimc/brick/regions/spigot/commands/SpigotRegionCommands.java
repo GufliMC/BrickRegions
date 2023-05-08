@@ -2,6 +2,7 @@ package com.guflimc.brick.regions.spigot.commands;
 
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
+import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.shape2d.Rectangle;
 import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
@@ -64,9 +65,9 @@ public class SpigotRegionCommands {
     @Command("br tiles contour")
     @Permission("brick.tiles.contour")
     public void contour(@Source Player player, @Source Tile tile, Material material) {
-        List<Vector2> points = tile.shape().vertices();
-        Vector2 from = points.get(points.size() - 1);
-        for (Vector2 to : points) {
+        List<Point2> points = tile.shape().vertices();
+        Point2 from = points.get(points.size() - 1);
+        for (Point2 to : points) {
             Vector dir = new Vector(to.x() - from.x(), 0, to.y() - from.y());
             Vector start = new Vector(from.x(), 0, from.y());
             BlockIterator iter = new BlockIterator(player.getWorld(), start, dir, player.getLocation().getY(), (int) Math.ceil(dir.length()));

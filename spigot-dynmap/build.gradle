@@ -1,5 +1,3 @@
-import java.util.jar.JarFile
-
 plugins {
     id 'net.minecrell.plugin-yml.bukkit' version '0.5.1'
 }
@@ -7,6 +5,7 @@ plugins {
 repositories {
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.mikeprimm.com/' }
     mavenCentral()
 }
 
@@ -17,17 +16,18 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
     compileOnly 'org.slf4j:slf4j-api:1.7.36'
 
-    compileOnly 'xyz.jpenilla:squaremap-api:+'
+    compileOnly 'us.dynmap:DynmapCoreAPI:3.5'
+    compileOnly 'us.dynmap:dynmap-api:3.5'
 }
 
 bukkit {
-    name = rootProject.name + "Squaremap"
-    main = project.group + '.squaremap.BrickRegionsSquaremap'
-    description = 'Render regions in squaremap'
+    name = rootProject.name + "Dynmap"
+    main = project.group + '.spigot.dynmap.BrickRegionsDynmap'
+    description = 'Render regions in dynmap'
     author = 'GufliMC'
     website = 'https://github.com/GufliMC/BrickRegions'
     apiVersion = '1.13'
-    depend = ["BrickRegions", "squaremap"]
+    depend = ["BrickRegions", "dynmap"]
 }
 
 // I want it nice like that

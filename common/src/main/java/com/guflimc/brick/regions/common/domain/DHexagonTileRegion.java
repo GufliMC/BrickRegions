@@ -3,6 +3,7 @@ package com.guflimc.brick.regions.common.domain;
 import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.shape2d.Rectangle;
+import com.guflimc.brick.math.common.geometry.shape2d.RegularHexagon;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.domain.Tile;
@@ -13,7 +14,6 @@ import java.util.*;
 
 @Entity
 public class DHexagonTileRegion extends DTileRegion {
-
 
     public DHexagonTileRegion() {
         super();
@@ -28,7 +28,7 @@ public class DHexagonTileRegion extends DTileRegion {
         Rectangle bounds = shape.bounds().contour();
 
         double width = width(tileradius);
-        double heightOffset = (int) (tileradius / 2d * 3);
+        double heightOffset = tileradius / 2d * 3d;
 
         int minTileX = (int) Math.ceil((bounds.min().x() + offset.x()) / width);
         int maxTileX = (int) Math.floor((bounds.max().x() + offset.x()) / width);
@@ -50,7 +50,7 @@ public class DHexagonTileRegion extends DTileRegion {
                     continue;
                 }
 
-                Hexagon hexagon = new Hexagon(new Vector2(x, z), tileradius);
+                RegularHexagon hexagon = new RegularHexagon(new Vector2(x, z), tileradius);
                 if ( !hexagon.vertices().stream().allMatch(contour::contains) ) {
                     continue;
                 }
@@ -112,50 +112,19 @@ public class DHexagonTileRegion extends DTileRegion {
     //
 
     private static double width(int radius) {
-        return (radius * 2d) / 1.73205080757d;
+        return 1.73205080757 * radius;
     }
 
-    private record Hexagon(Point2 center, int radius) implements Shape2 {
-
-        private double width() {
-            return DHexagonTileRegion.width(radius);
-        }
-
-        @Override
-        public List<Vector2> vertices() {
-            double w = width();
-            return List.of(
-                    new Vector2(center.x(), center.y() + radius),
-                    new Vector2(center.x() + w, center.y() + (radius / 2d)),
-                    new Vector2(center.x() + w, center.y() - (radius / 2d)),
-                    new Vector2(center.x(), center.y() - radius),
-                    new Vector2(center.x() - w, center.y() - (radius / 2d)),
-                    new Vector2(center.x() - w, center.y() + (radius / 2d))
-            );
-        }
-
-        @Override
-        public boolean contains(Point2 point) {
-            double qx = Math.abs(point.x() - center.x());
-            double qy = Math.abs(point.y() - center.y());
-            if ( qx > radius || qy > radius ) return false; // outside circle
-            if ( qx < radius && qy < radius / 2d ) return true; // inside rectangular part
-            double v = (radius / 2d) - 0.660254 * qx; // inside triangle part
-            return qy <= v;
-        }
-
-        @Override
-        public Rectangle bounds() {
-            return new Rectangle(
-                    new Vector2(center.x() - radius, center.y() - radius),
-                    new Vector2(center.x() + radius, center.y() + radius)
-            );
-        }
-
-        @NotNull
-        @Override
-        public Iterator<Point2> iterator() {
-            throw new UnsupportedOperationException("Not implemented yet"); // TODO;
+    public static void main(String[] args) {
+        for ( int i = 1; i < 2000; i++ ) {
+            double val = i * 1.73205080757;
+            if ( val - Math.floor(val) < 0.01 ) {
+                System.out.println(i + ": " + val + " => " + Math.floor(val));
+            }
+            if ( Math.ceil(val) - val < 0.01 ) {
+                System.out.println(i + ": " + val + " => " + Math.ceil(val));
+            }
         }
     }
+
 }

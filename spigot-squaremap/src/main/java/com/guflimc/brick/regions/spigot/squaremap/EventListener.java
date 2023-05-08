@@ -1,4 +1,4 @@
-package com.guflimc.brick.regions.squaremap;
+package com.guflimc.brick.regions.spigot.squaremap;
 
 import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.spigot.api.events.*;

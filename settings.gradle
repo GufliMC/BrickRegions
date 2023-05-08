@@ -4,5 +4,8 @@ include 'api'
 include 'common'
 include 'spigot-api'
 include 'spigot'
-include 'squaremap'
+include 'spigot-squaremap'
+include 'spigot-dynmap'
+
+//includeBuild '../BrickMath'
 

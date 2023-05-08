@@ -1,5 +1,6 @@
-package com.guflimc.brick.regions.squaremap;
+package com.guflimc.brick.regions.spigot.squaremap;
 
+import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.RegionAPI;
@@ -176,7 +177,7 @@ public class SquaremapRenderer {
 
         // draw shape
         List<Point> vertices = new ArrayList<>();
-        for (Vector2 vec : shape.vertices()) {
+        for (Point2 vec : shape.vertices()) {
             vertices.add(Point.of(vec.x(), vec.y()));
         }
 

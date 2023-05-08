@@ -1,19 +1,18 @@
-package com.guflimc.brick.regions.squaremap;
+package com.guflimc.brick.regions.spigot.dynmap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.jpenilla.squaremap.api.Squaremap;
-import xyz.jpenilla.squaremap.api.SquaremapProvider;
+import org.dynmap.DynmapAPI;
 
-public class BrickRegionsSquaremap extends JavaPlugin implements Listener {
+public class BrickRegionsDynmap extends JavaPlugin implements Listener {
 
-    private SquaremapRenderer renderer;
+    private DynmapRenderer renderer;
 
     @Override
     public void onEnable() {
-        Squaremap squaremap = SquaremapProvider.get();
-        renderer = new SquaremapRenderer(squaremap);
+        DynmapAPI dynmap = (DynmapAPI) getServer().getPluginManager().getPlugin("dynmap");
+        renderer = new DynmapRenderer(dynmap);
 
         // register event listener
         getServer().getPluginManager().registerEvents(new EventListener(this, renderer), this);

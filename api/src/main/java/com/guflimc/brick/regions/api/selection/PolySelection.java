@@ -1,6 +1,7 @@
 package com.guflimc.brick.regions.api.selection;
 
 
+import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Polygon;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 public class PolySelection extends AbstractSelection {
 
-    private final List<Vector2> vertices = new ArrayList<>();
+    private final List<Point2> vertices = new ArrayList<>();
     private double minY = Double.POSITIVE_INFINITY;
     private double maxY = Double.NEGATIVE_INFINITY;
 
@@ -46,7 +47,7 @@ public class PolySelection extends AbstractSelection {
         }
     }
 
-    public List<Vector2> points() {
+    public List<Point2> points() {
         return vertices;
     }
 

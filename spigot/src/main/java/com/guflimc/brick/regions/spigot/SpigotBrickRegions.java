@@ -21,6 +21,7 @@ import com.guflimc.brick.regions.spigot.placeholders.RegionPlaceholders;
 import com.guflimc.brick.regions.spigot.rules.RuleHandler;
 import com.guflimc.brick.regions.spigot.selection.SelectionRenderer;
 import com.guflimc.brick.regions.spigot.selection.listeners.SelectionListener;
+import com.guflimc.colonel.common.exception.CommandMiddlewareException;
 import com.guflimc.colonel.minecraft.paper.PaperColonel;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.NamespacedKey;
@@ -116,9 +117,18 @@ public class SpigotBrickRegions extends JavaPlugin {
         PaperColonel colonel = new PaperColonel(this);
 
         // SOURCE MAPPER
-        colonel.registry().registerSourceMapper(UUID.class, "worldId", s -> ((Player) s).getWorld().getUID());
-        colonel.registry().registerSourceMapper(Tile.class, s -> SpigotRegionAPI.get().tileAt((Player) s).orElseThrow());
-        colonel.registry().registerSourceMapper(Selection.class, s -> SpigotRegionAPI.get().selection((Player) s).orElseThrow());
+        colonel.registry().registerSourceMapper(UUID.class, "worldId", s -> {
+            if (!(s instanceof Player)) {
+                throw new CommandMiddlewareException(() -> SpigotI18nAPI.get(this).send(s, "cmd.error.player"));
+            }
+            return ((Player) s).getWorld().getUID();
+        });
+
+        colonel.registry().registerSourceMapper(Tile.class, s -> SpigotRegionAPI.get().tileAt((Player) s)
+                .orElseThrow(() -> new CommandMiddlewareException(() -> SpigotI18nAPI.get(this).send(s, "cmd.error.tile"))));
+
+        colonel.registry().registerSourceMapper(Selection.class, s -> SpigotRegionAPI.get().selection((Player) s)
+                .orElseThrow(() -> new CommandMiddlewareException(() -> SpigotI18nAPI.get(this).send(s, "cmd.error.selection"))));
 
         // CUSTOM ARGUMENTS
         colonel.registerAll(new RegionArguments());

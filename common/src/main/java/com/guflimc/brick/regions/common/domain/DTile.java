@@ -4,7 +4,10 @@ import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Polygon;
+import com.guflimc.brick.math.common.geometry.shape2d.Rectangle;
+import com.guflimc.brick.math.common.geometry.shape2d.RegularHexagon;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
+import com.guflimc.brick.math.database.GsonTools;
 import com.guflimc.brick.math.database.Point2Converter;
 import com.guflimc.brick.math.database.Shape2Converter;
 import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
@@ -66,6 +69,7 @@ public class DTile extends DLocality implements Tile {
     }
 
     public boolean contains(Point2 point) {
+        point = new Vector2(point.blockX(), point.blockY());
         return shape.contains(point);
     }
 
@@ -77,4 +81,5 @@ public class DTile extends DLocality implements Tile {
         }
         return parent.attribute(key);
     }
+
 }

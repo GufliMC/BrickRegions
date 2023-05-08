@@ -7,11 +7,10 @@ import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.ShapeRegion;
 import com.guflimc.brick.regions.api.domain.Tile;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableAttributedLocality;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.colonel.annotation.AnnotationColonel;
-import com.guflimc.colonel.common.build.CommandHandlerBuilder;
-import com.guflimc.colonel.common.build.CommandParameterBuilder;
+import com.guflimc.colonel.common.safe.SafeCommandHandlerBuilder;
+import com.guflimc.colonel.common.safe.SafeCommandParameterBuilder;
 import net.kyori.adventure.audience.Audience;
 
 import java.util.Collection;
@@ -38,8 +37,8 @@ public class RegionAttributeCommands {
         }
     }
 
-    private static <S, T> void value(CommandHandlerBuilder<S> builder, LocalityAttributeKey<T> attributeKey) {
-        CommandParameterBuilder<S> pb = builder.parameter("value").parser(attributeKey.type()).completer(attributeKey.type());
+    private static <S, T> void value(SafeCommandHandlerBuilder<S> builder, LocalityAttributeKey<T> attributeKey) {
+        SafeCommandParameterBuilder<S> pb = builder.parameter("value").parser(attributeKey.type()).completer(attributeKey.type());
         if (attributeKey.type().equals(String.class)) {
             pb.readGreedy();
         }
@@ -47,7 +46,7 @@ public class RegionAttributeCommands {
     }
 
     private static <S, T> void registerForRegions(AnnotationColonel<S> colonel, LocalityAttributeKey<T> attributeKey) {
-        CommandHandlerBuilder<S> b = colonel.builder();
+        SafeCommandHandlerBuilder<S> b = colonel.builder();
 
         b.path("br regions attributes set " + attributeKey.name());
         b.parameter("region").parser(Region.class).completer(Region.class).done();
@@ -71,7 +70,7 @@ public class RegionAttributeCommands {
     }
 
     private static <S, T> void registerForTiles(AnnotationColonel<S> colonel, LocalityAttributeKey<T> attributeKey) {
-        CommandHandlerBuilder<S> b = colonel.builder();
+        SafeCommandHandlerBuilder<S> b = colonel.builder();
 
         b.path("br tiles attributes set " + attributeKey.name());
         value(b, attributeKey);
@@ -94,7 +93,7 @@ public class RegionAttributeCommands {
     }
 
     private static <S, T> void registerForSelection(AnnotationColonel<S> colonel, LocalityAttributeKey<T> attributeKey) {
-        CommandHandlerBuilder<S> b = colonel.builder();
+        SafeCommandHandlerBuilder<S> b = colonel.builder();
 
         b.path("br attributes set " + attributeKey.name());
         value(b, attributeKey);

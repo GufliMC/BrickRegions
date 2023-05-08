@@ -1,5 +1,6 @@
 package com.guflimc.brick.regions.spigot.selection;
 
+import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.selection.Selection;
@@ -62,9 +63,9 @@ public class SelectionRenderer {
         Shape2 contour = sel.shape().contour();
 
         // borders
-        Vector2 from = contour.vertices().get(0);
+        Point2 from = contour.vertices().get(0);
         for (int i = 1; i < contour.vertices().size(); i++) {
-            Vector2 to = contour.vertices().get(i);
+            Point2 to = contour.vertices().get(i);
             renderWall(player, minY, maxY, from, to);
             from = to;
         }
@@ -75,8 +76,8 @@ public class SelectionRenderer {
         // floor & ceiling
     }
 
-    private void renderWall(Player player, double minY, double maxY, Vector2 from, Vector2 to) {
-        Vector2 vector = to.subtract(from);
+    private void renderWall(Player player, double minY, double maxY, Point2 from, Point2 to) {
+        Vector2 vector = to.subtract(from).toVector();
         double length = vector.length();
         double hStep, vStep;
         int hSteps;
@@ -89,7 +90,7 @@ public class SelectionRenderer {
         vStep = height / Math.floor(height / 2d);
 
         Vector2 vec = vector.scale(1 / length).scale(hStep);
-        Vector2 point = from;
+        Point2 point = from;
         for (int j = 0; j < hSteps; j++) {
             point = point.add(vec);
 

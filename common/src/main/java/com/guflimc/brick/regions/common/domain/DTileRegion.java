@@ -53,7 +53,8 @@ public abstract class DTileRegion extends DRegion implements TileRegion {
     //
 
     @PostLoad
-    private void maptiles() {
+    public void maptiles() {
+        tilemap.clear();
         tiles.forEach(tile -> tilemap.put((Vector2) tile.position(), tile));
     }
 
