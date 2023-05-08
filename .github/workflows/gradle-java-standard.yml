@@ -24,4 +24,4 @@ jobs:
     uses: GufliOfficial/.github/.github/workflows/java-gradle-github-pre-release.yml@main
     with:
       files: |
-        spigot/build/libs/*.jar
+        spigot*/build/libs/*.jar
