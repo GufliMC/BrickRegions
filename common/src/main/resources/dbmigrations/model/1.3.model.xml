@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="pendingDrops">
+        <dropColumn columnName="tile_position" tableName="localities"/>
+        <dropColumn columnName="tile_shape" tableName="localities"/>
+        <dropColumn columnName="group_id" tableName="localities"/>
+    </changeSet>
+</migration>

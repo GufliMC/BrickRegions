@@ -43,12 +43,12 @@ public class DLocalityProtectionRule implements LocalityProtectionRule {
 
     @ManyToOne(optional = false)
     @DbForeignKey(onDelete = ConstraintMode.CASCADE)
-    private DLocality locality;
+    private DModifiableLocality locality;
 
     public DLocalityProtectionRule() {
     }
 
-    public DLocalityProtectionRule(DLocality locality, int priority, RuleStatus status, RuleTarget target, RuleType... types) {
+    public DLocalityProtectionRule(DModifiableLocality locality, int priority, RuleStatus status, RuleTarget target, RuleType... types) {
         this.locality = locality;
         this.priority = priority;
         this.status = status;
@@ -56,11 +56,11 @@ public class DLocalityProtectionRule implements LocalityProtectionRule {
         this.typeSet = new RuleTypeSet(types);
     }
 
-    public DLocalityProtectionRule(DLocality locality, RuleStatus status, RuleTarget target, RuleType... types) {
+    public DLocalityProtectionRule(DModifiableLocality locality, RuleStatus status, RuleTarget target, RuleType... types) {
         this(locality, 0, status, target, types);
     }
 
-    public DLocality locality() {
+    public DModifiableLocality locality() {
         return locality;
     }
 

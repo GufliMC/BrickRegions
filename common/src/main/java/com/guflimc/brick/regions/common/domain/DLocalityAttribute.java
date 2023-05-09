@@ -25,18 +25,18 @@ public class DLocalityAttribute {
 
     @ManyToOne(optional = false)
     @DbForeignKey(onDelete = ConstraintMode.CASCADE)
-    private DLocality locality;
+    private DModifiableLocality locality;
 
     public DLocalityAttribute() {
     }
 
-    public DLocalityAttribute(DLocality locality, String name, String value) {
+    public DLocalityAttribute(DModifiableLocality locality, String name, String value) {
         this.locality = locality;
         this.name = name;
         this.value = value;
     }
 
-    public DLocality locality() {
+    public DModifiableLocality locality() {
         return locality;
     }
 

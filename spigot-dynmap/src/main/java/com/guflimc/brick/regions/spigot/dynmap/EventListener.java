@@ -66,6 +66,11 @@ public class EventListener implements Listener {
         render(event.locality());
     }
 
+    @EventHandler
+    public void onTileRegionChange(TileRegionChangeEvent event) {
+        render(event.region());
+    }
+
     //
 
     private final Map<Locality, Instant> queue = new ConcurrentHashMap<>();

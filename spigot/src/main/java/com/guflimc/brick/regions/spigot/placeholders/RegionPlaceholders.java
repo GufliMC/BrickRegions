@@ -23,7 +23,6 @@ public class RegionPlaceholders {
     public static void init() {
         BasePlaceholderModule<Player> module = new BasePlaceholderModule<>("region");
         module.register("name", region(region -> Component.text(region.name())));
-        module.register("display_name", region(Region::displayName));
         SpigotPlaceholderAPI.get().register(module);
     }
 

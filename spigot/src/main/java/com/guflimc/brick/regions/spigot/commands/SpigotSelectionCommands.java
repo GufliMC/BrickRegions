@@ -20,7 +20,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Optional;
 
-//@CommandContainer
 public class SpigotSelectionCommands {
 
     private final SpigotBrickRegions plugin;
@@ -30,7 +29,7 @@ public class SpigotSelectionCommands {
     }
 
     @Command("br select wand")
-    @Permission("brick.regions.select.wand")
+    @Permission("brickregions.select")
     public void wand(@Source Player sender) {
         ItemStack item = ItemStackBuilder.of(Material.IRON_AXE)
                 .withName(SpigotI18nAPI.get(this).string(sender, "select.wand.name"))
@@ -43,14 +42,14 @@ public class SpigotSelectionCommands {
     }
 
     @Command("br select type")
-    @Permission("brick.regions.select")
+    @Permission("brickregions.select")
     public void mode(@Source Player sender, @Parameter SelectionType type) {
         sender.getPersistentDataContainer().set(plugin.SELECTION_TYPE, PersistentDataType.INTEGER, type.ordinal());
         SpigotI18nAPI.get(this).send(sender, "cmd.select.type", type.name());
     }
 
-    @Command("br select worldborder")
-    @Permission("brick.regions.select")
+    @Command("br select border")
+    @Permission("brickregions.select")
     public void worldborder(@Source Player sender) {
         WorldBorder wb = sender.getWorld().getWorldBorder();
 
@@ -58,22 +57,22 @@ public class SpigotSelectionCommands {
         double max = sender.getWorld().getMaxHeight();
 
         CubeSelection sel = new CubeSelection(sender.getWorld().getUID());
-        sel.setPos1(SpigotMath.toBrickVector(wb.getCenter().add(-wb.getSize(), min, -wb.getSize())));
-        sel.setPos2(SpigotMath.toBrickVector(wb.getCenter().add(wb.getSize(), max, wb.getSize())));
+        sel.setPos1(SpigotMath.toBrickVector(wb.getCenter().add(-wb.getSize() / 2, min, -wb.getSize() / 2)));
+        sel.setPos2(SpigotMath.toBrickVector(wb.getCenter().add(wb.getSize() / 2, max, wb.getSize() / 2)));
 
         SpigotRegionAPI.get().setSelection(sender, sel);
         SpigotI18nAPI.get(this).send(sender, "cmd.select.worldborder");
     }
 
     @Command("br select clear")
-    @Permission("brick.regions.select.clear")
+    @Permission("brickregions.select")
     public void clear(@Source Player sender) {
         SpigotRegionAPI.get().clearSelection(sender);
         SpigotI18nAPI.get(this).send(sender, "cmd.select.clear");
     }
 
     @Command("br select undo")
-    @Permission("brick.regions.select.undo")
+    @Permission("brickregions.select")
     public void undo(@Source Player sender) {
         Optional<Selection> sel = SpigotRegionAPI.get().selection(sender);
         if ( sel.isEmpty() || !sel.get().isValid() ) {
@@ -86,7 +85,7 @@ public class SpigotSelectionCommands {
     }
 
     @Command("br select expand")
-    @Permission("brick.regions.select.expand")
+    @Permission("brickregions.select")
     public void expand(@Source Player sender) {
         Optional<Selection> sel = SpigotRegionAPI.get().selection(sender);
         if ( sel.isEmpty() || !sel.get().isValid() ) {

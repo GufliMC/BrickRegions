@@ -1,11 +1,12 @@
 package com.guflimc.brick.regions.spigot.squaremap;
 
 import com.guflimc.brick.math.common.geometry.pos2.Point2;
-import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.*;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableLocality;
+import com.guflimc.brick.regions.api.domain.tile.Tile;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +19,7 @@ import xyz.jpenilla.squaremap.api.marker.Polygon;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SquaremapRenderer {
 
@@ -77,8 +79,8 @@ public class SquaremapRenderer {
     }
 
     public void render(@NotNull Locality locality) {
-        if ( locality instanceof Tile tile ) {
-            render(tile);
+        if ( locality instanceof TileGroup tg) {
+            render(tg);
             return;
         }
 
@@ -112,7 +114,7 @@ public class SquaremapRenderer {
         RegionAPI.get().regions(world.getUID()).stream()
                 .filter(TileRegion.class::isInstance)
                 .map(TileRegion.class::cast)
-                .filter(rg -> !rg.tiles().isEmpty())
+                .filter(rg -> !rg.groups().isEmpty())
                 .forEach(rg -> this.render(mapWorld, rg));
     }
 
@@ -140,13 +142,13 @@ public class SquaremapRenderer {
         // render tiles in layer
         SimpleLayerProvider layer = tileLayers.get(tileRegion);
         layer.clearMarkers();
-        tileRegion.tiles().forEach(tile -> render(layer, tile, tile.shape()));
+        tileRegion.groups().forEach(group -> render(layer, group, group.shape()));
     }
 
-    private void render(@NotNull Tile tile) {
-        SimpleLayerProvider layer = tileLayers.get(tile.parent());
-        layer.removeMarker(Key.of(tile.id().toString()));
-        render(layer, tile, tile.shape());
+    private void render(@NotNull TileGroup group) {
+        SimpleLayerProvider layer = tileLayers.get(group.region());
+        layer.removeMarker(Key.of(group.id().toString()));
+        render(layer, group, group.shape());
     }
 
     private void render(@NotNull SimpleLayerProvider layer, @NotNull Locality locality, @NotNull Shape2 shape) {
@@ -189,8 +191,8 @@ public class SquaremapRenderer {
     //
 
     public void delete(@NotNull Locality locality) {
-        if ( locality instanceof Tile tile ) {
-            delete(tile);
+        if ( locality instanceof TileGroup tg ) {
+            delete(tg);
             return;
         }
 
@@ -204,13 +206,14 @@ public class SquaremapRenderer {
 
     private void delete(@NotNull MapWorld world, @NotNull TileRegion region) {
         SimpleLayerProvider layer = tileLayers.get(region);
+        if ( layer == null ) return;
         layer.clearMarkers();
         world.layerRegistry().unregister(Key.of(layer.getLabel()));
     }
 
-    private void delete(@NotNull Tile tile) {
-        SimpleLayerProvider layer = tileLayers.get(tile.parent());
-        layer.removeMarker(Key.of(tile.id().toString()));
+    private void delete(@NotNull TileGroup group) {
+        SimpleLayerProvider layer = tileLayers.get(group.region());
+        layer.removeMarker(Key.of(group.id().toString()));
     }
 
     private void delete(@NotNull MapWorld world, @NotNull Locality locality) {

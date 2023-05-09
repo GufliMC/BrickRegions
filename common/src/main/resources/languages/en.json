@@ -58,8 +58,8 @@
   "cmd.regions.attributes.set.error.parse": "<red>Invalid value <dark_red>{1}</dark_red> for <dark_red>{0}</dark_red>.",
   "cmd.regions.attributes.set": "<gray>Changed attribute <green>{0}</green> to <green>{1}</green> for <green>{2}</green>.",
 
-  "cmd.tiles.create": "<gray>Created region <green>{0}</green> with <green>{1}</green> tiles.",
-  "cmd.tiles.create.error.intersect": "<red>There can only be one tile region at a given location.",
+  "cmd.tiles.create": "<gray>Created tile region <green>{0}</green>.",
+  "cmd.tiles.fill": "<gray>Generated <green>{1} <gray>tiles in region <green>{0}<gray>.",
 
   "cmd.tiles.attributes.set": "<gray>Changed attribute <green>{0}</green> to <green>{1}</green> for the tile at your position.",
 

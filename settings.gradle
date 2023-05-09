@@ -7,5 +7,5 @@ include 'spigot'
 include 'spigot-squaremap'
 include 'spigot-dynmap'
 
-//includeBuild '../BrickMath'
+includeBuild '../BrickMath'
 

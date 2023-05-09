@@ -7,6 +7,9 @@ import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.domain.*;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
 import com.guflimc.brick.regions.api.domain.WorldRegion;
+import com.guflimc.brick.regions.api.domain.tile.Tile;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +48,7 @@ public interface RegionManager<S> {
 
     Collection<ShapeRegion> intersecting(@NotNull ShapeRegion region);
 
-    Collection<Tile> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape);
+    Collection<TileGroup> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape);
 
     Collection<Locality> localitiesAt(@NotNull UUID worldId, @NotNull Point3 position);
 
@@ -57,7 +60,7 @@ public interface RegionManager<S> {
 
     Optional<TileRegion> tileRegionAt(@NotNull Location location);
 
-    Optional<Tile> tileAt(@NotNull Location location);
+    Optional<TileGroup> tileGroupAt(@NotNull Location location);
 
     CompletableFuture<Void> delete(@NotNull Locality locality);
 
@@ -75,7 +78,6 @@ public interface RegionManager<S> {
 
     CompletableFuture<Region> create(@NotNull String name, @NotNull Selection selection);
 
-    CompletableFuture<TileRegion> createTiles(@NotNull String name, int tileRadius, @NotNull UUID worldId, @NotNull Shape3 shape);
+    CompletableFuture<TileRegion> createHexagonTileRegion(@NotNull String name, @NotNull UUID worldId, int radius);
 
-    CompletableFuture<TileRegion> createTiles(@NotNull String name, int tileRadius, @NotNull Selection selection);
 }

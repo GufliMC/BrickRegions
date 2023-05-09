@@ -5,6 +5,4 @@ import net.kyori.adventure.text.Component;
 
 public interface ModifiableRegion extends ModifiableLocality, Region {
 
-    void setDisplayName(Component displayName);
-
 }

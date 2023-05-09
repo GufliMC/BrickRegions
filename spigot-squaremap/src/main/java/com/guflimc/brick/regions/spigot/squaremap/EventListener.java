@@ -66,6 +66,11 @@ public class EventListener implements Listener {
         render(event.locality());
     }
 
+    @EventHandler
+    public void onTileRegionChange(TileRegionChangeEvent event) {
+        render(event.region());
+    }
+
     //
 
     private final Map<Locality, Instant> queue = new ConcurrentHashMap<>();
@@ -80,8 +85,8 @@ public class EventListener implements Listener {
             Set.copyOf(queue.keySet()).stream()
                     .filter(loc -> queue.get(loc).isBefore(t))
                     .forEach(loc -> {
-                        renderer.render(loc);
                         queue.remove(loc);
+                        renderer.render(loc);
                     });
         }, 20L, 20L);
     }

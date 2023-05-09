@@ -3,12 +3,14 @@ package com.guflimc.brick.regions.common;
 import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
-import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.RegionManager;
 import com.guflimc.brick.regions.api.domain.*;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
 import com.guflimc.brick.regions.api.domain.WorldRegion;
+import com.guflimc.brick.regions.api.domain.tile.Tile;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.domain.*;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
@@ -39,7 +41,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
                 .filter(rg -> rg instanceof WorldRegion)
                 .findFirst().orElseGet(() -> {
                     DWorldRegion region = new DWorldRegion(worldId, "__global__");
-                    region.setDisplayName(Component.text("Wilderness", NamedTextColor.GREEN));
+                    region.setAttribute(LocalityAttributeKey.ENTRANCE_TITLE, Component.text("Wilderness", NamedTextColor.GREEN));
                     databaseContext.persistAsync(region).join();
                     return region;
                 });
@@ -126,7 +128,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Collection<Tile> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape) {
+    public Collection<TileGroup> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape) {
         return regions(worldId).stream()
                 .filter(rg -> rg instanceof TileRegion)
                 .map(rg -> (TileRegion) rg)
@@ -149,10 +151,10 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         Collection<Region> regions = regionsAt(point);
         List<Locality> localities = new ArrayList<>(regions);
 
-        // include tiles
+        // include tile groups
         regions.stream().filter(TileRegion.class::isInstance)
                 .map(TileRegion.class::cast)
-                .map(rg -> rg.tileAt(point).orElse(null))
+                .map(rg -> rg.groupAt(point).orElse(null))
                 .filter(Objects::nonNull)
                 .forEach(localities::add);
 
@@ -178,13 +180,13 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public Optional<Tile> tileAt(@NotNull Location location) {
-        return tileRegionAt(location).flatMap(tr -> tr.tileAt(location));
+    public Optional<TileGroup> tileGroupAt(@NotNull Location location) {
+        return tileRegionAt(location).flatMap(tr -> tr.groupAt(location));
     }
 
     @Override
     public CompletableFuture<Void> delete(@NotNull Locality locality) {
-        if (!(locality instanceof DLocality)) {
+        if (!(locality instanceof DModifiableLocality)) {
             throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
         }
         if ( locality instanceof DWorldRegion) {
@@ -199,7 +201,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public CompletableFuture<Void> save(@NotNull Locality locality) {
-        if (!(locality instanceof DLocality)) {
+        if (!(locality instanceof DModifiableLocality)) {
             throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
         }
         return databaseContext.persistAsync(locality);
@@ -246,11 +248,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public CompletableFuture<TileRegion> createTiles(@NotNull String name, int tileRadius, @NotNull UUID worldId, @NotNull Shape3 shape) {
-        if ( intersecting(worldId, shape).stream().anyMatch(TileRegion.class::isInstance) ) {
-            throw new IllegalArgumentException("There can only be one tile region at the same location.");
-        }
-        DHexagonTileRegion region = new DHexagonTileRegion(worldId, name, shape, tileRadius);
+    public CompletableFuture<TileRegion> createHexagonTileRegion(@NotNull String name, @NotNull UUID worldId, int radius) {
+        DHexagonTileRegion region = new DHexagonTileRegion(worldId, name, radius);
         return databaseContext.persistAsync(region).thenApply((n) -> {
             regionEngine.add(region);
             EventManager.INSTANCE.onCreate(region);
@@ -258,8 +257,4 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         });
     }
 
-    @Override
-    public CompletableFuture<TileRegion> createTiles(@NotNull String name, int tileRadius, @NotNull Selection selection) {
-        return createTiles(name, tileRadius, selection.worldId(), selection.shape());
-    }
 }

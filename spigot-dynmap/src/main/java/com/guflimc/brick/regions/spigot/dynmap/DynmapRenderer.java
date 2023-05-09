@@ -1,16 +1,17 @@
 package com.guflimc.brick.regions.spigot.dynmap;
 
 import com.guflimc.brick.math.common.geometry.pos2.Point2;
-import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.*;
+import com.guflimc.brick.regions.api.domain.tile.Tile;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.GenericMarker;
-import org.dynmap.markers.Marker;
 import org.dynmap.markers.MarkerSet;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,17 +61,17 @@ public class DynmapRenderer {
                 .map(ShapeRegion.class::cast)
                 .forEach(rg -> this.render(world, rg));
 
-        // render tiles
+        // render tile groups
         RegionAPI.get().regions(world.getUID()).stream()
                 .filter(TileRegion.class::isInstance)
                 .map(TileRegion.class::cast)
-                .filter(rg -> !rg.tiles().isEmpty())
+                .filter(rg -> !rg.groups().isEmpty())
                 .forEach(rg -> this.render(world, rg));
     }
 
     public void render(@NotNull Locality locality) {
-        if (locality instanceof Tile tile) {
-            render(tile);
+        if (locality instanceof TileGroup tg) {
+            render(tg);
             return;
         }
 
@@ -102,16 +103,16 @@ public class DynmapRenderer {
 
         // render tiles in layer
         MarkerSet markerSet = ms;
-        tileRegion.tiles().forEach(tile -> render(markerSet, world, tile, tile.shape()));
+        tileRegion.groups().forEach(group -> render(markerSet, world, group, group.shape()));
     }
 
-    private void render(@NotNull Tile tile) {
-        World world = world(tile.worldId()).orElseThrow();
-        MarkerSet ms = tileLayers.get(tile.parent());
+    private void render(@NotNull TileGroup group) {
+        World world = world(group.worldId()).orElseThrow();
+        MarkerSet ms = tileLayers.get(group.region());
         ms.getAreaMarkers().stream()
-                .filter(m -> m.getMarkerID().equals(tile.id().toString()))
+                .filter(m -> m.getMarkerID().equals(group.id().toString()))
                 .findFirst().ifPresent(GenericMarker::deleteMarker);
-        render(ms, world, tile, tile.shape());
+        render(ms, world, group, group.shape());
     }
 
     private void render(@NotNull MarkerSet markerSet, @NotNull World world, @NotNull Locality locality, @NotNull Shape2 shape) {
@@ -119,7 +120,8 @@ public class DynmapRenderer {
         double[] zPoints = shape.vertices().stream().mapToDouble(Point2::y).toArray();
 
         String label = "";
-        if ( locality instanceof Tile t) {
+        if ( locality instanceof TileGroup tg && tg.tiles().size() == 1) {
+            Tile t = tg.tiles().iterator().next();
             label = t.position().blockX() + ", " + t.position().blockY();
         } else if ( locality instanceof Region r) {
             label = r.name();

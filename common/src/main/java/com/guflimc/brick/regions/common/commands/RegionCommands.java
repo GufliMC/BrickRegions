@@ -24,11 +24,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//@CommandContainer
 public class RegionCommands {
 
+    // MANAGE
+
     @Command("br regions delete")
-    @Permission("brick.regions.delete")
+    @Permission("brickregions.regions.delete")
     public void delete(@Source Audience sender, @Parameter(parser = "not-global", completer = "not-global") Region region) {
         if (region instanceof WorldRegion) {
             I18nAPI.get(this).send(sender, "cmd.regions.delete.error.global");
@@ -38,18 +39,10 @@ public class RegionCommands {
         I18nAPI.get(this).send(sender, "cmd.regions.delete", region.name());
     }
 
-    @Command("br regions setdisplayname")
-    @Permission("brick.regions.setdisplayname")
-    public void setdisplayname(@Source Audience sender,
-                               @Parameter ModifiableRegion region,
-                               @Parameter(read = ReadMode.GREEDY) String name) {
-        region.setDisplayName(MiniMessage.miniMessage().deserialize(name));
-        RegionAPI.get().save(region);
-        I18nAPI.get(this).send(sender, "cmd.regions.setdisplayname", region.name(), region.displayName());
-    }
+    // RULES
 
     @Command("br regions rules list")
-    @Permission("brick.regions.rules.list")
+    @Permission("brickregions.regions.rules.list")
     public <T extends Region & ModifiableProtectedLocality> void rulesList(@Source Audience sender,
                                                                            @Parameter T region) {
         List<LocalityProtectionRule> rules = region.rules();
@@ -69,7 +62,7 @@ public class RegionCommands {
     }
 
     @Command("br regions rules add")
-    @Permission("brick.regions.rules.add")
+    @Permission("brickregions.regions.rules.add")
     public <T extends Region & ModifiableProtectedLocality> void rulesAdd(@Source Audience sender,
                                                                           @Parameter T region,
                                                                           @Parameter RuleStatus status,
@@ -93,7 +86,7 @@ public class RegionCommands {
     }
 
     @Command("br regions rules remove")
-    @Permission("brick.regions.rules.remove")
+    @Permission("brickregions.regions.rules.remove")
     public <T extends Region & ModifiableProtectedLocality> void rulesRemove(@Source Audience sender,
                                                                              @Parameter T region,
                                                                              @Parameter int index) {
@@ -110,7 +103,7 @@ public class RegionCommands {
     }
 
     @Command("br regions rules clear")
-    @Permission("brick.regions.rules.clear")
+    @Permission("brickregions.regions.rules.clear")
     public <T extends Region & ModifiableProtectedLocality> void rulesClear(@Source Audience sender,
                                                                             @Parameter T region) {
         region.removeRules();

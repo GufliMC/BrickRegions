@@ -32,12 +32,15 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
 
     private static final Class<?>[] APPLICABLE_CLASSES = new Class[]{
             DLocality.class,
+            DModifiableLocality.class,
             DLocalityAttribute.class,
             DLocalityProtectionRule.class,
             DRegion.class,
             DShapeRegion.class,
-            DTile.class,
             DWorldRegion.class,
+
+            DTile.class,
+            DTileGroup.class,
             DTileRegion.class,
             DHexagonTileRegion.class,
 

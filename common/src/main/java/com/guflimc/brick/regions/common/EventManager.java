@@ -4,6 +4,7 @@ import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableLocality;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 
 public abstract class EventManager {
 
@@ -28,5 +29,7 @@ public abstract class EventManager {
     public void onRuleAdd(LocalityProtectionRule rule) {}
 
     public void onRuleRemove(LocalityProtectionRule rule) {}
+
+    public void onTileRegionChange(TileRegion region) {}
 
 }

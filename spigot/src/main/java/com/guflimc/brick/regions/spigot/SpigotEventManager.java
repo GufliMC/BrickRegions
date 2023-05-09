@@ -4,6 +4,7 @@ import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableLocality;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import com.guflimc.brick.regions.common.EventManager;
 import com.guflimc.brick.regions.spigot.api.events.*;
 import org.bukkit.Bukkit;
@@ -53,5 +54,10 @@ public class SpigotEventManager extends EventManager {
     @Override
     public void onRuleRemove(LocalityProtectionRule rule) {
         Bukkit.getServer().getPluginManager().callEvent(new LocalityRuleRemoveEvent(rule.locality(), !Bukkit.isPrimaryThread(), rule));
+    }
+
+    @Override
+    public void onTileRegionChange(TileRegion region) {
+        Bukkit.getServer().getPluginManager().callEvent(new TileRegionChangeEvent(region, !Bukkit.isPrimaryThread()));
     }
 }

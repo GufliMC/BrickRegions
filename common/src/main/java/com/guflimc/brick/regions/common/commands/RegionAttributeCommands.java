@@ -1,26 +1,30 @@
-package com.guflimc.brick.regions.spigot.commands;
+package com.guflimc.brick.regions.common.commands;
 
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.ShapeRegion;
-import com.guflimc.brick.regions.api.domain.Tile;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableAttributedLocality;
-import com.guflimc.brick.regions.api.selection.Selection;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
 import com.guflimc.colonel.annotation.AnnotationColonel;
+import com.guflimc.colonel.annotation.annotations.Command;
+import com.guflimc.colonel.annotation.annotations.parameter.Parameter;
+import com.guflimc.colonel.annotation.annotations.parameter.Source;
 import com.guflimc.colonel.common.safe.SafeCommandHandlerBuilder;
 import com.guflimc.colonel.common.safe.SafeCommandParameterBuilder;
+import com.guflimc.colonel.minecraft.common.annotations.Permission;
 import net.kyori.adventure.audience.Audience;
-
-import java.util.Collection;
 
 public class RegionAttributeCommands {
 
     private RegionAttributeCommands() {
     }
 
+    //
+
     public static <S> void register(AnnotationColonel<S> colonel) {
+        colonel.registerAll(new RegionAttributeCommands());
+
         for (LocalityAttributeKey<?> attribute : LocalityAttributeKey.values()) {
             register(colonel, attribute);
         }
@@ -31,7 +35,6 @@ public class RegionAttributeCommands {
             // TODO permissions
             registerForRegions(colonel, attributeKey);
             registerForTiles(colonel, attributeKey);
-            registerForSelection(colonel, attributeKey);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,8 +51,9 @@ public class RegionAttributeCommands {
     private static <S, T> void registerForRegions(AnnotationColonel<S> colonel, LocalityAttributeKey<T> attributeKey) {
         SafeCommandHandlerBuilder<S> b = colonel.builder();
 
-        b.path("br regions attributes set " + attributeKey.name());
+        b.path("br regions attributes set ");
         b.parameter("region").parser(Region.class).completer(Region.class).done();
+        b.literal(attributeKey.name());
         value(b, attributeKey);
 
         b.source(Audience.class);
@@ -76,7 +80,7 @@ public class RegionAttributeCommands {
         value(b, attributeKey);
 
         b.source(Audience.class);
-        b.source(Tile.class);
+        b.source(TileGroup.class);
 
         b.executor(ctx -> {
             ModifiableAttributedLocality tile = ctx.source(1);
@@ -92,35 +96,30 @@ public class RegionAttributeCommands {
         b.register();
     }
 
-    private static <S, T> void registerForSelection(AnnotationColonel<S> colonel, LocalityAttributeKey<T> attributeKey) {
-        SafeCommandHandlerBuilder<S> b = colonel.builder();
+    //
 
-        b.path("br attributes set " + attributeKey.name());
-        value(b, attributeKey);
+    @Command("br regions attributes unset ")
+    @Permission("brickregions.regions.tiles.attributes.unset")
+    public <T extends Region & ModifiableAttributedLocality> void regionsAttributesUnset(@Source Audience sender,
+                                                                                         @Parameter T region,
+                                                                                         @Parameter LocalityAttributeKey<?> attributeKey) {
+        region.removeAttribute(attributeKey);
+        RegionAPI.get().save(region);
 
-        b.source(Audience.class);
-        b.source(Selection.class);
+        I18nAPI.get(RegionAttributeCommands.class)
+                .send(sender, "cmd.tiles.attributes.unset", attributeKey.name());
+    }
 
-        b.executor(ctx -> {
-            Selection selection = ctx.source(1);
-            T value = ctx.argument("value");
+    @Command("br tiles attributes unset ")
+    @Permission("brickregions.tiles.attributes.unset")
+    public void tilesAttributesUnset(@Source Audience sender,
+                                     @Source TileGroup tileGroup,
+                                     @Parameter LocalityAttributeKey<?> attributeKey) {
+        tileGroup.removeAttribute(attributeKey);
+        RegionAPI.get().save(tileGroup);
 
-            Collection<ShapeRegion> regions = RegionAPI.get().intersecting(selection.worldId(), selection.shape());
-            regions.stream()
-                    .filter(r -> r instanceof ModifiableAttributedLocality)
-                    .map(r -> (ModifiableAttributedLocality) r)
-                    .forEach(r -> r.setAttribute(attributeKey, value));
-            RegionAPI.get().save(regions);
-
-            Collection<Tile> tiles = RegionAPI.get().intersecting(selection.worldId(), selection.shape().contour());
-            tiles.forEach(t -> t.setAttribute(attributeKey, value));
-            RegionAPI.get().save(tiles);
-
-            Audience sender = ctx.source(0);
-            I18nAPI.get(RegionAttributeCommands.class).send(sender, "cmd.attributes.set",
-                    attributeKey.name(), value.toString(), regions.size(), tiles.size());
-        });
-        b.register();
+        I18nAPI.get(RegionAttributeCommands.class)
+                .send(sender, "cmd.tiles.attributes.unset", attributeKey.name());
     }
 
 }
