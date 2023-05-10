@@ -170,6 +170,8 @@ public class SpigotRegionCommands {
         region.merge(size);
         RegionAPI.get().save(region);
 
+        sender.sendMessage(region.groups().stream().mapToLong(g -> g.tiles().size()).sum() + "");
+
         SpigotI18nAPI.get(this).send(sender, "cmd.tiles.groupify", region.name());
     }
 }

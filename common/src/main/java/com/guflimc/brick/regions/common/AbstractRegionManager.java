@@ -137,11 +137,6 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
-    public <T extends Locality> CompletableFuture<Void> save(@NotNull Collection<T> localities) {
-        return null;
-    }
-
-    @Override
     public Collection<Locality> localitiesAt(@NotNull UUID worldId, @NotNull Point3 position) {
         return localitiesAt(new Location(worldId, position));
     }
@@ -204,7 +199,14 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         if (!(locality instanceof DModifiableLocality)) {
             throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
         }
-        return databaseContext.persistAsync(locality);
+        return databaseContext.persistAsync(locality)
+                .thenRun(() -> EventManager.INSTANCE.onSave(locality));
+    }
+
+    @Override
+    public <T extends Locality> CompletableFuture<Void> save(@NotNull Collection<T> localities) {
+        return databaseContext.persistAsync((Collection) localities)
+                .thenRun(() -> localities.forEach(EventManager.INSTANCE::onSave));
     }
 
     @Override

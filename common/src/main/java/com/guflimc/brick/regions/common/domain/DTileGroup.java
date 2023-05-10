@@ -76,7 +76,7 @@ public class DTileGroup extends DModifiableLocality implements TileGroup {
 
     @Override
     public String toString() {
-        return "TileRegion{" + this.tiles.stream().map(Tile::toString).collect(Collectors.joining(", ")) + "}";
+        return "TileGroup{" + this.tiles.stream().map(Tile::toString).collect(Collectors.joining(", ")) + "}";
     }
 
 }

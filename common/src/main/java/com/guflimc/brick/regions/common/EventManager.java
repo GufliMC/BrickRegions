@@ -1,5 +1,6 @@
 package com.guflimc.brick.regions.common;
 
+import com.guflimc.brick.regions.api.domain.Locality;
 import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
 import com.guflimc.brick.regions.api.domain.Region;
@@ -30,6 +31,6 @@ public abstract class EventManager {
 
     public void onRuleRemove(LocalityProtectionRule rule) {}
 
-    public void onTileRegionChange(TileRegion region) {}
+    public void onSave(Locality locality) {}
 
 }

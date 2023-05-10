@@ -89,11 +89,12 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
     @Override
     public void removeGroup(@NotNull TileGroup group) {
         groups.remove((DTileGroup) group);
-        EventManager.INSTANCE.onTileRegionChange(this);
+
+        group.tiles().forEach(tile -> tilemap.remove(tile.position()));
     }
 
     @Override
-    public void merge(TileGroup... groups) {
+    public TileGroup merge(TileGroup... groups) {
         // TODO check adjacency
 
         Set<Tile> tiles = Arrays.stream(groups)
@@ -101,20 +102,28 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
                 .collect(Collectors.toSet());
 
         Arrays.stream(groups).map(g -> (DTileGroup) g).forEach(g -> this.groups.remove(g));
-        this.groups.add(new DTileGroup(this, tiles.toArray(Tile[]::new)));
+        DTileGroup group = new DTileGroup(this, tiles.toArray(Tile[]::new));
+        this.groups.add(group);
 
-        EventManager.INSTANCE.onTileRegionChange(this);
+        tiles.forEach(tile -> tilemap.put(tile.position(), group));
+
+        return group;
     }
 
     @Override
-    public void unmerge(TileGroup group) {
+    public TileGroup[] unmerge(TileGroup group) {
         this.groups.remove((DTileGroup) group);
 
+        List<TileGroup> result = new ArrayList<>();
         for ( Tile tile : group.tiles() ) {
-            this.groups.add(new DTileGroup(this, tile));
+            DTileGroup tg = new DTileGroup(this, tile);
+            groups.add(tg);
+            result.add(tg);
+
+            tilemap.put(tile.position(), tg);
         }
 
-        EventManager.INSTANCE.onTileRegionChange(this);
+        return result.toArray(TileGroup[]::new);
     }
 
     //
@@ -125,39 +134,37 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
     public void merge(int size) {
         new HashSet<>(groups).forEach(this::unmerge);
 
-        Map<Point2, Tile> tiles = new HashMap<>();
-        groups.stream().flatMap(g -> g.tiles().stream()).forEach(t -> tiles.put(t.position(), t));
-
+        Set<TileGroup> groups = new HashSet<>(groups());
         Set<TileGroup> frontier = new HashSet<>();
 
         int radius = 0;
-        while ( !tiles.isEmpty() ) {
+        while ( !groups.isEmpty() && radius < 100 ) {
             frontier.removeIf(tg -> tg.tiles().size() >= size);
 
             // get contouring tiles of current radius
-            List<Tile> contour = new ArrayList<>();
+            Set<TileGroup> contour = new HashSet<>();
             for ( int rx = -1; rx <= 1; rx += 2) {
                 int x = radius * rx;
                 for ( int z = -radius; z <= radius; z++ ) {
-                    Tile tile = tiles.get(new Vector2(x, z));
-                    if ( tile != null ) contour.add(tile);
+                    groupAt(x, z).ifPresent(contour::add);
                 }
             }
             for ( int rz = -1; rz <= 1; rz += 2) {
                 int z = radius * rz;
                 for ( int x = -radius; x <= radius; x++ ) {
-                    Tile tile = tiles.get(new Vector2(x, z));
-                    if ( tile != null ) contour.add(tile);
+                    groupAt(x, z).ifPresent(contour::add);
                 }
             }
 
-            contour.forEach(t -> tiles.remove(t.position()));
-            Collections.shuffle(contour);
+            // track groups that haven't been processed yet
+            contour.removeIf(g -> !groups.contains(g));
+            contour.forEach(groups::remove);
+
+            List<TileGroup> shufcontour = new ArrayList<>(contour);
+            Collections.shuffle(shufcontour);
 
             // add new groups to the frontier
-            for ( Tile tile : new ArrayList<>(contour) ) {
-                TileGroup group = groupAt(tile.position()).orElseThrow();
-
+            for ( TileGroup group : shufcontour ) {
                 // TODO fix this
                 List<TileGroup> adjacent = adjacent(group).stream()
                         .filter(frontier::contains)
@@ -170,17 +177,21 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
                 }
 
                 TileGroup target = adjacent.stream().min(Comparator.comparingInt(tg -> tg.tiles().size())).orElseThrow();
-                merge(target, group);
+                TileGroup replacement = merge(target, group);
 
-                if ( target.tiles().size() >= size ) {
-                    frontier.remove(target);
+                frontier.remove(target);
+                frontier.remove(group);
+
+                if ( replacement.tiles().size() < size ) {
+                    frontier.add(replacement);
                 }
             }
 
             radius++;
 
             System.out.println("contour: " + contour.size());
-            System.out.println("total: " + tiles.size());
+            System.out.println("total: " + groups.size());
+            System.out.println();
         }
     }
 

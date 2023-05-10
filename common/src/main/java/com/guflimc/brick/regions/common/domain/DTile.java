@@ -46,19 +46,8 @@ public class DTile implements Tile {
         return shape;
     }
 
-    //
-
-    public static class TileConverter implements AttributeConverter<Tile, String> {
-
-        @Override
-        public String convertToDatabaseColumn(Tile attribute) {
-            return GsonTools.serialize(attribute);
-        }
-
-        @Override
-        public Tile convertToEntityAttribute(String dbData) {
-            return GsonTools.deserialize(dbData, Tile.class);
-        }
+    @Override
+    public String toString() {
+        return "DTile{position:" + position + "}";
     }
-
 }

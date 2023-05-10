@@ -7,12 +7,10 @@ import com.guflimc.brick.math.common.geometry.shape2d.RegularHexagon;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.domain.tile.Tile;
 import com.guflimc.brick.regions.api.domain.tile.TileGroup;
-import com.guflimc.brick.regions.common.EventManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Entity
 public class DHexagonTileRegion extends DTileRegion {
@@ -65,7 +63,7 @@ public class DHexagonTileRegion extends DTileRegion {
     @Override
     public Collection<TileGroup> adjacent(@NotNull TileGroup group) {
         Set<TileGroup> result = new HashSet<>();
-        for ( Tile tile : group.tiles() ) {
+        for (Tile tile : group.tiles()) {
             Vector2 vec = new Vector2(tile.position().x(), tile.position().y());
             int offset = vec.blockY() % 2 == 0 ? -1 : 1;
             groupAt(vec.blockX() + offset, vec.blockY() - 1).ifPresent(result::add);
@@ -76,21 +74,20 @@ public class DHexagonTileRegion extends DTileRegion {
             groupAt(vec.blockX() - offset, vec.blockY()).ifPresent(result::add);
             groupAt(vec.blockX(), vec.blockY() + 1).ifPresent(result::add);
         }
+        result.remove(group);
         return result;
     }
 
-    private static record TempTile(Point2 position, Shape2 shape) implements Tile {
-
+    private record TempTile(Point2 position, Shape2 shape) implements Tile {
     }
 
     private void addGroup(int relX, int relZ, RegularHexagon hexagon) {
         groups.add(new DTileGroup(this, new TempTile(new Vector2(relX, relZ), hexagon)));
-        EventManager.INSTANCE.onTileRegionChange(this);
     }
 
     @Override
     public void addGroup(int relX, int relZ) {
-        if ( groupAt(relX, relZ).isPresent() ) {
+        if (groupAt(relX, relZ).isPresent()) {
             throw new IllegalArgumentException("A group at this position already exists.");
         }
 

@@ -67,8 +67,8 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onTileRegionChange(TileRegionChangeEvent event) {
-        render(event.region());
+    public void onSave(LocalitySaveEvent event) {
+        render(event.locality());
     }
 
     //

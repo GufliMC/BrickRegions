@@ -31,8 +31,8 @@ public interface TileRegion extends Region, ModifiableLocality, ModifiableProtec
 
     void merge(int maxGroupSize);
 
-    void merge(TileGroup... groups);
+    TileGroup merge(TileGroup... groups);
 
-    void unmerge(TileGroup group);
+    TileGroup[] unmerge(TileGroup group);
 
 }

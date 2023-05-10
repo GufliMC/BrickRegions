@@ -12,7 +12,7 @@ import com.guflimc.brick.regions.api.selection.SelectionType;
 import com.guflimc.colonel.annotation.annotations.Completer;
 import com.guflimc.colonel.annotation.annotations.Parser;
 import com.guflimc.colonel.annotation.annotations.parameter.Source;
-import com.guflimc.colonel.common.exception.CommandMiddlewareException;
+import com.guflimc.colonel.common.build.HandleFailure;
 import net.kyori.adventure.audience.Audience;
 
 import java.util.Arrays;
@@ -24,11 +24,11 @@ public class RegionArguments {
 
     // REGION
 
-    @Parser
+    @Parser()
     public Region region(@Source Audience audience, @Source("worldId") UUID worldId, String input) {
         return RegionAPI.get()
                 .findRegion(worldId, input)
-                .orElseThrow(() -> new CommandMiddlewareException(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
+                .orElseThrow(() -> HandleFailure.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
     }
 
     @Completer(type = Region.class)
@@ -45,7 +45,7 @@ public class RegionArguments {
         return RegionAPI.get()
                 .findRegion(worldId, input)
                 .filter(region -> !(region instanceof WorldRegion))
-                .orElseThrow(() -> new CommandMiddlewareException(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
+                .orElseThrow(() -> HandleFailure.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
     }
 
     @Completer(type = Region.class, value = "not-global")
@@ -70,7 +70,7 @@ public class RegionArguments {
     public LocalityAttributeKey<?> attribute(@Source Audience sender, String input) {
         LocalityAttributeKey<?> attribute = LocalityAttributeKey.valueOf(input);
         if ( attribute == null ) {
-            throw new CommandMiddlewareException(() -> I18nAPI.get(this).send(sender, "cmd.error.args.attribute", input));
+            throw HandleFailure.of(() -> I18nAPI.get(this).send(sender, "cmd.error.args.attribute", input));
         }
         return attribute;
     }
@@ -80,7 +80,7 @@ public class RegionArguments {
     @Parser(type = RuleType.class)
     public RuleType ruleType(@Source Audience audience, String input) {
         return Optional.ofNullable(RuleType.valueOf(input.toUpperCase()))
-                .orElseThrow(() -> new CommandMiddlewareException(() -> I18nAPI.get(this).send(audience, "cmd.error.args.ruletype", input)));
+                .orElseThrow(() -> HandleFailure.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.ruletype", input)));
     }
 
     @Completer(type = RuleType.class)
@@ -93,7 +93,7 @@ public class RegionArguments {
     @Parser(type = RuleTarget.class)
     public RuleTarget ruleTarget(@Source Audience audience, String input) {
         return Optional.ofNullable(RuleTarget.valueOf(input.toUpperCase()))
-                .orElseThrow(() -> new CommandMiddlewareException(() -> I18nAPI.get(this).send(audience, "cmd.error.args.ruletarget", input)));
+                .orElseThrow(() -> HandleFailure.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.ruletarget", input)));
     }
 
     @Completer(type = RuleTarget.class)
@@ -106,7 +106,7 @@ public class RegionArguments {
     @Parser(type = RuleStatus.class)
     public RuleStatus ruleStatus(@Source Audience audience, String input) {
         return Arrays.stream(RuleStatus.values()).filter(rs -> rs.name().equalsIgnoreCase(input)).findFirst()
-                .orElseThrow(() -> new CommandMiddlewareException(() -> I18nAPI.get(this).send(audience, "cmd.error.args.rulestatus", input)));
+                .orElseThrow(() -> HandleFailure.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.rulestatus", input)));
     }
 
     @Completer(type = RuleStatus.class)
@@ -119,7 +119,7 @@ public class RegionArguments {
     @Parser(type = SelectionType.class)
     public SelectionType selectionType(@Source Audience audience, String input) {
         return Arrays.stream(SelectionType.values()).filter(st -> st.name().equalsIgnoreCase(input)).findFirst()
-                .orElseThrow(() -> new CommandMiddlewareException(() -> I18nAPI.get(this).send(audience, "cmd.error.args.selectiontype", input)));
+                .orElseThrow(() -> HandleFailure.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.selectiontype", input)));
     }
 
     @Completer(type = SelectionType.class)
