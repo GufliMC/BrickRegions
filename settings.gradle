@@ -6,6 +6,3 @@ include 'spigot-api'
 include 'spigot'
 include 'spigot-squaremap'
 include 'spigot-dynmap'
-
-includeBuild '../BrickMath'
-

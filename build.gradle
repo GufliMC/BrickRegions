@@ -6,6 +6,8 @@ plugins {
 group 'com.guflimc.brick.regions'
 version = scmVersion.version
 
+// version = 'git rev-parse --short HEAD'.execute().text.trim() + "-" + (project.hasProperty('buildNumber') ? project.buildNumber : "snapshot")
+
 def javadocProjects = [project(':api'), project(':spigot-api')]
 ext.set("javadocProjects", javadocProjects)
 
