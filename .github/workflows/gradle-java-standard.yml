@@ -25,3 +25,4 @@ jobs:
     with:
       files: |
         spigot*/build/libs/*.jar
+        !spigot-api/**
