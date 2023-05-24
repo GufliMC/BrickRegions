@@ -24,5 +24,6 @@ jobs:
     uses: GufliOfficial/.github/.github/workflows/java-gradle-github-pre-release.yml@main
     with:
       files: |
-        spigot*/build/libs/*.jar
-        !spigot-api/**
+        spigot/build/libs/*.jar
+        spigot-dynmap/build/libs/*.jar
+        spigot-squaremap/build/libs/*.jar
