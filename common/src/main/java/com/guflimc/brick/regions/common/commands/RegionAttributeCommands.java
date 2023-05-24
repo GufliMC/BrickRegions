@@ -1,102 +1,86 @@
 package com.guflimc.brick.regions.common.commands;
 
 import com.guflimc.brick.i18n.api.I18nAPI;
+import com.guflimc.brick.orm.api.attributes.AttributeKey;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableAttributedLocality;
 import com.guflimc.brick.regions.api.domain.tile.TileGroup;
-import com.guflimc.colonel.annotation.AnnotationColonel;
 import com.guflimc.colonel.annotation.annotations.Command;
+import com.guflimc.colonel.annotation.annotations.Completer;
+import com.guflimc.colonel.annotation.annotations.Parser;
 import com.guflimc.colonel.annotation.annotations.parameter.Parameter;
 import com.guflimc.colonel.annotation.annotations.parameter.Source;
-import com.guflimc.colonel.common.safe.SafeCommandHandlerBuilder;
-import com.guflimc.colonel.common.safe.SafeCommandParameterBuilder;
+import com.guflimc.colonel.common.Colonel;
+import com.guflimc.colonel.common.build.HandleFailure;
+import com.guflimc.colonel.common.dispatch.suggestion.Suggestion;
+import com.guflimc.colonel.common.safe.SafeCommandContext;
 import com.guflimc.colonel.minecraft.common.annotations.Permission;
 import net.kyori.adventure.audience.Audience;
 
-public class RegionAttributeCommands {
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
-    private RegionAttributeCommands() {
+public class RegionAttributeCommands<S> {
+
+    private final Colonel<S> colonel;
+
+    public RegionAttributeCommands(Colonel<S> colonel) {
+        this.colonel = colonel;
     }
 
     //
 
-    public static <S> void register(AnnotationColonel<S> colonel) {
-        colonel.registerAll(new RegionAttributeCommands());
-
-        for (LocalityAttributeKey<?> attribute : LocalityAttributeKey.values()) {
-            register(colonel, attribute);
-        }
+    @Parser("attributeKey")
+    public LocalityAttributeKey<?> attributeKeyParser(@Source Audience sender, String input) {
+        return Optional.ofNullable(LocalityAttributeKey.valueOf(input))
+                .filter(a -> !a.hidden())
+                .orElseThrow(() -> HandleFailure.of(() -> I18nAPI.get(this).send(sender, "cmd.error.args.attribute", input)));
     }
 
-    private static <S, T> void register(AnnotationColonel<S> colonel, LocalityAttributeKey<T> attributeKey) {
-        try {
-            // TODO permissions
-            registerForRegions(colonel, attributeKey);
-            registerForTiles(colonel, attributeKey);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Completer("attributeKey")
+    public List<String> attributeKeyCompleter() {
+        return Arrays.stream(LocalityAttributeKey.values())
+                .filter(a -> !a.hidden())
+                .map(AttributeKey::name)
+                .toList();
     }
 
-    private static <S, T> void value(SafeCommandHandlerBuilder<S> builder, LocalityAttributeKey<T> attributeKey) {
-        SafeCommandParameterBuilder<S> pb = builder.parameter("value").parser(attributeKey.type()).completer(attributeKey.type());
-        if (attributeKey.type().equals(String.class)) {
-            pb.readGreedy();
-        }
-        pb.done();
+    @Parser("attributeValue")
+    public Object attributeValueParser(SafeCommandContext<S> ctx, String input) {
+        LocalityAttributeKey<?> key = ctx.argument("attributeKey");
+        return colonel.registry().parser(key.type())
+                .map(parser -> parser.parse(ctx, input))
+                .orElseThrow(() -> HandleFailure.of(String.format("No value parser for attribute %s with type %s", key.name(), key.type().getSimpleName())));
     }
 
-    private static <S, T> void registerForRegions(AnnotationColonel<S> colonel, LocalityAttributeKey<T> attributeKey) {
-        SafeCommandHandlerBuilder<S> b = colonel.builder();
-
-        b.path("br regions attributes set ");
-        b.parameter("region").parser(Region.class).completer(Region.class).done();
-        b.literal(attributeKey.name());
-        value(b, attributeKey);
-
-        b.source(Audience.class);
-
-        b.executor(ctx -> {
-            Region region = ctx.argument("region");
-            ModifiableAttributedLocality mr = ctx.argument("region");
-            T value = ctx.argument("value");
-
-            mr.setAttribute(attributeKey, value);
-            RegionAPI.get().save(mr);
-
-            Audience sender = ctx.source(0);
-            I18nAPI.get(RegionAttributeCommands.class)
-                    .send(sender, "cmd.regions.attributes.set", region.name(), attributeKey.name(), value.toString());
-        });
-        b.register();
-    }
-
-    private static <S, T> void registerForTiles(AnnotationColonel<S> colonel, LocalityAttributeKey<T> attributeKey) {
-        SafeCommandHandlerBuilder<S> b = colonel.builder();
-
-        b.path("br tiles attributes set " + attributeKey.name());
-        value(b, attributeKey);
-
-        b.source(Audience.class);
-        b.source(TileGroup.class);
-
-        b.executor(ctx -> {
-            ModifiableAttributedLocality tile = ctx.source(1);
-            T value = ctx.argument("value");
-
-            tile.setAttribute(attributeKey, value);
-            RegionAPI.get().save(tile);
-
-            Audience sender = ctx.source(0);
-            I18nAPI.get(RegionAttributeCommands.class)
-                    .send(sender, "cmd.tiles.attributes.set", attributeKey.name(), value.toString());
-        });
-        b.register();
+    @Completer("attributeValue")
+    public List<Suggestion> attributeValueCompleter(SafeCommandContext<S> ctx, String input) {
+        LocalityAttributeKey<?> key = ctx.argument("attributeKey");
+        return colonel.registry().completer(key.type())
+                .map(completer -> completer.suggestions(ctx, input))
+                .orElse(List.of());
     }
 
     //
+
+    @Command("br regions attributes set ")
+    @Permission("brickregions.regions.attributes.set")
+    public <T> void regionsAttributesSet(@Source Audience sender,
+                                         @Parameter Region region,
+                                         @Parameter LocalityAttributeKey<T> attributeKey,
+                                         @Parameter T attributeValue) {
+        ModifiableAttributedLocality mr = (ModifiableAttributedLocality) region;
+
+        mr.setAttribute(attributeKey, attributeValue);
+        RegionAPI.get().save(mr);
+
+        I18nAPI.get(RegionAttributeCommands.class).send(sender, "cmd.regions.attributes.set",
+                region.name(), attributeKey.name(), attributeValue.toString());
+    }
+
 
     @Command("br regions attributes unset ")
     @Permission("brickregions.regions.tiles.attributes.unset")
@@ -108,6 +92,19 @@ public class RegionAttributeCommands {
 
         I18nAPI.get(RegionAttributeCommands.class)
                 .send(sender, "cmd.tiles.attributes.unset", attributeKey.name());
+    }
+
+    @Command("br tiles attributes set ")
+    @Permission("brickregions.tiles.attributes.set")
+    public <T> void tilesAttributesSet(@Source Audience sender,
+                                       @Source TileGroup tileGroup,
+                                       @Parameter LocalityAttributeKey<T> attributeKey,
+                                       @Parameter T attributeValue) {
+        tileGroup.setAttribute(attributeKey, attributeValue);
+        RegionAPI.get().save(tileGroup);
+
+        I18nAPI.get(RegionAttributeCommands.class).send(sender, "cmd.tiles.attributes.set",
+                attributeKey.name(), attributeValue.toString());
     }
 
     @Command("br tiles attributes unset ")

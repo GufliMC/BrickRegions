@@ -5,7 +5,6 @@ import com.guflimc.brick.orm.api.attributes.AttributeKey;
 import net.kyori.adventure.text.Component;
 
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -62,16 +61,29 @@ public class LocalityAttributeKey<T> extends AttributeKey<T> {
 
     //
 
+    private final boolean hidden;
 
-    public LocalityAttributeKey(String name, Class<T> type, Function<T, String> serializer, Function<String, T> deserializer) {
+    public LocalityAttributeKey(String name, Class<T> type, boolean hidden, Function<T, String> serializer, Function<String, T> deserializer) {
         super(name, type, serializer, deserializer);
+        this.hidden = hidden;
 
         if ( KEYS.containsKey(name) ) {
             throw new IllegalArgumentException("An attribute key with that name already exists.");
         }
-
         KEYS.put(name, this);
     }
+
+    public LocalityAttributeKey(String name, Class<T> type, Function<T, String> serializer, Function<String, T> deserializer) {
+        this(name, type, false, serializer, deserializer);
+    }
+
+    //
+
+    public boolean hidden() {
+        return hidden;
+    }
+
+    //
 
     public static LocalityAttributeKey<?>[] values() {
         return KEYS.values().toArray(LocalityAttributeKey<?>[]::new);

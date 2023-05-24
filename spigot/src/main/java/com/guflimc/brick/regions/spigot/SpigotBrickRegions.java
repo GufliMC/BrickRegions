@@ -137,8 +137,7 @@ public class SpigotBrickRegions extends JavaPlugin {
         colonel.registerAll(new RegionCommands());
         colonel.registerAll(new SpigotRegionCommands(this));
         colonel.registerAll(new SpigotSelectionCommands(this));
-
-        RegionAttributeCommands.register(colonel);
+        colonel.registerAll(new RegionAttributeCommands<>(colonel));
 
         getLogger().info("Enabled " + nameAndVersion() + ".");
     }
