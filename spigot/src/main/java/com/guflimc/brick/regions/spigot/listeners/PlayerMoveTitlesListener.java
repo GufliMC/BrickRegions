@@ -13,6 +13,7 @@ import net.kyori.adventure.title.TitlePart;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.time.Duration;
@@ -36,7 +37,7 @@ public class PlayerMoveTitlesListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerRegionsMoveEvent event) {
         handle(event.player(),
                 event.uniqueFrom().stream().filter(Region.class::isInstance).map(Region.class::cast).toList(),
@@ -67,7 +68,7 @@ public class PlayerMoveTitlesListener implements Listener {
             priority = ra.priority();
         }
 
-        Region rb = ca.stream()
+        Region rb = cb.stream()
                 .filter(rg -> rg instanceof AttributedLocality al && al.attribute(lb).isPresent())
                 .max(Comparator.comparingInt(Region::priority))
                 .orElse(null);

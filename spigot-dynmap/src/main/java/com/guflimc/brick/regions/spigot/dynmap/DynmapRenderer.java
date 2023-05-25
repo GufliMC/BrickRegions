@@ -93,10 +93,11 @@ public class DynmapRenderer {
     private void render(@NotNull World world, @NotNull TileRegion tileRegion) {
         MarkerSet ms = tileLayers.remove(tileRegion);
         if ( ms != null ) {
+            ms.getMarkers().forEach(GenericMarker::deleteMarker);
             ms.deleteMarkerSet();
         }
 
-        ms = dynmap.getMarkerAPI().createMarkerSet("Tiles-" + tileRegion.name(), "Tiles-" + tileRegion.name(), null, false);
+        ms = dynmap.getMarkerAPI().createMarkerSet("BRT:" + tileRegion.name(), "BRT:" + tileRegion.name(), null, false);
         ms.setHideByDefault(false);
         ms.setLayerPriority(1 + tileRegion.priority());
         tileLayers.put(tileRegion, ms);
@@ -108,7 +109,12 @@ public class DynmapRenderer {
 
     private void render(@NotNull TileGroup group) {
         World world = world(group.worldId()).orElseThrow();
-        MarkerSet ms = tileLayers.get(group.region());
+        MarkerSet ms = tileLayers.get(group.parent());
+        if ( ms == null ) {
+            render(group.parent());
+            return;
+        }
+
         ms.getAreaMarkers().stream()
                 .filter(m -> m.getMarkerID().equals(group.id().toString()))
                 .findFirst().ifPresent(GenericMarker::deleteMarker);

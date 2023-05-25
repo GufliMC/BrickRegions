@@ -7,7 +7,6 @@ import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.domain.*;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
 import com.guflimc.brick.regions.api.domain.WorldRegion;
-import com.guflimc.brick.regions.api.domain.tile.Tile;
 import com.guflimc.brick.regions.api.domain.tile.TileGroup;
 import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
@@ -30,9 +29,9 @@ public interface RegionManager<S> {
 
     // REGIONS
 
-    Optional<Region> findRegion(@NotNull UUID id);
+    Optional<Region> region(@NotNull UUID id);
 
-    Optional<Region> findRegion(@NotNull UUID worldId, @NotNull String name);
+    Optional<Region> region(@NotNull UUID worldId, @NotNull String name);
 
     Collection<Region> regions();
 

@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 @Entity
 public class DTileGroup extends DModifiableLocality implements TileGroup {
 
-    @Column(name = "tile_group_region_id")
+    @JoinColumn(name = "tilegroup_parent_region_id")
     @ManyToOne(targetEntity = DTileRegion.class, fetch = FetchType.EAGER)
     private DTileRegion region;
 
-    @Column(name = "tile_group_tiles")
+
     @OneToMany(targetEntity = DTile.class, mappedBy = "group",
             cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DTile> tiles = new ArrayList<>();
@@ -49,7 +49,7 @@ public class DTileGroup extends DModifiableLocality implements TileGroup {
     }
 
     @Override
-    public TileRegion region() {
+    public TileRegion parent() {
         return region;
     }
 
@@ -73,6 +73,11 @@ public class DTileGroup extends DModifiableLocality implements TileGroup {
         return shape;
     }
 
+    @Override
+    public int priority() {
+        // current priority + parent priority
+        return super.priority() + region.priority();
+    }
 
     @Override
     public String toString() {

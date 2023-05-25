@@ -27,6 +27,7 @@ dependencies {
 
     implementation 'com.guflimc.brick.math:spigot:+'
     implementation 'com.guflimc.brick.gui:spigot-api:+'
+    implementation 'com.guflimc.config:toml:+'
 }
 
 compileJava.options.compilerArgs.add '-parameters'

@@ -26,44 +26,44 @@
   "select.cuboid.secondary": "<gray>Changed secondary position.",
   "select.poly": "<gray>Added position to the selection.",
 
-  "cmd.regions.create.error.poly-invalid": "<red>A polygon selection may not be complex (edges must not cross).",
-  "cmd.regions.create.error.exists": "<red>A region with that name already exists.",
-  "cmd.regions.create.usage": "<red>Invalid usage, try this: /br region create <name>",
-  "cmd.regions.create": "<gray>You created a region named <green>{0}</green>.",
+  "cmd.region.create.error.poly-invalid": "<red>A polygon selection may not be complex (edges must not cross).",
+  "cmd.region.create.error.exists": "<red>A region with that name already exists.",
+  "cmd.region.create.usage": "<red>Invalid usage, try this: /br region create <name>",
+  "cmd.region.create": "<gray>You created a region named <green>{0}</green>.",
 
-  "cmd.regions.delete.usage": "<red>Invalid usage, try this: <dark_red>/br region delete <region></dark_red>.",
-  "cmd.regions.delete": "<gray>Deleted <green>{0}</green>.",
-  "cmd.regions.delete.error.global": "<red>You can't delete the global region.",
+  "cmd.region.delete.usage": "<red>Invalid usage, try this: <dark_red>/br region delete <region></dark_red>.",
+  "cmd.region.delete": "<gray>Deleted <green>{0}</green>.",
+  "cmd.region.delete.error.global": "<red>You can't delete the global region.",
 
-  "cmd.regions.setdisplayname": "<gray>Changed the display name of <green>{0}</green> to <white>{1}</white><gray>.",
+  "cmd.region.setdisplayname": "<gray>Changed the display name of <green>{0}</green> to <white>{1}</white><gray>.",
 
-  "cmd.regions.list": "<gray>List of regions in your current world: <green>{0}</green>.</gray>",
-  "cmd.regions.list.world": "<gray>List of regions in <dark_gray>{0}<gray>: <green>{1}</green>.",
+  "cmd.region.list": "<gray>List of regions in your current world: <green>{0}</green>.</gray>",
+  "cmd.region.list.world": "<gray>List of regions in <dark_gray>{0}<gray>: <green>{1}</green>.",
 
-  "cmd.regions.rules.list": "<gray>List of rules for <green>{0}</green>: {1}",
-  "cmd.regions.rules.list.format": "<yellow>{0} <gray>- <green>{1}",
-  "cmd.regions.rules.list.error.empty": "<gray>The region <green>{0}</green> has no rules.",
+  "cmd.region.rule.list": "<gray>List of rules for <green>{0}</green>: {1}",
+  "cmd.region.rule.list.format": "<yellow>{0} <gray>- <green>{1}",
+  "cmd.region.rule.list.error.empty": "<gray>The region <green>{0}</green> has no rules.",
 
-  "cmd.regions.rules.add": "<gray>Added rule <green>{0}</green> to <green>{1}</green>.",
-  "cmd.regions.rules.add.error.exists": "<red>A rule that does the same already exists.",
+  "cmd.region.rule.add": "<gray>Added rule <green>{0}</green> to <green>{1}</green>.",
+  "cmd.region.rule.add.error.exists": "<red>A rule that does the same already exists.",
 
-  "cmd.regions.rules.remove": "<gray>Removed rule <green>{0}</green> to <green>{1}</green>.",
-  "cmd.regions.rules.remove.error.index": "<red>A rule with that index does not exist.",
+  "cmd.region.rule.remove": "<gray>Removed rule <green>{0}</green> to <green>{1}</green>.",
+  "cmd.region.rule.remove.error.index": "<red>A rule with that index does not exist.",
 
-  "cmd.regions.rules.clear": "<gray>Removed all rules from <green>{0}</green>.",
+  "cmd.region.rule.clear": "<gray>Removed all rules from <green>{0}</green>.",
 
-  "cmd.regions.tile.error.region": "<red>This region cannot be tiled.",
-  "cmd.regions.tile": "<gray>Generated tiles <green>{1}</green> for <green>{0}</green>.",
+  "cmd.region.attribute.set.error.parse": "<red>Invalid attribute value <dark_red>{1}</dark_red> for <dark_red>{0}</dark_red>.",
+  "cmd.region.attribute.set": "<gray>Changed attribute <green>{0}</green> to <green>{1}</green> for <green>{2}</green>.",
+  "cmd.region.attribute.unset": "<gray>Cleared attribute <green>{0}</green> for <green>{2}</green>.",
 
-  "cmd.regions.attributes.set.error.parse": "<red>Invalid value <dark_red>{1}</dark_red> for <dark_red>{0}</dark_red>.",
-  "cmd.regions.attributes.set": "<gray>Changed attribute <green>{0}</green> to <green>{1}</green> for <green>{2}</green>.",
+  "cmd.tileregion.create": "<gray>Created tile region <green>{0}</green>.",
 
-  "cmd.tiles.create": "<gray>Created tile region <green>{0}</green>.",
-  "cmd.tiles.fill": "<gray>Generated <green>{1} <gray>tiles in region <green>{0}<gray>.",
+  "cmd.tileregion.fill": "<gray>Generated <green>{1} <gray>tiles in region <green>{0}<gray>.",
 
-  "cmd.tiles.attributes.set": "<gray>Changed attribute <green>{0}</green> to <green>{1}</green> for the tile at your position.",
+  "cmd.tileregion.groupify": "<gray>Generated random groups of <green>{1}<gray> tiles in <green>{0}<gray>.",
 
-  "cmd.attributes.set": "<gray>Changed attribute <green>{0}</green> to <green>{1}</green> for <green>{2}</green> regions and <green>{3}</green> tiles within your selection.",
+  "cmd.tilegroup.attribute.set": "<gray>Changed attribute <green>{0}</green> to <green>{1}</green> for the tile group at your position.",
+  "cmd.tilegroup.attribute.unset": "<gray>Cleared attribute <green>{0}</green> from the tile group at your position.",
 
   "protection.build": "<red>You cannot build here.",
   "protection.interact": "<red>You cannot do that here.",

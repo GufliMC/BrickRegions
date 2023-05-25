@@ -72,12 +72,12 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     // REGIONS
 
     @Override
-    public Optional<Region> findRegion(@NotNull UUID id) {
+    public Optional<Region> region(@NotNull UUID id) {
         return regionEngine.findRegion(id);
     }
 
     @Override
-    public Optional<Region> findRegion(@NotNull UUID worldId, @NotNull String name) {
+    public Optional<Region> region(@NotNull UUID worldId, @NotNull String name) {
         return regionEngine.findRegion(worldId, name);
     }
 
@@ -186,6 +186,9 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         }
         if ( locality instanceof DWorldRegion) {
             throw new IllegalArgumentException("Cannot delete the global region.");
+        }
+        if ( locality instanceof DTileGroup ) {
+            throw new IllegalArgumentException("A tile group can only be deleted using TileRegion#removeGroup.");
         }
         if (locality instanceof DRegion region) {
             regionEngine.remove(region);

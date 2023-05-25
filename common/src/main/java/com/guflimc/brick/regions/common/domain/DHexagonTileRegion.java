@@ -7,6 +7,7 @@ import com.guflimc.brick.math.common.geometry.shape2d.RegularHexagon;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.domain.tile.Tile;
 import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.common.EventManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Entity;
@@ -83,6 +84,7 @@ public class DHexagonTileRegion extends DTileRegion {
 
     private void addGroup(int relX, int relZ, RegularHexagon hexagon) {
         groups.add(new DTileGroup(this, new TempTile(new Vector2(relX, relZ), hexagon)));
+        EventManager.INSTANCE.onPropertyChange(this);
     }
 
     @Override

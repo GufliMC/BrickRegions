@@ -2,17 +2,13 @@
 create table localities (
   dtype                         varchar(31) not null,
   id                            uuid not null,
-  world_id                      uuid not null,
-  priority                      integer default 1 not null,
+  locality_world_id             uuid not null,
+  locality_priority             integer default 1 not null,
   region_name                   varchar(255),
-  region_displayname            varchar(2048) default null,
   shaperegion_shape             varchar(2048) default null,
   tileregion_tile_radius        integer default 0 not null,
-  tileregion_tile_width         integer default 0 not null,
-  tileregion_offset             varchar(255),
-  parent_id                     uuid,
-  tile_position                 varchar(1024),
-  tile_polygon                  varchar(2048),
+  tileregion_tile_offset        varchar(255),
+  tilegroup_parent_region_id    uuid,
   constraint pk_localities primary key (id)
 );
 
@@ -37,13 +33,24 @@ create table locality_rules (
   constraint pk_locality_rules primary key (id)
 );
 
+create table tiles (
+  id                            uuid not null,
+  group_id                      uuid not null,
+  position                      varchar(255),
+  shape                         varchar(255),
+  constraint pk_tiles primary key (id)
+);
+
 -- foreign keys and indices
-create index ix_localities_parent_id on localities (parent_id);
-alter table localities add constraint fk_localities_parent_id foreign key (parent_id) references localities (id) on delete restrict on update restrict;
+create index ix_localities_tilegroup_parent_region_id on localities (tilegroup_parent_region_id);
+alter table localities add constraint fk_localities_tilegroup_parent_region_id foreign key (tilegroup_parent_region_id) references localities (id) on delete restrict on update restrict;
 
 create index ix_locality_attributes_locality_id on locality_attributes (locality_id);
 alter table locality_attributes add constraint fk_locality_attributes_locality_id foreign key (locality_id) references localities (id) on delete cascade on update restrict;
 
 create index ix_locality_rules_locality_id on locality_rules (locality_id);
 alter table locality_rules add constraint fk_locality_rules_locality_id foreign key (locality_id) references localities (id) on delete cascade on update restrict;
+
+create index ix_tiles_group_id on tiles (group_id);
+alter table tiles add constraint fk_tiles_group_id foreign key (group_id) references localities (id) on delete cascade on update restrict;
 

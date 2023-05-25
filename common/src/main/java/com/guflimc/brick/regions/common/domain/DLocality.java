@@ -16,7 +16,7 @@ public abstract class DLocality implements Locality {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "locality_world_id", nullable = false)
     private UUID worldId;
 
     public DLocality() {

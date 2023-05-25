@@ -4,7 +4,6 @@ import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.*;
-import com.guflimc.brick.regions.api.domain.tile.Tile;
 import com.guflimc.brick.regions.api.domain.tile.TileGroup;
 import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import org.bukkit.Bukkit;
@@ -19,7 +18,6 @@ import xyz.jpenilla.squaremap.api.marker.Polygon;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SquaremapRenderer {
 
@@ -146,7 +144,7 @@ public class SquaremapRenderer {
     }
 
     private void render(@NotNull TileGroup group) {
-        SimpleLayerProvider layer = tileLayers.get(group.region());
+        SimpleLayerProvider layer = tileLayers.get(group.parent());
         layer.removeMarker(Key.of(group.id().toString()));
         render(layer, group, group.shape());
     }
@@ -212,7 +210,7 @@ public class SquaremapRenderer {
     }
 
     private void delete(@NotNull TileGroup group) {
-        SimpleLayerProvider layer = tileLayers.get(group.region());
+        SimpleLayerProvider layer = tileLayers.get(group.parent());
         layer.removeMarker(Key.of(group.id().toString()));
     }
 

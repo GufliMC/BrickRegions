@@ -2,7 +2,6 @@ package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
-import com.guflimc.brick.math.database.GsonTools;
 import com.guflimc.brick.math.database.Point2Converter;
 import com.guflimc.brick.math.database.Shape2Converter;
 import com.guflimc.brick.regions.api.domain.tile.Tile;
@@ -13,6 +12,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@Table(name = "tiles")
 public class DTile implements Tile {
 
     @Id

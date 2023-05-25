@@ -4,6 +4,7 @@ import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.math.database.Shape3Converter;
 import com.guflimc.brick.regions.api.domain.modifiable.ModifiableShapeRegion;
+import com.guflimc.brick.regions.common.EventManager;
 import io.ebean.annotation.DbDefault;
 
 import javax.persistence.Column;
@@ -36,6 +37,7 @@ public class DShapeRegion extends DRegion implements ModifiableShapeRegion {
     @Override
     public void setShape(Shape3 shape) {
         this.shape = shape;
+        EventManager.INSTANCE.onPropertyChange(this);
     }
 
     @Override

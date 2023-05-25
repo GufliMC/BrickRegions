@@ -29,7 +29,7 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
     @DbDefault("0")
     protected int radius;
 
-    @Column(name = "tileregion_offset")
+    @Column(name = "tileregion_tile_offset")
     @Convert(converter = Point2Converter.class)
     protected Point2 offset = new Vector2(0, 0);
 
@@ -89,8 +89,8 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
     @Override
     public void removeGroup(@NotNull TileGroup group) {
         groups.remove((DTileGroup) group);
-
         group.tiles().forEach(tile -> tilemap.remove(tile.position()));
+        EventManager.INSTANCE.onPropertyChange(this);
     }
 
     @Override
@@ -101,18 +101,19 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
                 .flatMap(g -> g.tiles().stream())
                 .collect(Collectors.toSet());
 
-        Arrays.stream(groups).map(g -> (DTileGroup) g).forEach(g -> this.groups.remove(g));
+        Arrays.stream(groups).map(g -> (DTileGroup) g).forEach(this::removeGroup);
         DTileGroup group = new DTileGroup(this, tiles.toArray(Tile[]::new));
         this.groups.add(group);
 
         tiles.forEach(tile -> tilemap.put(tile.position(), group));
 
+        EventManager.INSTANCE.onPropertyChange(this);
         return group;
     }
 
     @Override
     public TileGroup[] unmerge(TileGroup group) {
-        this.groups.remove((DTileGroup) group);
+        removeGroup(group);
 
         List<TileGroup> result = new ArrayList<>();
         for ( Tile tile : group.tiles() ) {
@@ -123,6 +124,7 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
             tilemap.put(tile.position(), tg);
         }
 
+        EventManager.INSTANCE.onPropertyChange(this);
         return result.toArray(TileGroup[]::new);
     }
 
@@ -165,7 +167,6 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
 
             // add new groups to the frontier
             for ( TileGroup group : shufcontour ) {
-                // TODO fix this
                 List<TileGroup> adjacent = adjacent(group).stream()
                         .filter(frontier::contains)
                         .distinct()
@@ -188,10 +189,6 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
             }
 
             radius++;
-
-            System.out.println("contour: " + contour.size());
-            System.out.println("total: " + groups.size());
-            System.out.println();
         }
     }
 

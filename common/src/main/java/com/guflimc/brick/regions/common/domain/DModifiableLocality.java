@@ -18,7 +18,7 @@ import java.util.*;
 @Inheritance
 public abstract class DModifiableLocality extends DLocality implements ModifiableProtectedLocality, ModifiableAttributedLocality {
 
-    @Column(nullable = false)
+    @Column(name = "locality_priority", nullable = false)
     @DbDefault("1")
     private int priority = 1;
 
