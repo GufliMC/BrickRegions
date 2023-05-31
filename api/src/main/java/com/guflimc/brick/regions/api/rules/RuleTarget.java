@@ -1,6 +1,6 @@
 package com.guflimc.brick.regions.api.rules;
 
-import com.guflimc.brick.regions.api.domain.Locality;
+import com.guflimc.brick.regions.api.domain.locality.Locality;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;

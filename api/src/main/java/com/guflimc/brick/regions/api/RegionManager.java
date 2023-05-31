@@ -4,11 +4,14 @@ import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
-import com.guflimc.brick.regions.api.domain.*;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
-import com.guflimc.brick.regions.api.domain.WorldRegion;
-import com.guflimc.brick.regions.api.domain.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.locality.Locality;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.region.RegionKey;
+import com.guflimc.brick.regions.api.domain.region.ShapeRegion;
+import com.guflimc.brick.regions.api.domain.region.WorldRegion;
+import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
+import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,15 +34,13 @@ public interface RegionManager<S> {
 
     Optional<Region> region(@NotNull UUID id);
 
-    Optional<Region> region(@NotNull UUID worldId, @NotNull String name);
+    Optional<Region> region(@NotNull UUID worldId, @NotNull RegionKey key);
 
     Collection<Region> regions();
 
     Collection<Region> regions(@NotNull UUID worldId);
 
-    Collection<ModifiableRegion> persistentRegions();
-
-    Collection<ModifiableRegion> persistentRegions(@NotNull UUID worldId);
+    Collection<Region> regions(@NotNull UUID worldId, @NotNull String namespace);
 
     WorldRegion worldRegion(@NotNull UUID worldId);
 
@@ -49,17 +50,13 @@ public interface RegionManager<S> {
 
     Collection<TileGroup> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape);
 
-    Collection<Locality> localitiesAt(@NotNull UUID worldId, @NotNull Point3 position);
-
-    Collection<Locality> localitiesAt(@NotNull Location position);
-
     Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point3 position);
 
     Collection<Region> regionsAt(@NotNull Location position);
 
-    Optional<TileRegion> tileRegionAt(@NotNull Location location);
-
-    Optional<TileGroup> tileGroupAt(@NotNull Location location);
+//    Optional<TileRegion> tileRegionAt(@NotNull Location location);
+//
+//    Optional<TileGroup> tileGroupAt(@NotNull Location location);
 
     CompletableFuture<Void> delete(@NotNull Locality locality);
 
@@ -73,10 +70,10 @@ public interface RegionManager<S> {
 
     //
 
-    CompletableFuture<Region> create(@NotNull String name, @NotNull UUID worldId, @NotNull Shape3 shape);
+    CompletableFuture<Region> create(@NotNull RegionKey key, @NotNull UUID worldId, @NotNull Shape3 shape);
 
-    CompletableFuture<Region> create(@NotNull String name, @NotNull Selection selection);
+    CompletableFuture<Region> create(@NotNull RegionKey key, @NotNull Selection selection);
 
-    CompletableFuture<TileRegion> createHexagonTileRegion(@NotNull String name, @NotNull UUID worldId, int radius);
+    CompletableFuture<TileRegion> createHexagonTileRegion(@NotNull RegionKey key, @NotNull UUID worldId, int radius);
 
 }

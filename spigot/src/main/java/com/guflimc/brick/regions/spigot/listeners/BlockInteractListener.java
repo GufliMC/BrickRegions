@@ -2,9 +2,8 @@ package com.guflimc.brick.regions.spigot.listeners;
 
 import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.Locality;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesBlockInteractEvent;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsBlockInteractEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -56,12 +55,12 @@ public class BlockInteractListener implements Listener {
     );
 
     private void blockInteract(Player player, Block block, Cancellable e) {
-        Collection<Locality> regions = RegionAPI.get().localitiesAt(SpigotMath.toBrickLocation(block.getLocation()));
+        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMath.toBrickLocation(block.getLocation()));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerLocalitiesBlockInteractEvent event = new PlayerLocalitiesBlockInteractEvent(player, regions, block);
+        PlayerRegionsBlockInteractEvent event = new PlayerRegionsBlockInteractEvent(player, regions, block);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }

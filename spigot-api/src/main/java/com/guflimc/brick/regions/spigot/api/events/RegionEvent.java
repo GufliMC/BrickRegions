@@ -1,6 +1,6 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
-import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.region.Region;
 import org.bukkit.event.Event;
 
 public abstract class RegionEvent extends Event {

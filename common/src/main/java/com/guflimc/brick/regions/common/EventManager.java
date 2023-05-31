@@ -1,11 +1,10 @@
 package com.guflimc.brick.regions.common;
 
-import com.guflimc.brick.regions.api.domain.Locality;
-import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableLocality;
-import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.locality.Locality;
+import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
+import com.guflimc.brick.regions.api.domain.locality.LocalityRule;
+import com.guflimc.brick.regions.api.domain.locality.ModifiableLocality;
+import com.guflimc.brick.regions.api.domain.region.Region;
 
 public abstract class EventManager {
 
@@ -27,9 +26,9 @@ public abstract class EventManager {
 
     public <T> void onAttributeRemove(ModifiableLocality locality, LocalityAttributeKey<T> key, T previousValue) {}
 
-    public void onRuleAdd(LocalityProtectionRule rule) {}
+    public void onRuleAdd(Locality locality, LocalityRule rule) {}
 
-    public void onRuleRemove(LocalityProtectionRule rule) {}
+    public void onRuleRemove(Locality locality, LocalityRule rule) {}
 
     public void onSave(Locality locality) {}
 

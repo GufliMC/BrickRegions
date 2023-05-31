@@ -1,11 +1,10 @@
 package com.guflimc.brick.regions.spigot.api;
 
 import com.guflimc.brick.regions.api.RegionManager;
-import com.guflimc.brick.regions.api.domain.Locality;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.tile.Tile;
-import com.guflimc.brick.regions.api.domain.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.locality.Locality;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -18,15 +17,21 @@ import java.util.Optional;
 
 public interface SpigotRegionManager extends RegionManager<Player> {
 
-    Collection<Locality> localitiesAt(@NotNull Location position);
+//    Collection<Locality> localitiesAt(@NotNull Location position);
+//
+//    default Collection<Locality> localitiesAt(@NotNull Block block) {
+//        return localitiesAt(block.getLocation());
+//    }
+//
+//    default Collection<Locality> localitiesAt(@NotNull Entity entity) {
+//        return localitiesAt(entity.getLocation());
+//    }
 
-    default Collection<Locality> localitiesAt(@NotNull Block block) {
-        return localitiesAt(block.getLocation());
-    }
+    //
 
-    default Collection<Locality> localitiesAt(@NotNull Entity entity) {
-        return localitiesAt(entity.getLocation());
-    }
+    Collection<Region> regions(@NotNull World world);
+
+    Region worldRegion(@NotNull World world);
 
     //
 
@@ -41,33 +46,28 @@ public interface SpigotRegionManager extends RegionManager<Player> {
     }
 
     //
+//
+//    Optional<TileRegion> tileRegionAt(@NotNull Location location);
+//
+//    default Optional<TileRegion> tileRegionAt(@NotNull Entity entity) {
+//        return tileRegionAt(entity.getLocation());
+//    }
+//
+//    default Optional<TileRegion> tileRegionAt(@NotNull Block block) {
+//        return tileRegionAt(block.getLocation());
+//    }
+//
+//    //
+//
+//    Optional<TileGroup> tileGroupAt(@NotNull Location location);
+//
+//    default Optional<TileGroup> tileGroupAt(@NotNull Entity entity) {
+//        return tileGroupAt(entity.getLocation());
+//    }
+//
+//    default Optional<TileGroup> tileGroupAt(@NotNull Block block) {
+//        return tileGroupAt(block.getLocation());
+//    }
 
-    Optional<TileRegion> tileRegionAt(@NotNull Location location);
-
-    default Optional<TileRegion> tileRegionAt(@NotNull Entity entity) {
-        return tileRegionAt(entity.getLocation());
-    }
-
-    default Optional<TileRegion> tileRegionAt(@NotNull Block block) {
-        return tileRegionAt(block.getLocation());
-    }
-
-    //
-
-    Optional<TileGroup> tileGroupAt(@NotNull Location location);
-
-    default Optional<TileGroup> tileGroupAt(@NotNull Entity entity) {
-        return tileGroupAt(entity.getLocation());
-    }
-
-    default Optional<TileGroup> tileGroupAt(@NotNull Block block) {
-        return tileGroupAt(block.getLocation());
-    }
-
-    //
-
-    Collection<Region> regions(@NotNull World world);
-
-    Region globalRegion(@NotNull World world);
 
 }

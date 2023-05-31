@@ -1,8 +1,9 @@
 package com.guflimc.brick.regions.common.engine;
 
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.WorldRegion;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.region.RegionKey;
+import com.guflimc.brick.regions.api.domain.region.WorldRegion;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class RegionContainer {
 
-    private final Map<String, Region> byName = new ConcurrentHashMap<>();
+    private final Map<RegionKey, Region> byName = new ConcurrentHashMap<>();
     private final UUID worldId;
     private final WorldRegion worldRegion;
 
@@ -22,7 +23,7 @@ public class RegionContainer {
 
         this.worldId = worldId;
         this.worldRegion = worldRegion;
-        byName.put(worldRegion.name(), worldRegion);
+        byName.put(worldRegion.key(), worldRegion);
     }
 
     public UUID worldId() {
@@ -35,15 +36,15 @@ public class RegionContainer {
 
     //
 
-    public void remove(Region region) {
+    public void removeRegion(Region region) {
         if (region.equals(worldRegion)) {
             return;
         }
-        byName.remove(region.name(), region);
+        byName.remove(region.key(), region);
     }
 
-    public void add(Region region) {
-        byName.put(region.name(), region);
+    public void addRegion(Region region) {
+        byName.put(region.key(), region);
     }
 
     //
@@ -52,8 +53,8 @@ public class RegionContainer {
         return Collections.unmodifiableCollection(byName.values());
     }
 
-    public Optional<Region> findRegion(@NotNull String name) {
-        return Optional.ofNullable(byName.get(name));
+    public Optional<Region> region(@NotNull RegionKey key) {
+        return Optional.ofNullable(byName.get(key));
     }
 
     public Collection<Region> regionsAt(@NotNull Point3 point) {

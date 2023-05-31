@@ -2,9 +2,8 @@ package com.guflimc.brick.regions.spigot.listeners;
 
 import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.Locality;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesEntityInteractEvent;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsEntityInteractEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -32,12 +31,12 @@ public class EntityInteractListener implements Listener {
     }
 
     private void entityInteract(Player player, Entity entity, Cancellable e) {
-        Collection<Locality> regions = RegionAPI.get().localitiesAt(SpigotMath.toBrickLocation(entity.getLocation()));
+        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMath.toBrickLocation(entity.getLocation()));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerLocalitiesEntityInteractEvent event = new PlayerLocalitiesEntityInteractEvent(player, regions, entity);
+        PlayerRegionsEntityInteractEvent event = new PlayerRegionsEntityInteractEvent(player, regions, entity);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }

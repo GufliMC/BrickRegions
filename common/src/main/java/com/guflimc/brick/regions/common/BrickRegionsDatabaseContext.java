@@ -32,14 +32,12 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
 
     private static final Class<?>[] APPLICABLE_CLASSES = new Class[]{
             DLocality.class,
-            DModifiableLocality.class,
             DLocalityAttribute.class,
             DLocalityProtectionRule.class,
             DRegion.class,
             DShapeRegion.class,
             DWorldRegion.class,
 
-            DTile.class,
             DTileGroup.class,
             DTileRegion.class,
             DHexagonTileRegion.class,
@@ -49,7 +47,8 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
             Point2Converter.class,
             DLocalityProtectionRule.RuleTargetConverter.class,
             DLocalityProtectionRule.RuleTypeSetConverter.class,
-            ComponentConverter.class
+            ComponentConverter.class,
+            DTileGroup.TileKeySetConverter.class
     };
 
     public static void main(String[] args) throws IOException, SQLException {

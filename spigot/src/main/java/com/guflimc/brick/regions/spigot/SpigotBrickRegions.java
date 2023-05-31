@@ -3,7 +3,9 @@ package com.guflimc.brick.regions.spigot;
 import com.guflimc.brick.gui.spigot.SpigotBrickGUI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.i18n.spigot.api.namespace.SpigotNamespace;
-import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.math.spigot.SpigotMath;
+import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.BrickRegionsConfig;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
@@ -27,7 +29,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Comparator;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 public class SpigotBrickRegions extends JavaPlugin {
@@ -105,7 +109,13 @@ public class SpigotBrickRegions extends JavaPlugin {
             return ((Player) s).getWorld().getUID();
         });
 
-        colonel.registry().registerSourceMapper(TileGroup.class, s -> SpigotRegionAPI.get().tileGroupAt((Player) s)
+        colonel.registry().registerSourceMapper(TileGroup.class, s -> SpigotRegionAPI.get()
+                .regionsAt((Player) s)
+                .stream().filter(TileRegion.class::isInstance)
+                .map(TileRegion.class::cast)
+                .map(rg -> rg.groupAt(SpigotMath.toBrickLocation(((Player) s).getLocation())).orElse(null))
+                .filter(Objects::nonNull)
+                .max(Comparator.comparingInt(TileGroup::priority))
                 .orElseThrow(() -> FailureHandler.of(() -> SpigotI18nAPI.get(this).send(s, "cmd.error.tile"))));
 
         colonel.registry().registerSourceMapper(Selection.class, s -> SpigotRegionAPI.get().selection((Player) s)

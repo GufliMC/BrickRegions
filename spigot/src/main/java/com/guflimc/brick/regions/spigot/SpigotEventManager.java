@@ -1,11 +1,10 @@
 package com.guflimc.brick.regions.spigot;
 
-import com.guflimc.brick.regions.api.domain.Locality;
-import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableLocality;
-import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.locality.Locality;
+import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
+import com.guflimc.brick.regions.api.domain.locality.LocalityRule;
+import com.guflimc.brick.regions.api.domain.locality.ModifiableLocality;
+import com.guflimc.brick.regions.api.domain.region.Region;
 import com.guflimc.brick.regions.common.EventManager;
 import com.guflimc.brick.regions.spigot.api.events.*;
 import org.bukkit.Bukkit;
@@ -34,31 +33,43 @@ public class SpigotEventManager extends EventManager {
 
     @Override
     public void onPropertyChange(ModifiableLocality locality) {
-        Bukkit.getServer().getPluginManager().callEvent(new LocalityPropertyChangeEvent(locality, !Bukkit.isPrimaryThread()));
+        if (locality instanceof Region rg) {
+            Bukkit.getServer().getPluginManager().callEvent(new RegionPropertyChangeEvent(rg, !Bukkit.isPrimaryThread()));
+        }
     }
 
     @Override
     public <T> void onAttributeChange(ModifiableLocality locality, LocalityAttributeKey<T> key, T previousValue, T value) {
-        Bukkit.getServer().getPluginManager().callEvent(new LocalityAttributeChangeEvent<>(locality, !Bukkit.isPrimaryThread(), key, previousValue, value));
+        if (locality instanceof Region rg) {
+            Bukkit.getServer().getPluginManager().callEvent(new RegionAttributeChangeEvent<>(rg, !Bukkit.isPrimaryThread(), key, previousValue, value));
+        }
     }
 
     @Override
     public <T> void onAttributeRemove(ModifiableLocality locality, LocalityAttributeKey<T> key, T previousValue) {
-        Bukkit.getServer().getPluginManager().callEvent(new LocalityAttributeRemoveEvent<>(locality, !Bukkit.isPrimaryThread(), key, previousValue));
+        if (locality instanceof Region rg) {
+            Bukkit.getServer().getPluginManager().callEvent(new RegionAttributeRemoveEvent<>(rg, !Bukkit.isPrimaryThread(), key, previousValue));
+        }
     }
 
     @Override
-    public void onRuleAdd(LocalityProtectionRule rule) {
-        Bukkit.getServer().getPluginManager().callEvent(new LocalityRuleAddEvent(rule.locality(), !Bukkit.isPrimaryThread(), rule));
+    public void onRuleAdd(Locality locality, LocalityRule rule) {
+        if (locality instanceof Region rg) {
+            Bukkit.getServer().getPluginManager().callEvent(new RegionRuleAddEvent(rg, !Bukkit.isPrimaryThread(), rule));
+        }
     }
 
     @Override
-    public void onRuleRemove(LocalityProtectionRule rule) {
-        Bukkit.getServer().getPluginManager().callEvent(new LocalityRuleRemoveEvent(rule.locality(), !Bukkit.isPrimaryThread(), rule));
+    public void onRuleRemove(Locality locality, LocalityRule rule) {
+        if (locality instanceof Region rg) {
+            Bukkit.getServer().getPluginManager().callEvent(new RegionRuleRemoveEvent(rg, !Bukkit.isPrimaryThread(), rule));
+        }
     }
 
     @Override
     public void onSave(Locality locality) {
-        Bukkit.getServer().getPluginManager().callEvent(new LocalitySaveEvent(locality, !Bukkit.isPrimaryThread()));
+        if (locality instanceof Region rg) {
+            Bukkit.getServer().getPluginManager().callEvent(new RegionSaveEvent(rg, !Bukkit.isPrimaryThread()));
+        }
     }
 }

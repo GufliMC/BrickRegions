@@ -2,10 +2,9 @@ package com.guflimc.brick.regions.spigot.listeners;
 
 import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.Locality;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesBlockBreakEvent;
-import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesBlockPlaceEvent;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsBlockBreakEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsBlockPlaceEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -23,23 +22,23 @@ import java.util.Collection;
 public class BlockBuildListener implements Listener {
 
     private void blockPlace(Player player, Block block, Cancellable e) {
-        Collection<Locality> regions = RegionAPI.get().localitiesAt(SpigotMath.toBrickLocation(block.getLocation()));
+        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMath.toBrickLocation(block.getLocation()));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerLocalitiesBlockPlaceEvent event = new PlayerLocalitiesBlockPlaceEvent(player, regions, block);
+        PlayerRegionsBlockPlaceEvent event = new PlayerRegionsBlockPlaceEvent(player, regions, block);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }
 
     private void blockBreak(Player player, Block block, Cancellable e) {
-        Collection<Locality> regions = RegionAPI.get().localitiesAt(SpigotMath.toBrickLocation(block.getLocation()));
+        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMath.toBrickLocation(block.getLocation()));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerLocalitiesBlockBreakEvent event = new PlayerLocalitiesBlockBreakEvent(player, regions, block);
+        PlayerRegionsBlockBreakEvent event = new PlayerRegionsBlockBreakEvent(player, regions, block);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }

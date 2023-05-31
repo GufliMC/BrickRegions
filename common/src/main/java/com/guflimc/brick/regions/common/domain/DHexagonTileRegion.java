@@ -2,11 +2,13 @@ package com.guflimc.brick.regions.common.domain;
 
 import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.pos2.Vector2;
+import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Rectangle;
 import com.guflimc.brick.math.common.geometry.shape2d.RegularHexagon;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
-import com.guflimc.brick.regions.api.domain.tile.Tile;
-import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.region.RegionKey;
+import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
 import com.guflimc.brick.regions.common.EventManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,41 +22,43 @@ public class DHexagonTileRegion extends DTileRegion {
         super();
     }
 
-    public DHexagonTileRegion(UUID worldId, String name, int radius) {
-        super(worldId, name, radius);
+    public DHexagonTileRegion(UUID worldId, RegionKey key, int radius) {
+        super(worldId, key, radius);
     }
 
     @Override
-    public Optional<TileGroup> groupAt(@NotNull Point2 point) {
+    public Optional<TileGroup> groupAt(@NotNull Point3 point) {
         double width = width();
         double heightOffset = heightOffset();
 
-        int tileZ = (int) Math.round((offset.y() + point.y()) / (int) heightOffset);
+        int tileZ = (int) Math.round((offset.y() + point.z()) / (int) heightOffset);
         double x = point.x();
         if (tileZ % 2 != 0) {
             x -= width / 2d;
         }
         int tileX = (int) Math.round((offset.x() + x) / width);
 
-        DTileGroup group = tilemap.get(new Vector2(tileX, tileZ));
+        DTileGroup group = tilemap.get(new TileKey(tileX, tileZ));
 
         // is in center rectangle of tile
-        if (point.y() < tileZ * (radius / 2d) || point.y() > tileZ * radius) {
+        if (point.z() < tileZ * (radius / 2d) || point.z() > tileZ * radius) {
             return Optional.ofNullable(group);
         }
 
+        Point2 p2d = new Vector2(point.x(), point.z());
+
         // correct guess
-        if (group != null && group.shape().contains(point)) {
+        if (group != null && group.shape().contains(p2d)) {
             return Optional.of(group);
         }
 
-        TileGroup left = tilemap.get(new Vector2(tileX, tileZ - 1));
-        if (left != null && left.shape().contains(point)) {
+        TileGroup left = tilemap.get(new TileKey(tileX, tileZ - 1));
+        if (left != null && left.shape().contains(p2d)) {
             return Optional.of(left);
         }
 
-        TileGroup right = tilemap.get(new Vector2(tileX + 1, tileZ - 1));
-        if (right != null && right.shape().contains(point)) {
+        TileGroup right = tilemap.get(new TileKey(tileX + 1, tileZ - 1));
+        if (right != null && right.shape().contains(p2d)) {
             return Optional.of(right);
         }
 
@@ -64,40 +68,33 @@ public class DHexagonTileRegion extends DTileRegion {
     @Override
     public Collection<TileGroup> adjacent(@NotNull TileGroup group) {
         Set<TileGroup> result = new HashSet<>();
-        for (Tile tile : group.tiles()) {
-            Vector2 vec = new Vector2(tile.position().x(), tile.position().y());
+        for (TileKey tile : group.tiles()) {
+            Vector2 vec = new Vector2(tile.x(), tile.z());
             int offset = vec.blockY() % 2 == 0 ? -1 : 1;
-            groupAt(vec.blockX() + offset, vec.blockY() - 1).ifPresent(result::add);
-            groupAt(vec.blockX() + offset, vec.blockY()).ifPresent(result::add);
-            groupAt(vec.blockX() + offset, vec.blockY() + 1).ifPresent(result::add);
+            groupAt(new TileKey(vec.blockX() + offset, vec.blockY() - 1)).ifPresent(result::add);
+            groupAt(new TileKey(vec.blockX() + offset, vec.blockY())).ifPresent(result::add);
+            groupAt(new TileKey(vec.blockX() + offset, vec.blockY() + 1)).ifPresent(result::add);
 
-            groupAt(vec.blockX(), vec.blockY() - 1).ifPresent(result::add);
-            groupAt(vec.blockX() - offset, vec.blockY()).ifPresent(result::add);
-            groupAt(vec.blockX(), vec.blockY() + 1).ifPresent(result::add);
+            groupAt(new TileKey(vec.blockX(), vec.blockY() - 1)).ifPresent(result::add);
+            groupAt(new TileKey(vec.blockX() - offset, vec.blockY())).ifPresent(result::add);
+            groupAt(new TileKey(vec.blockX(), vec.blockY() + 1)).ifPresent(result::add);
         }
         result.remove(group);
         return result;
     }
 
-    private record TempTile(Point2 position, Shape2 shape) implements Tile {
-    }
+    @Override
+    public void addGroup(@NotNull TileKey key) {
+        if (groupAt(key).isPresent()) {
+            throw new IllegalArgumentException("A group at this position already exists.");
+        }
 
-    private void addGroup(int relX, int relZ, RegularHexagon hexagon) {
-        groups.add(new DTileGroup(this, new TempTile(new Vector2(relX, relZ), hexagon)));
+        groups.add(new DTileGroup(this, key));
         EventManager.INSTANCE.onPropertyChange(this);
     }
 
     @Override
-    public void addGroup(int relX, int relZ) {
-        if (groupAt(relX, relZ).isPresent()) {
-            throw new IllegalArgumentException("A group at this position already exists.");
-        }
-
-        addGroup(relX, relZ, hexagonAt(relX, relZ));
-    }
-
-    @Override
-    public void addGroups(Shape2 shape) {
+    public void addGroups(@NotNull Shape2 shape) {
         Rectangle bounds = shape.bounds();
 
         double width = width();
@@ -110,16 +107,17 @@ public class DHexagonTileRegion extends DTileRegion {
 
         for (int tileX = minTileX; tileX <= maxTileX; tileX++) {
             for (int tileZ = minTileZ; tileZ <= maxTileZ; tileZ++) {
-                if (groupAt(tileX, tileZ).isPresent()) {
+                TileKey key = new TileKey(tileX, tileZ);
+                if (groupAt(key).isPresent()) {
                     continue;
                 }
 
-                RegularHexagon hexagon = hexagonAt(tileX, tileZ);
+                RegularHexagon hexagon = tileShapeAt(key);
                 if (!hexagon.vertices().stream().allMatch(shape::contains)) {
                     continue;
                 }
 
-                addGroup(tileX, tileZ, hexagon);
+                addGroup(key);
             }
         }
     }
@@ -134,13 +132,14 @@ public class DHexagonTileRegion extends DTileRegion {
         return radius / 2d * 3d;
     }
 
-    private RegularHexagon hexagonAt(int relX, int relZ) {
+    @Override
+    public RegularHexagon tileShapeAt(@NotNull TileKey key) {
         double width = width();
         double heightOffset = heightOffset();
 
-        double x = offset.x() + relX * width;
-        double z = offset.y() + relZ * heightOffset;
-        if (relZ % 2 != 0) {
+        double x = offset.x() + key.x() * width;
+        double z = offset.y() + key.z() * heightOffset;
+        if (key.z() % 2 != 0) {
             x += width / 2d;
         }
 

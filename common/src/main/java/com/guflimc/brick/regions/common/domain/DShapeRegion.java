@@ -3,9 +3,10 @@ package com.guflimc.brick.regions.common.domain;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.math.database.Shape3Converter;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableShapeRegion;
-import com.guflimc.brick.regions.common.EventManager;
+import com.guflimc.brick.regions.api.domain.region.RegionKey;
+import com.guflimc.brick.regions.api.domain.region.ShapeRegion;
 import io.ebean.annotation.DbDefault;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -13,7 +14,7 @@ import javax.persistence.Entity;
 import java.util.UUID;
 
 @Entity
-public class DShapeRegion extends DRegion implements ModifiableShapeRegion {
+public class DShapeRegion extends DRegion implements ShapeRegion {
 
     @Convert(converter = Shape3Converter.class)
     @Column(name = "shaperegion_shape", length = 2048)
@@ -24,8 +25,8 @@ public class DShapeRegion extends DRegion implements ModifiableShapeRegion {
         super();
     }
 
-    public DShapeRegion(UUID worldId, String name, Shape3 shape) {
-        super(worldId, name);
+    public DShapeRegion(UUID worldId, RegionKey key, Shape3 shape) {
+        super(worldId, key);
         this.shape = shape;
     }
 
@@ -35,13 +36,7 @@ public class DShapeRegion extends DRegion implements ModifiableShapeRegion {
     }
 
     @Override
-    public void setShape(Shape3 shape) {
-        this.shape = shape;
-        EventManager.INSTANCE.onPropertyChange(this);
-    }
-
-    @Override
-    public boolean contains(Point3 point) {
-        return ModifiableShapeRegion.super.contains(point);
+    public boolean contains(@NotNull Point3 point) {
+        return ShapeRegion.super.contains(point);
     }
 }

@@ -5,10 +5,11 @@ import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.database.Point2Converter;
-import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableTileRegion;
-import com.guflimc.brick.regions.api.domain.tile.Tile;
-import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
+import com.guflimc.brick.regions.api.domain.region.RegionKey;
+import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
+import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
 import com.guflimc.brick.regions.common.EventManager;
 import io.ebean.annotation.DbDefault;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Inheritance
-public abstract class DTileRegion extends DRegion implements ModifiableTileRegion {
+public abstract class DTileRegion extends DRegion implements TileRegion {
 
     @OneToMany(targetEntity = DTileGroup.class, mappedBy = "region",
             cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -33,14 +34,14 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
     @Convert(converter = Point2Converter.class)
     protected Point2 offset = new Vector2(0, 0);
 
-    protected transient final Map<Point2, DTileGroup> tilemap = new HashMap<>();
+    protected transient final Map<TileKey, DTileGroup> tilemap = new HashMap<>();
 
     public DTileRegion() {
         super();
     }
 
-    public DTileRegion(UUID worldId, String name, int radius) {
-        super(worldId, name);
+    public DTileRegion(UUID worldId, RegionKey key, int radius) {
+        super(worldId, key);
         this.radius = radius;
 
         setAttribute(LocalityAttributeKey.MAP_STROKE_WEIGHT, 1);
@@ -51,28 +52,21 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
     @PostLoad
     public void maptiles() {
         for ( DTileGroup group : groups ) {
-            group.tiles().forEach(tile -> tilemap.put(tile.position(), group));
+            group.tiles().forEach(tile -> tilemap.put(tile, group));
         }
     }
 
     //
 
     @Override
-    public boolean contains(Point3 point) {
+    public boolean contains(@NotNull Point3 point) {
         return groupAt(point).isPresent();
     }
 
     @Override
-    public Optional<TileGroup> groupAt(int relX, int relZ) {
-        return Optional.ofNullable(tilemap.get(new Vector2(relX, relZ)));
+    public Optional<TileGroup> groupAt(@NotNull TileKey key) {
+        return Optional.ofNullable(tilemap.get(key));
     }
-
-    @Override
-    public Optional<TileGroup> groupAt(@NotNull Point3 point) {
-        return groupAt(new Vector2(point.x(), point.z()));
-    }
-
-    public abstract Optional<TileGroup> groupAt(@NotNull Point2 point);
 
     @Override
     public Collection<TileGroup> groups() {
@@ -89,39 +83,39 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
     @Override
     public void removeGroup(@NotNull TileGroup group) {
         groups.remove((DTileGroup) group);
-        group.tiles().forEach(tile -> tilemap.remove(tile.position()));
+        group.tiles().forEach(tilemap::remove);
         EventManager.INSTANCE.onPropertyChange(this);
     }
 
     @Override
-    public TileGroup merge(TileGroup... groups) {
+    public TileGroup merge(@NotNull TileGroup... groups) {
         // TODO check adjacency
 
-        Set<Tile> tiles = Arrays.stream(groups)
+        Set<TileKey> tiles = Arrays.stream(groups)
                 .flatMap(g -> g.tiles().stream())
                 .collect(Collectors.toSet());
 
         Arrays.stream(groups).map(g -> (DTileGroup) g).forEach(this::removeGroup);
-        DTileGroup group = new DTileGroup(this, tiles.toArray(Tile[]::new));
+        DTileGroup group = new DTileGroup(this, tiles.toArray(TileKey[]::new));
         this.groups.add(group);
 
-        tiles.forEach(tile -> tilemap.put(tile.position(), group));
+        tiles.forEach(tile -> tilemap.put(tile, group));
 
         EventManager.INSTANCE.onPropertyChange(this);
         return group;
     }
 
     @Override
-    public TileGroup[] unmerge(TileGroup group) {
+    public TileGroup[] unmerge(@NotNull TileGroup group) {
         removeGroup(group);
 
         List<TileGroup> result = new ArrayList<>();
-        for ( Tile tile : group.tiles() ) {
+        for ( TileKey tile : group.tiles() ) {
             DTileGroup tg = new DTileGroup(this, tile);
             groups.add(tg);
             result.add(tg);
 
-            tilemap.put(tile.position(), tg);
+            tilemap.put(tile, tg);
         }
 
         EventManager.INSTANCE.onPropertyChange(this);
@@ -133,7 +127,7 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
     private final static Random random = new Random();
 
     @Override
-    public void merge(int size) {
+    public void groupify(int size) {
         new HashSet<>(groups).forEach(this::unmerge);
 
         Set<TileGroup> groups = new HashSet<>(groups());
@@ -148,13 +142,13 @@ public abstract class DTileRegion extends DRegion implements ModifiableTileRegio
             for ( int rx = -1; rx <= 1; rx += 2) {
                 int x = radius * rx;
                 for ( int z = -radius; z <= radius; z++ ) {
-                    groupAt(x, z).ifPresent(contour::add);
+                    groupAt(new TileKey(x, z)).ifPresent(contour::add);
                 }
             }
             for ( int rz = -1; rz <= 1; rz += 2) {
                 int z = radius * rz;
                 for ( int x = -radius; x <= radius; x++ ) {
-                    groupAt(x, z).ifPresent(contour::add);
+                    groupAt(new TileKey(x, z)).ifPresent(contour::add);
                 }
             }
 

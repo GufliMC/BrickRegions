@@ -2,9 +2,8 @@ package com.guflimc.brick.regions.spigot.listeners;
 
 import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.Locality;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesEntityDamageEvent;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsEntityDamageEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.Cancellable;
@@ -20,12 +19,12 @@ import java.util.Collection;
 public class EntityDamageListener implements Listener {
 
     private void entityDamage(Player player, Entity entity, Cancellable e) {
-        Collection<Locality> regions = RegionAPI.get().localitiesAt(SpigotMath.toBrickLocation(entity.getLocation()));
+        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMath.toBrickLocation(entity.getLocation()));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerLocalitiesEntityDamageEvent event = new PlayerLocalitiesEntityDamageEvent(player, regions, entity);
+        PlayerRegionsEntityDamageEvent event = new PlayerRegionsEntityDamageEvent(player, regions, entity);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }

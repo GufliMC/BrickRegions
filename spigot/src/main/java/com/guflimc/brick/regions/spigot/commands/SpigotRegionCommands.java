@@ -5,8 +5,9 @@ import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.math.common.geometry.shape3d.PolyPrism;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.region.RegionKey;
+import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.spigot.SpigotBrickRegions;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
@@ -33,8 +34,8 @@ public class SpigotRegionCommands {
     @Permission("brickregions.region.list")
     public void list(@Source Player sender) {
         SpigotI18nAPI.get(this).send(sender, "cmd.region.list",
-                RegionAPI.get().persistentRegions(sender.getWorld().getUID()).stream()
-                        .map(Region::name)
+                RegionAPI.get().regions(sender.getWorld().getUID(), RegionKey.BRICK_REGIONS_NAMESPACE).stream()
+                        .map(rg -> rg.key().name())
                         .filter(Objects::nonNull).toList()
         );
     }
@@ -43,8 +44,8 @@ public class SpigotRegionCommands {
     @Permission("brickregions.region.list")
     public void listWorld(@Source Audience sender, @Parameter World world) {
         I18nAPI.get(this).send(sender, "cmd.region.list.world", world.getName(),
-                RegionAPI.get().persistentRegions(world.getUID()).stream()
-                        .map(Region::name)
+                RegionAPI.get().regions(world.getUID(), RegionKey.BRICK_REGIONS_NAMESPACE).stream()
+                        .map(rg -> rg.key().name())
                         .filter(Objects::nonNull).toList()
         );
     }
@@ -52,7 +53,9 @@ public class SpigotRegionCommands {
     @Command("br region create")
     @Permission("brickregions.region.create")
     public void create(@Source Player sender, @Parameter String name) {
-        if (RegionAPI.get().region(sender.getWorld().getUID(), name).isPresent()) {
+        RegionKey key = new RegionKey(name);
+
+        if (RegionAPI.get().region(sender.getWorld().getUID(), key).isPresent()) {
             SpigotI18nAPI.get(this).send(sender, "cmd.region.create.error.exists", name);
             return;
         }
@@ -69,7 +72,7 @@ public class SpigotRegionCommands {
 //            return;
 //        }
 
-        SpigotRegionAPI.get().create(name, selection);
+        SpigotRegionAPI.get().create(key, selection);
 
         SpigotI18nAPI.get(this).send(sender, "cmd.region.create", name);
     }
@@ -81,9 +84,16 @@ public class SpigotRegionCommands {
     public void createTiles(@Source Player sender,
                             @Parameter String name,
                             @Parameter int radius) {
-        RegionAPI.get().createHexagonTileRegion(name, sender.getWorld().getUID(), radius).thenAccept((region) -> {
-            SpigotI18nAPI.get(this).send(sender, "cmd.tileregion.create", name);
-        });
+        RegionKey key = new RegionKey(name);
+
+        if (RegionAPI.get().region(sender.getWorld().getUID(), key).isPresent()) {
+            SpigotI18nAPI.get(this).send(sender, "cmd.region.create.error.exists", name);
+            return;
+        }
+
+        RegionAPI.get().createHexagonTileRegion(key, sender.getWorld().getUID(), radius);
+
+        SpigotI18nAPI.get(this).send(sender, "cmd.tileregion.create", name);
     }
 
     @Command("br tileregion fill")
@@ -102,7 +112,7 @@ public class SpigotRegionCommands {
             region.addGroups(shape.contour());
             RegionAPI.get().save(region);
 
-            SpigotI18nAPI.get(this).send(sender, "cmd.tileregion.fill", region.name(), region.groups().size() - count);
+            SpigotI18nAPI.get(this).send(sender, "cmd.tileregion.fill", region.key().name(), region.groups().size() - count);
         });
     }
 
@@ -111,9 +121,9 @@ public class SpigotRegionCommands {
     public void groupifyTiles(@Source Player sender,
                           @Parameter TileRegion region,
                           @Parameter int size) {
-        region.merge(size);
+        region.groupify(size);
         RegionAPI.get().save(region);
 
-        SpigotI18nAPI.get(this).send(sender, "cmd.tileregion.groupify", region.name(), size);
+        SpigotI18nAPI.get(this).send(sender, "cmd.tileregion.groupify", region.key().name(), size);
     }
 }

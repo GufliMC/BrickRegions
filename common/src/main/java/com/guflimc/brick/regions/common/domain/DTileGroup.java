@@ -5,47 +5,46 @@ import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Polygon;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
-import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.tile.Tile;
-import com.guflimc.brick.regions.api.domain.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
+import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
+import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
-public class DTileGroup extends DModifiableLocality implements TileGroup {
+public class DTileGroup extends DLocality implements TileGroup {
 
     @JoinColumn(name = "tilegroup_parent_region_id")
     @ManyToOne(targetEntity = DTileRegion.class, fetch = FetchType.EAGER)
     private DTileRegion region;
 
-
-    @OneToMany(targetEntity = DTile.class, mappedBy = "group",
-            cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<DTile> tiles = new ArrayList<>();
+    @Convert(converter = TileKeySetConverter.class)
+    private TileKeySet tileSet = new TileKeySet(new ArrayList<>());
 
     private transient Shape2 shape;
 
     public DTileGroup() {
     }
 
-    DTileGroup(DTileRegion region, Tile... tiles) {
+    DTileGroup(DTileRegion region, TileKey... tiles) {
         super(region.worldId());
         this.region = region;
-        Arrays.asList(tiles).forEach(tile -> this.tiles.add(new DTile(this, tile.position(), tile.shape())));
+        this.tileSet = new TileKeySet(Arrays.asList(tiles));
         calcshape();
     }
 
     @PostLoad
     public void calcshape() {
-        this.shape = Polygon.merge(this.tiles.stream().map(Tile::shape).toArray(Shape2[]::new));
+        this.shape = Polygon.merge(this.tileSet.tiles.stream().map(tile -> region.tileShapeAt(tile)).toArray(Shape2[]::new));
     }
 
     @Override
-    public Collection<Tile> tiles() {
-        return this.tiles.stream().map(tile -> (Tile) tile).toList();
+    public Collection<TileKey> tiles() {
+        return Collections.unmodifiableList(this.tileSet.tiles);
     }
 
     @Override
@@ -54,9 +53,9 @@ public class DTileGroup extends DModifiableLocality implements TileGroup {
     }
 
     @Override
-    public boolean contains(Point3 point) {
+    public boolean contains(@NotNull Point3 point) {
         Point2 p2 = new Vector2(point.x(), point.z());
-        return this.tiles.stream().anyMatch(tile -> tile.shape().contains(p2));
+        return this.tileSet.tiles.stream().anyMatch(tile -> region.tileShapeAt(tile).contains(p2));
     }
 
     @Override
@@ -81,7 +80,31 @@ public class DTileGroup extends DModifiableLocality implements TileGroup {
 
     @Override
     public String toString() {
-        return "TileGroup{" + this.tiles.stream().map(Tile::toString).collect(Collectors.joining(", ")) + "}";
+        return "TileGroup{" + this.tileSet.tiles.stream().map(TileKey::toString).collect(Collectors.joining(", ")) + "}";
+    }
+
+    //
+
+    public static record TileKeySet(List<TileKey> tiles) {
+    }
+
+    //
+
+    public static class TileKeySetConverter implements AttributeConverter<TileKeySet, String> {
+
+        @Override
+        public String convertToDatabaseColumn(TileKeySet attribute) {
+            return attribute.tiles.stream().map(tile -> tile.x() + "," + tile.z()).collect(Collectors.joining(";"));
+        }
+
+        @Override
+        public TileKeySet convertToEntityAttribute(String dbData) {
+            String[] tiles = dbData.split(";");
+            return new TileKeySet(Arrays.stream(tiles).map(tile -> {
+                String[] coords = tile.split(",");
+                return new TileKey(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+            }).collect(Collectors.toList()));
+        }
     }
 
 }

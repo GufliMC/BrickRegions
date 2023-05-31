@@ -3,21 +3,23 @@ package com.guflimc.brick.regions.spigot.squaremap;
 import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.*;
-import com.guflimc.brick.regions.api.domain.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.locality.Locality;
+import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
+import com.guflimc.brick.regions.api.domain.region.ShapeRegion;
+import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
-import xyz.jpenilla.squaremap.api.*;
 import xyz.jpenilla.squaremap.api.Point;
+import xyz.jpenilla.squaremap.api.*;
 import xyz.jpenilla.squaremap.api.marker.Marker;
 import xyz.jpenilla.squaremap.api.marker.MarkerOptions;
 import xyz.jpenilla.squaremap.api.marker.Polygon;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class SquaremapRenderer {
 
@@ -127,7 +129,7 @@ public class SquaremapRenderer {
 
     private void render(@NotNull MapWorld mapWorld, @NotNull TileRegion tileRegion) {
         tileLayers.computeIfAbsent(tileRegion, tr -> {
-            SimpleLayerProvider layer = SimpleLayerProvider.builder("Tiles-" + tileRegion.name())
+            SimpleLayerProvider layer = SimpleLayerProvider.builder("Tiles-" + tileRegion.key().name())
                     .showControls(true)
                     .defaultHidden(false)
                     .layerPriority(1 + tileRegion.priority())
@@ -159,21 +161,19 @@ public class SquaremapRenderer {
                 .fillOpacity(0.2)
                 .build();
 
-        if ( locality instanceof AttributedLocality al ) {
-            if ( al.attribute(LocalityAttributeKey.MAP_HIDDEN).orElse(false) ) {
-                return; // do not render
-            }
-
-            MarkerOptions.Builder builder = options.asBuilder();
-            al.attribute(LocalityAttributeKey.MAP_CLICK_TEXT).ifPresent(builder::clickTooltip);
-            al.attribute(LocalityAttributeKey.MAP_HOVER_TEXT).ifPresent(builder::hoverTooltip);
-            al.attribute(LocalityAttributeKey.MAP_FILL_COLOR).ifPresent(builder::fillColor);
-            al.attribute(LocalityAttributeKey.MAP_FILL_OPACITY).ifPresent(builder::fillOpacity);
-            al.attribute(LocalityAttributeKey.MAP_STROKE_COLOR).ifPresent(builder::strokeColor);
-            al.attribute(LocalityAttributeKey.MAP_STROKE_OPACITY).ifPresent(builder::strokeOpacity);
-            al.attribute(LocalityAttributeKey.MAP_STROKE_WEIGHT).ifPresent(builder::strokeWeight);
-            options = builder.build();
+        if ( locality.attribute(LocalityAttributeKey.MAP_HIDDEN).orElse(false) ) {
+            return; // do not render
         }
+
+        MarkerOptions.Builder builder = options.asBuilder();
+        locality.attribute(LocalityAttributeKey.MAP_CLICK_TEXT).ifPresent(builder::clickTooltip);
+        locality.attribute(LocalityAttributeKey.MAP_HOVER_TEXT).ifPresent(builder::hoverTooltip);
+        locality.attribute(LocalityAttributeKey.MAP_FILL_COLOR).ifPresent(builder::fillColor);
+        locality.attribute(LocalityAttributeKey.MAP_FILL_OPACITY).ifPresent(builder::fillOpacity);
+        locality.attribute(LocalityAttributeKey.MAP_STROKE_COLOR).ifPresent(builder::strokeColor);
+        locality.attribute(LocalityAttributeKey.MAP_STROKE_OPACITY).ifPresent(builder::strokeOpacity);
+        locality.attribute(LocalityAttributeKey.MAP_STROKE_WEIGHT).ifPresent(builder::strokeWeight);
+        options = builder.build();
 
         // draw shape
         List<Point> vertices = new ArrayList<>();

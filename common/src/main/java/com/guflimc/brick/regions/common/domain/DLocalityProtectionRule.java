@@ -1,6 +1,6 @@
 package com.guflimc.brick.regions.common.domain;
 
-import com.guflimc.brick.regions.api.domain.LocalityProtectionRule;
+import com.guflimc.brick.regions.api.domain.locality.LocalityRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "locality_rules")
 @Index(columnNames = {"locality_id", "status", "target", "type_set"}, unique = true)
-public class DLocalityProtectionRule implements LocalityProtectionRule {
+public class DLocalityProtectionRule implements LocalityRule {
 
     @Id
     @GeneratedValue
@@ -43,12 +43,12 @@ public class DLocalityProtectionRule implements LocalityProtectionRule {
 
     @ManyToOne(optional = false)
     @DbForeignKey(onDelete = ConstraintMode.CASCADE)
-    private DModifiableLocality locality;
+    private DLocality locality;
 
     public DLocalityProtectionRule() {
     }
 
-    public DLocalityProtectionRule(DModifiableLocality locality, int priority, RuleStatus status, RuleTarget target, RuleType... types) {
+    public DLocalityProtectionRule(DLocality locality, int priority, RuleStatus status, RuleTarget target, RuleType... types) {
         this.locality = locality;
         this.priority = priority;
         this.status = status;
@@ -56,11 +56,11 @@ public class DLocalityProtectionRule implements LocalityProtectionRule {
         this.typeSet = new RuleTypeSet(types);
     }
 
-    public DLocalityProtectionRule(DModifiableLocality locality, RuleStatus status, RuleTarget target, RuleType... types) {
+    public DLocalityProtectionRule(DLocality locality, RuleStatus status, RuleTarget target, RuleType... types) {
         this(locality, 0, status, target, types);
     }
 
-    public DModifiableLocality locality() {
+    public DLocality locality() {
         return locality;
     }
 

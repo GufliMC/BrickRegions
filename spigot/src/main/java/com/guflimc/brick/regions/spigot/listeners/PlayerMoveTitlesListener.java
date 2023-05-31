@@ -1,11 +1,10 @@
 package com.guflimc.brick.regions.spigot.listeners;
 
-import com.guflimc.brick.regions.api.domain.AttributedLocality;
-import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
+import com.guflimc.brick.regions.api.domain.region.Region;
 import com.guflimc.brick.regions.spigot.SpigotBrickRegions;
-import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsMoveEvent;
 import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsMoveDisplayEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsMoveEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -20,8 +19,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 public class PlayerMoveTitlesListener implements Listener {
 
@@ -40,8 +37,8 @@ public class PlayerMoveTitlesListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerRegionsMoveEvent event) {
         handle(event.player(),
-                event.uniqueFrom().stream().filter(Region.class::isInstance).map(Region.class::cast).toList(),
-                event.uniqueFrom().stream().filter(Region.class::isInstance).map(Region.class::cast).toList());
+                event.uniqueFrom().stream().map(Region.class::cast).toList(),
+                event.uniqueFrom().stream().map(Region.class::cast).toList());
     }
 
 //    @EventHandler
@@ -56,32 +53,32 @@ public class PlayerMoveTitlesListener implements Listener {
 
     private <T> T get(Collection<Region> ca, LocalityAttributeKey<T> la, Collection<Region> cb, LocalityAttributeKey<T> lb) {
         Region ra = ca.stream()
-                .filter(rg -> rg instanceof AttributedLocality al && al.attribute(la).isPresent())
+                .filter(rg -> rg.attribute(la).isPresent())
                 .max(Comparator.comparingInt(Region::priority))
                 .orElse(null);
 
         T result = null;
         int priority = Integer.MIN_VALUE;
 
-        if ( ra != null ) {
-            result = ((AttributedLocality) ra).attribute(la).orElse(null);
+        if (ra != null) {
+            result = ra.attribute(la).orElse(null);
             priority = ra.priority();
         }
 
         Region rb = cb.stream()
-                .filter(rg -> rg instanceof AttributedLocality al && al.attribute(lb).isPresent())
+                .filter(rg -> rg.attribute(lb).isPresent())
                 .max(Comparator.comparingInt(Region::priority))
                 .orElse(null);
 
-        if ( rb != null && rb.priority() > priority ) {
-            result = ((AttributedLocality) rb).attribute(lb).orElse(null);
+        if (rb != null && rb.priority() > priority) {
+            result = rb.attribute(lb).orElse(null);
         }
 
         return result;
     }
 
     private void handle(Player player, Collection<Region> from, Collection<Region> to) {
-        if ( from.isEmpty() && to.isEmpty() ) {
+        if (from.isEmpty() && to.isEmpty()) {
             return;
         }
 
@@ -105,7 +102,7 @@ public class PlayerMoveTitlesListener implements Listener {
             audience.sendTitlePart(TitlePart.SUBTITLE, Component.empty());
         }
 
-        if ( e.actionbar() != null ) {
+        if (e.actionbar() != null) {
             audience.sendActionBar(e.actionbar());
         }
 

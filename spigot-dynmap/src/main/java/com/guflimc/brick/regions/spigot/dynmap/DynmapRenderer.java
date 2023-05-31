@@ -3,10 +3,13 @@ package com.guflimc.brick.regions.spigot.dynmap;
 import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.*;
-import com.guflimc.brick.regions.api.domain.tile.Tile;
-import com.guflimc.brick.regions.api.domain.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.locality.Locality;
+import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.region.ShapeRegion;
+import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
+import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.dynmap.DynmapAPI;
@@ -92,12 +95,12 @@ public class DynmapRenderer {
 
     private void render(@NotNull World world, @NotNull TileRegion tileRegion) {
         MarkerSet ms = tileLayers.remove(tileRegion);
-        if ( ms != null ) {
+        if (ms != null) {
             ms.getMarkers().forEach(GenericMarker::deleteMarker);
             ms.deleteMarkerSet();
         }
 
-        ms = dynmap.getMarkerAPI().createMarkerSet("BRT:" + tileRegion.name(), "BRT:" + tileRegion.name(), null, false);
+        ms = dynmap.getMarkerAPI().createMarkerSet(tileRegion.key().name(), tileRegion.key().name(), null, false);
         ms.setHideByDefault(false);
         ms.setLayerPriority(1 + tileRegion.priority());
         tileLayers.put(tileRegion, ms);
@@ -110,7 +113,7 @@ public class DynmapRenderer {
     private void render(@NotNull TileGroup group) {
         World world = world(group.worldId()).orElseThrow();
         MarkerSet ms = tileLayers.get(group.parent());
-        if ( ms == null ) {
+        if (ms == null) {
             render(group.parent());
             return;
         }
@@ -126,11 +129,11 @@ public class DynmapRenderer {
         double[] zPoints = shape.vertices().stream().mapToDouble(Point2::y).toArray();
 
         String label = "";
-        if ( locality instanceof TileGroup tg && tg.tiles().size() == 1) {
-            Tile t = tg.tiles().iterator().next();
-            label = t.position().blockX() + ", " + t.position().blockY();
-        } else if ( locality instanceof Region r) {
-            label = r.name();
+        if (locality instanceof TileGroup tg && tg.tiles().size() == 1) {
+            TileKey t = tg.tiles().iterator().next();
+            label = t.x() + ", " + t.z();
+        } else if (locality instanceof Region r) {
+            label = r.key().name();
         }
 
         AreaMarker am = markerSet.createAreaMarker(locality.id().toString(), label, true, world.getName(), xPoints, zPoints, false);
@@ -142,21 +145,19 @@ public class DynmapRenderer {
         double strokeOpacity = 0.8;
         int strokeWeight = 2;
 
-        if (locality instanceof AttributedLocality al) {
-            if (al.attribute(LocalityAttributeKey.MAP_HIDDEN).orElse(false)) {
-                am.deleteMarker();
-                return; // do not render
-            }
-
-            al.attribute(LocalityAttributeKey.MAP_CLICK_TEXT).ifPresent(am::setDescription);
-            al.attribute(LocalityAttributeKey.MAP_HOVER_TEXT).ifPresent(am::setDescription);
-
-            fillColor = al.attribute(LocalityAttributeKey.MAP_FILL_COLOR).map(c -> c.getRGB() & 0xFFFFFF).orElse(fillColor);
-            fillOpacity = al.attribute(LocalityAttributeKey.MAP_FILL_OPACITY).orElse(fillOpacity);
-            strokeColor = al.attribute(LocalityAttributeKey.MAP_STROKE_COLOR).map(c -> c.getRGB() & 0xFFFFFF).orElse(strokeColor);
-            strokeOpacity = al.attribute(LocalityAttributeKey.MAP_STROKE_OPACITY).orElse(strokeOpacity);
-            strokeWeight = al.attribute(LocalityAttributeKey.MAP_STROKE_WEIGHT).orElse(strokeWeight);
+        if (locality.attribute(LocalityAttributeKey.MAP_HIDDEN).orElse(false)) {
+            am.deleteMarker();
+            return; // do not render
         }
+
+        locality.attribute(LocalityAttributeKey.MAP_CLICK_TEXT).ifPresent(am::setDescription);
+        locality.attribute(LocalityAttributeKey.MAP_HOVER_TEXT).ifPresent(am::setDescription);
+
+        fillColor = locality.attribute(LocalityAttributeKey.MAP_FILL_COLOR).map(c -> c.getRGB() & 0xFFFFFF).orElse(fillColor);
+        fillOpacity = locality.attribute(LocalityAttributeKey.MAP_FILL_OPACITY).orElse(fillOpacity);
+        strokeColor = locality.attribute(LocalityAttributeKey.MAP_STROKE_COLOR).map(c -> c.getRGB() & 0xFFFFFF).orElse(strokeColor);
+        strokeOpacity = locality.attribute(LocalityAttributeKey.MAP_STROKE_OPACITY).orElse(strokeOpacity);
+        strokeWeight = locality.attribute(LocalityAttributeKey.MAP_STROKE_WEIGHT).orElse(strokeWeight);
 
         am.setFillStyle(fillOpacity, fillColor);
         am.setLineStyle(strokeWeight, strokeOpacity, strokeColor);

@@ -2,10 +2,9 @@ package com.guflimc.brick.regions.common.commands;
 
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableAttributedLocality;
-import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
+import com.guflimc.brick.regions.api.domain.region.ModifiableRegion;
+import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
 import com.guflimc.colonel.annotation.annotations.Command;
 import com.guflimc.colonel.annotation.annotations.parameter.Parameter;
 import com.guflimc.colonel.annotation.annotations.parameter.Source;
@@ -19,28 +18,26 @@ public class RegionAttributeCommands {
     @Command("br region attribute set")
     @Permission("brickregions.region.attribute.set")
     public <T> void regionsAttributesSet(@Source Audience sender,
-                                         @Parameter Region region,
+                                         @Parameter ModifiableRegion region,
                                          @Parameter LocalityAttributeKey<T> attributeKey,
                                          @Parameter T attributeValue) {
-        ModifiableAttributedLocality mr = (ModifiableAttributedLocality) region;
-
-        mr.setAttribute(attributeKey, attributeValue);
-        RegionAPI.get().save(mr);
+        region.setAttribute(attributeKey, attributeValue);
+        RegionAPI.get().save(region);
 
         I18nAPI.get(RegionAttributeCommands.class).send(sender, "cmd.region.attribute.set",
-                attributeKey.name(), attributeValue.toString(), region.name());
+                attributeKey.name(), attributeValue.toString(), region.key().name());
     }
 
     @Command("br region attribute unset")
     @Permission("brickregions.region.attribute.unset")
-    public <T extends Region & ModifiableAttributedLocality> void regionsAttributesUnset(@Source Audience sender,
-                                                                                         @Parameter T region,
-                                                                                         @Parameter LocalityAttributeKey<?> attributeKey) {
+    public void regionsAttributesUnset(@Source Audience sender,
+                                       @Parameter ModifiableRegion region,
+                                       @Parameter LocalityAttributeKey<?> attributeKey) {
         region.removeAttribute(attributeKey);
         RegionAPI.get().save(region);
 
         I18nAPI.get(RegionAttributeCommands.class)
-                .send(sender, "cmd.region.attribute.unset", attributeKey.name(), region.name());
+                .send(sender, "cmd.region.attribute.unset", attributeKey.name(), region.key().name());
     }
 
     // TILE GROUPS

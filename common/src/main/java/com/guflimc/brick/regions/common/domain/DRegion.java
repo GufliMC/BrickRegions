@@ -1,6 +1,7 @@
 package com.guflimc.brick.regions.common.domain;
 
-import com.guflimc.brick.regions.api.domain.modifiable.ModifiableRegion;
+import com.guflimc.brick.regions.api.domain.region.ModifiableRegion;
+import com.guflimc.brick.regions.api.domain.region.RegionKey;
 import io.ebean.annotation.Index;
 
 import javax.persistence.Column;
@@ -9,22 +10,34 @@ import java.util.UUID;
 
 @Entity
 @Index(columnNames = {"world_id", "name"}, unique = true)
-public class DRegion extends DModifiableLocality implements ModifiableRegion {
+public class DRegion extends DLocality implements ModifiableRegion {
 
-    @Column(name = "region_name")
-    private String name;
+    @Column(name = "region_key")
+    private RegionKey key; // TODO converter
+
+    @Column(name = "region_archived")
+    private boolean archived;
 
     public DRegion() {
     }
 
-    public DRegion(UUID worldId, String name) {
+    public DRegion(UUID worldId, RegionKey key) {
         super(worldId);
-        this.name = name;
+        this.key = key;
     }
 
     @Override
-    public String name() {
-        return name;
+    public RegionKey key() {
+        return key;
     }
 
+    @Override
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    @Override
+    public boolean archived() {
+        return archived;
+    }
 }

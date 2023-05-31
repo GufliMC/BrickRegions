@@ -1,6 +1,6 @@
 package com.guflimc.brick.regions.spigot.squaremap;
 
-import com.guflimc.brick.regions.api.domain.Locality;
+import com.guflimc.brick.regions.api.domain.locality.Locality;
 import com.guflimc.brick.regions.spigot.api.events.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -57,18 +57,18 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onAttributeChange(LocalityAttributeChangeEvent<?> event) {
-        render(event.locality());
+    public void onAttributeChange(RegionAttributeChangeEvent<?> event) {
+        render(event.region());
     }
 
     @EventHandler
-    public void onAttributeRemove(LocalityAttributeRemoveEvent<?> event) {
-        render(event.locality());
+    public void onAttributeRemove(RegionAttributeRemoveEvent<?> event) {
+        render(event.region());
     }
 
     @EventHandler
-    public void onSave(LocalitySaveEvent event) {
-        render(event.locality());
+    public void onSave(RegionSaveEvent event) {
+        render(event.region());
     }
 
     //

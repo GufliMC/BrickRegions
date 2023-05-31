@@ -2,10 +2,9 @@ package com.guflimc.brick.regions.spigot.listeners;
 
 import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.Locality;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesEntityBreakEvent;
-import com.guflimc.brick.regions.spigot.api.events.PlayerLocalitiesEntityPlaceEvent;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsEntityBreakEvent;
+import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsEntityPlaceEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -26,24 +25,24 @@ public class EntityBuildListener implements Listener {
 
     private void entityPlace(Player player, Entity entity, Cancellable e) {
         Location loc = entity.getLocation();
-        Collection<Locality> regions = RegionAPI.get().localitiesAt(SpigotMath.toPosition(loc));
+        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMath.toBrickLocation(loc));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerLocalitiesEntityPlaceEvent event = new PlayerLocalitiesEntityPlaceEvent(player, regions, entity);
+        PlayerRegionsEntityPlaceEvent event = new PlayerRegionsEntityPlaceEvent(player, regions, entity);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }
 
     private void entityBreak(Player player, Entity entity, Cancellable e) {
         Location loc = entity.getLocation();
-        Collection<Locality> regions = RegionAPI.get().localitiesAt(SpigotMath.toPosition(loc));
+        Collection<Region> regions = RegionAPI.get().regionsAt(SpigotMath.toBrickLocation(loc));
         if (regions.isEmpty()) {
             return;
         }
 
-        PlayerLocalitiesEntityBreakEvent event = new PlayerLocalitiesEntityBreakEvent(player, regions, entity);
+        PlayerRegionsEntityBreakEvent event = new PlayerRegionsEntityBreakEvent(player, regions, entity);
         Bukkit.getPluginManager().callEvent(event);
         e.setCancelled(event.isCancelled());
     }

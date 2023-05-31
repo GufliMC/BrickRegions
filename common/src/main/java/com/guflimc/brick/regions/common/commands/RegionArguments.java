@@ -3,10 +3,11 @@ package com.guflimc.brick.regions.common.commands;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.orm.api.attributes.AttributeKey;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.WorldRegion;
-import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
+import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.region.RegionKey;
+import com.guflimc.brick.regions.api.domain.region.WorldRegion;
+import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -46,7 +47,7 @@ public class RegionArguments<S> {
         SafeCommandParameterParser<S> parser = colonel.registry()
                 .parser(key.type())
                 .orElse(null);
-        if ( parser == null ) throw new RuntimeException(String
+        if (parser == null) throw new RuntimeException(String
                 .format("No value parser for attribute %s with type %s", key.name(), key.type().getSimpleName()));
         return parser.parse(ctx, input);
     }
@@ -57,7 +58,7 @@ public class RegionArguments<S> {
         SafeCommandParameterCompleter<S> completer = colonel.registry()
                 .completer(key.type())
                 .orElse(null);
-        if ( completer == null ) return List.of();
+        if (completer == null) return List.of();
         return completer.suggestions(ctx, input);
     }
 
@@ -83,15 +84,15 @@ public class RegionArguments<S> {
     @Parser()
     public Region region(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
         return RegionAPI.get()
-                .region(worldId, input)
+                .region(worldId, new RegionKey(input))
                 .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
     }
 
     @Completer(type = Region.class)
     public List<String> region(@Source("worldId") UUID worldId) {
         return RegionAPI.get()
-                .regions(worldId)
-                .stream().map(Region::name).toList();
+                .regions(worldId, RegionKey.BRICK_REGIONS_NAMESPACE)
+                .stream().map(rg -> rg.key().name()).toList();
     }
 
     // TILE REGION
@@ -99,15 +100,15 @@ public class RegionArguments<S> {
     @Completer(value = "region", type = TileRegion.class)
     public List<String> tileRegion(@Source("worldId") UUID worldId) {
         return RegionAPI.get()
-                .regions(worldId).stream()
+                .regions(worldId, RegionKey.BRICK_REGIONS_NAMESPACE).stream()
                 .filter(TileRegion.class::isInstance)
-                .map(Region::name).toList();
+                .map(rg -> rg.key().name()).toList();
     }
 
     @Parser("region")
     public TileRegion tileRegion(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
         return RegionAPI.get()
-                .region(worldId, input)
+                .region(worldId, new RegionKey(input))
                 .filter(TileRegion.class::isInstance)
                 .map(TileRegion.class::cast)
                 .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
@@ -118,7 +119,7 @@ public class RegionArguments<S> {
     @Parser(type = Region.class, value = "not-global")
     public Region regionNotGlobal(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
         return RegionAPI.get()
-                .region(worldId, input)
+                .region(worldId, new RegionKey(input))
                 .filter(region -> !(region instanceof WorldRegion))
                 .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
     }
@@ -126,10 +127,10 @@ public class RegionArguments<S> {
     @Completer(type = Region.class, value = "not-global")
     public List<String> regionNotGlobal(@Source("worldId") UUID worldId) {
         return RegionAPI.get()
-                .regions(worldId)
+                .regions(worldId, RegionKey.BRICK_REGIONS_NAMESPACE)
                 .stream()
                 .filter(region -> !(region instanceof WorldRegion))
-                .map(Region::name).toList();
+                .map(rg -> rg.key().name()).toList();
     }
 
     // ATTRIBUTE
