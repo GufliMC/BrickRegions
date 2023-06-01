@@ -1,6 +1,6 @@
 package com.guflimc.brick.regions.api.rules;
 
-import com.guflimc.brick.regions.api.domain.locality.Locality;
+import com.guflimc.brick.regions.api.domain.Region;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -34,7 +34,7 @@ public abstract class RuleTarget {
         return priority;
     }
 
-    public abstract boolean test(Object subject, Locality locality);
+    public abstract boolean test(Object subject, Region region);
 
     //
 
@@ -48,11 +48,11 @@ public abstract class RuleTarget {
 
     //
 
-    public static <T> RuleTarget register(String name, int priority, Class<T> type, BiPredicate<T, Locality> predicate) {
+    public static <T> RuleTarget register(String name, int priority, Class<T> type, BiPredicate<T, Region> predicate) {
         return new SimpleRuleTarget<>(name, priority, type, predicate);
     }
 
-    public static <T> RuleTarget register(String name, Class<T> type, BiPredicate<T, Locality> predicate) {
+    public static <T> RuleTarget register(String name, Class<T> type, BiPredicate<T, Region> predicate) {
         return register(name, 0, type, predicate);
     }
 
@@ -61,17 +61,17 @@ public abstract class RuleTarget {
         //
 
         private final Class<S> type;
-        private final BiPredicate<S, Locality> predicate;
+        private final BiPredicate<S, Region> predicate;
 
-        SimpleRuleTarget(String name, int priority, Class<S> type, BiPredicate<S, Locality> predicate) {
+        SimpleRuleTarget(String name, int priority, Class<S> type, BiPredicate<S, Region> predicate) {
             super(name, priority);
             this.type = type;
             this.predicate = predicate;
         }
 
         @Override
-        public boolean test(Object subject, Locality locality) {
-            return type.isInstance(subject) && predicate.test(type.cast(subject), locality);
+        public boolean test(Object subject, Region region) {
+            return type.isInstance(subject) && predicate.test(type.cast(subject), region);
         }
 
     }

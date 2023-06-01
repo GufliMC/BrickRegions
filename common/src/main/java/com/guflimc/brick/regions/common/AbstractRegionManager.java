@@ -2,17 +2,11 @@ package com.guflimc.brick.regions.common;
 
 import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
-import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.RegionManager;
-import com.guflimc.brick.regions.api.domain.locality.Locality;
-import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.region.Region;
-import com.guflimc.brick.regions.api.domain.region.RegionKey;
-import com.guflimc.brick.regions.api.domain.region.ShapeRegion;
-import com.guflimc.brick.regions.api.domain.region.WorldRegion;
-import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.domain.*;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
@@ -23,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
@@ -35,22 +30,22 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         this.databaseContext = databaseContext;
     }
 
-    public void loadWorld(UUID worldId) {
-        List<DRegion> regions = databaseContext
-                .findAllWhereAsync(DRegion.class, "worldId", worldId).join();
+    public void loadWorld(@NotNull UUID worldId) {
+        List<DKeyedRegion> regions = databaseContext
+                .findAllWhereAsync(DKeyedRegion.class, "worldId", worldId).join();
 
-        WorldRegion worldRegion = (WorldRegion) regions.stream()
-                .filter(rg -> rg instanceof WorldRegion)
+        DWorldRegion region = (DWorldRegion) regions.stream()
+                .filter(rg -> rg instanceof Region.World)
                 .findFirst().orElseGet(() -> {
-                    DWorldRegion region = new DWorldRegion(worldId, new RegionKey("__global__"));
-                    region.setAttribute(LocalityAttributeKey.ENTRANCE_TITLE, Component.text("Wilderness", NamedTextColor.GREEN));
-                    databaseContext.persistAsync(region).join();
-                    return region;
+                    DWorldRegion rg = new DWorldRegion(worldId);
+                    rg.setAttribute(RegionAttributeKey.ENTRANCE_TITLE, Component.text("Wilderness", NamedTextColor.GREEN));
+                    databaseContext.persistAsync(rg).join();
+                    return rg;
                 });
 
-        regions.remove(worldRegion);
+        regions.remove(region);
 
-        regionEngine.addContainer(worldId, worldRegion);
+        regionEngine.addContainer(region);
         regions.forEach(regionEngine::addRegion);
     }
 
@@ -74,14 +69,14 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     // REGIONS
 
     @Override
-    public Optional<Region> region(@NotNull UUID id) {
+    public Optional<Region.Keyed> region(@NotNull UUID id) {
         return regionEngine.region(id);
     }
 
 
     @Override
-    public Optional<Region> region(@NotNull UUID worldId, @NotNull RegionKey key) {
-        return regionEngine.region(worldId, key);
+    public Optional<Region.Keyed> region(@NotNull UUID worldId, @NotNull String name) {
+        return regionEngine.region(worldId, name);
     }
 
     @Override
@@ -90,56 +85,96 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     @Override
+    public <R extends Region> Collection<R> regions(@NotNull Class<R> type) {
+        return regions().stream()
+                .filter(type::isInstance)
+                .map(type::cast)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public <R extends Region, R1 extends Region> Collection<R> regions(@NotNull Class<R> type, @NotNull Class<R1> type1) {
+        return regions().stream()
+                .filter(type::isInstance)
+                .filter(type1::isInstance)
+                .map(type::cast)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public <R extends Region, R1 extends Region, R2 extends Region> Collection<R> regions(@NotNull Class<R> type, @NotNull Class<R1> type1, @NotNull Class<R2> type2) {
+        return regions().stream()
+                .filter(type::isInstance)
+                .filter(type1::isInstance)
+                .filter(type2::isInstance)
+                .map(type::cast)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
     public Collection<Region> regions(@NotNull UUID worldId) {
         return regionEngine.regions(worldId);
     }
 
     @Override
-    public Collection<Region> regions(@NotNull UUID worldId, @NotNull String namespace) {
-        return regionEngine.regions(worldId).stream()
-                .filter(rg -> rg.key().namespace().equals(namespace))
-                .toList();
+    public Region.World world(@NotNull UUID worldId) {
+        return regionEngine.world(worldId);
     }
 
     @Override
-    public WorldRegion worldRegion(@NotNull UUID worldId) {
-        return regionEngine.worldRegion(worldId);
+    public <R extends Region> Collection<R> regions(@NotNull UUID worldId, @NotNull Class<R> type) {
+        return regions(worldId).stream()
+                .filter(type::isInstance)
+                .map(type::cast)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public <R extends Region, R1 extends Region> Collection<R> regions(@NotNull UUID worldId, @NotNull Class<R> type, @NotNull Class<R1> type1) {
+        return regions(worldId).stream()
+                .filter(type::isInstance)
+                .filter(type1::isInstance)
+                .map(type::cast)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public <R extends Region, R1 extends Region, R2 extends Region> Collection<R> regions(@NotNull UUID worldId, @NotNull Class<R> type, @NotNull Class<R1> type1, @NotNull Class<R2> type2) {
+        return regions(worldId).stream()
+                .filter(type::isInstance)
+                .filter(type1::isInstance)
+                .filter(type2::isInstance)
+                .map(type::cast)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     //
 
     @Override
-    public Collection<ShapeRegion> intersecting(@NotNull UUID worldId, @NotNull Shape3 shape) {
+    public Collection<Region> intersecting(@NotNull UUID worldId, @NotNull Shape3 shape) {
         return regions(worldId).stream()
-                .filter(rg -> rg instanceof ShapeRegion)
-                .map(rg -> (ShapeRegion) rg)
-                .filter(rg -> shape.intersects(rg.shape()))
-                .toList();
-    }
-
-    @Override
-    public Collection<ShapeRegion> intersecting(@NotNull ShapeRegion region) {
-        return intersecting(region.worldId(), region.shape());
-    }
-
-    @Override
-    public Collection<TileGroup> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape) {
-        return regions(worldId).stream()
-                .filter(rg -> rg instanceof TileRegion)
-                .map(rg -> (TileRegion) rg)
-                .flatMap(rg -> rg.intersecting(shape).stream())
+                .filter(rg -> rg instanceof Region.Shaped rs && shape.intersects(rs.shape()))
                 .toList();
     }
 
 //    @Override
-//    public Collection<Locality> localitiesAt(@NotNull UUID worldId, @NotNull Point3 position) {
+//    public Collection<TileGroup> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape) {
+//        return regions(worldId).stream()
+//                .filter(rg -> rg instanceof TileRegion)
+//                .map(rg -> (TileRegion) rg)
+//                .flatMap(rg -> rg.intersecting(shape).stream())
+//                .toList();
+//    }
+
+//    @Override
+//    public Collection<Region> localitiesAt(@NotNull UUID worldId, @NotNull Point3 position) {
 //        return localitiesAt(new Location(worldId, position));
 //    }
 //
 //    @Override
-//    public Collection<Locality> localitiesAt(@NotNull Location point) {
+//    public Collection<Region> localitiesAt(@NotNull Location point) {
 //        Collection<Region> regions = regionsAt(point);
-//        List<Locality> localities = new ArrayList<>(regions);
+//        List<Region> localities = new ArrayList<>(regions);
 //
 //        // include tile groups
 //        regions.stream().filter(TileRegion.class::isInstance)
@@ -175,45 +210,41 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 //    }
 
     @Override
-    public CompletableFuture<Void> delete(@NotNull Locality locality) {
-        if (locality instanceof DWorldRegion) {
-            throw new IllegalArgumentException("Cannot delete a world region.");
+    public CompletableFuture<Void> remove(@NotNull Region region) {
+        if (region instanceof DWorldRegion || region instanceof DTileGroup) {
+            throw new IllegalArgumentException("The given region cannot be deleted.");
         }
-        if (locality instanceof DTileGroup) {
-            throw new IllegalArgumentException("A tile group can only be deleted using TileRegion#removeGroup.");
-        }
-
-        if (locality instanceof DRegion region) {
-            regionEngine.removeRegion(region);
-            EventManager.INSTANCE.onDelete(region);
-            return databaseContext.removeAsync(locality);
+        if (!(region instanceof DRegion)) {
+            throw new IllegalArgumentException("The given region cannot be deleted.");
         }
 
-        throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
+        regionEngine.removeRegion(region);
+        EventManager.INSTANCE.onDelete(region);
+        return databaseContext.removeAsync(region);
     }
 
     @Override
-    public CompletableFuture<Void> save(@NotNull Locality locality) {
-        if (!(locality instanceof DRegion)) {
-            throw new IllegalArgumentException("The given locality is not persisted by BrickRegions.");
+    public CompletableFuture<Void> persist(@NotNull Region region) {
+        if (!(region instanceof DRegion)) {
+            throw new IllegalArgumentException("The given region cannot be deleted.");
         }
-        return databaseContext.persistAsync(locality)
-                .thenRun(() -> EventManager.INSTANCE.onSave(locality));
+        return databaseContext.persistAsync(region)
+                .thenRun(() -> EventManager.INSTANCE.onSave(region));
     }
 
-    @Override
-    public <T extends Locality> CompletableFuture<Void> save(@NotNull Collection<T> localities) {
-        return databaseContext
-                .persistAsync((Collection) localities)
-                .thenRun(() -> localities.forEach(EventManager.INSTANCE::onSave));
-    }
+//    @Override
+//    public <T extends Region> CompletableFuture<Void> persist(@NotNull Collection<T> localities) {
+//        return databaseContext
+//                .persistAsync((Collection) localities)
+//                .thenRun(() -> localities.forEach(EventManager.INSTANCE::onSave));
+//    }
 
     @Override
     public void register(@NotNull Region region) {
-        if (region instanceof DRegion || region.key().namespace().equals(RegionKey.BRICK_REGIONS_NAMESPACE)) {
-            throw new IllegalArgumentException("Only transient regions can be registered.");
+        if (region instanceof DRegion) {
+            throw new IllegalArgumentException("The given region cannot be registered.");
         }
-        if (regionEngine.region(region.id()).isPresent()) {
+        if (regionEngine.regions().contains(region)) {
             return;
         }
 
@@ -223,8 +254,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public void unregister(@NotNull Region region) {
-        if (region instanceof DRegion || region.key().namespace().equals(RegionKey.BRICK_REGIONS_NAMESPACE)) {
-            throw new IllegalArgumentException("Only transient regions can be unregistered.");
+        if (region instanceof DRegion) {
+            throw new IllegalArgumentException("The given region cannot be unregistered.");
         }
 
         regionEngine.removeRegion(region);
@@ -234,27 +265,27 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     //
 
     @Override
-    public CompletableFuture<Region> create(@NotNull RegionKey key, @NotNull UUID worldId, @NotNull Shape3 shape) {
-        DShapeRegion region = new DShapeRegion(worldId, key, shape);
+    public <T extends Region.Keyed & Region.Shaped> CompletableFuture<T> create(@NotNull String name, @NotNull UUID worldId, @NotNull Shape3 shape) {
+        DShapeRegion region = new DShapeRegion(worldId, name, shape);
         return databaseContext.persistAsync(region).thenApply((n) -> {
             regionEngine.addRegion(region);
             EventManager.INSTANCE.onCreate(region);
-            return region;
+            return (T) region;
         });
     }
 
     @Override
-    public CompletableFuture<Region> create(@NotNull RegionKey key, @NotNull Selection selection) {
-        return create(key, selection.worldId(), selection.shape());
+    public <T extends Region.Keyed & Region.Shaped> CompletableFuture<T> create(@NotNull String name, @NotNull Selection selection) {
+        return create(name, selection.worldId(), selection.shape());
     }
 
     @Override
-    public CompletableFuture<TileRegion> createHexagonTileRegion(@NotNull RegionKey key, @NotNull UUID worldId, int radius) {
-        DHexagonTileRegion region = new DHexagonTileRegion(worldId, key, radius);
+    public <T extends Region.Keyed & TileRegion> CompletableFuture<T> createHexagonTileRegion(@NotNull String name, @NotNull UUID worldId, int radius) {
+        DHexagonTileRegion region = new DHexagonTileRegion(worldId, name, radius);
         return databaseContext.persistAsync(region).thenApply((n) -> {
             regionEngine.addRegion(region);
             EventManager.INSTANCE.onCreate(region);
-            return region;
+            return (T) region;
         });
     }
 

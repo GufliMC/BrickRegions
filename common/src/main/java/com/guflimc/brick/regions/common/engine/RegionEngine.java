@@ -1,9 +1,7 @@
 package com.guflimc.brick.regions.common.engine;
 
 import com.guflimc.brick.math.common.geometry.pos3.Location;
-import com.guflimc.brick.regions.api.domain.region.Region;
-import com.guflimc.brick.regions.api.domain.region.RegionKey;
-import com.guflimc.brick.regions.api.domain.region.WorldRegion;
+import com.guflimc.brick.regions.api.domain.Region;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -12,38 +10,50 @@ import java.util.stream.Collectors;
 
 public class RegionEngine {
 
-    private final Map<UUID, Region> byId = new ConcurrentHashMap<>();
+    private final Map<UUID, Region.Keyed> byId = new ConcurrentHashMap<>();
     private final Map<UUID, RegionContainer> containers = new ConcurrentHashMap<>();
 
-    public void addContainer(@NotNull UUID worldId, @NotNull WorldRegion worldRegion) {
-        containers.put(worldId, new RegionContainer(worldId, worldRegion));
+    public <T extends Region.World & Region.Keyed> void addContainer(@NotNull T region) {
+        containers.put(region.worldId(), new RegionContainer(region.worldId(), region));
     }
 
     public void removeContainer(@NotNull UUID worldId) {
         containers.remove(worldId);
-        byId.keySet().removeIf(id -> byId.get(id).worldId().equals(worldId));
+        byId.entrySet().removeIf(e -> e.getValue().worldId().equals(worldId));
     }
 
     //
 
     public void addRegion(@NotNull Region region) {
         if (!containers.containsKey(region.worldId())) {
-            throw new IllegalStateException("A region container for this world does not exist.");
+            throw new IllegalStateException("A region container for the given world does not exist.");
         }
 
-        byId.put(region.id(), region);
         containers.get(region.worldId()).addRegion(region);
+
+        if ( region instanceof Region.Keyed rk )
+            byId.put(rk.id(), rk);
     }
 
     public void removeRegion(@NotNull Region region) {
-        if ( containers.get(region.worldId()).worldRegion().equals(region) ) {
+        if (containers.get(region.worldId()).world().equals(region)) {
             return;
         }
-        byId.remove(region.id());
+
         containers.get(region.worldId()).removeRegion(region);
+
+        if ( region instanceof Region.Keyed rk )
+            byId.remove(rk.id(), rk);
     }
 
     //
+
+    public Region.World world(@NotNull UUID worldId) {
+        if (!containers.containsKey(worldId)) {
+            throw new IllegalStateException("A region container for the given world does not exist.");
+        }
+        return containers.get(worldId).world();
+    }
 
     public Collection<Region> regions() {
         return containers.values().stream()
@@ -53,27 +63,20 @@ public class RegionEngine {
 
     public Collection<Region> regions(@NotNull UUID worldId) {
         if (!containers.containsKey(worldId)) {
-            throw new IllegalStateException("A region container for this world does not exist.");
+            throw new IllegalStateException("A region container for the given world does not exist.");
         }
         return containers.get(worldId).regions();
     }
 
-    public WorldRegion worldRegion(@NotNull UUID worldId) {
-        if (!containers.containsKey(worldId)) {
-            throw new IllegalStateException("A region container for this world does not exist.");
-        }
-        return containers.get(worldId).worldRegion();
-    }
-
-    public Optional<Region> region(@NotNull UUID id) {
+    public Optional<Region.Keyed> region(@NotNull UUID id) {
         return Optional.ofNullable(byId.get(id));
     }
 
-    public Optional<Region> region(@NotNull UUID worldId, @NotNull RegionKey key) {
+    public Optional<Region.Keyed> region(@NotNull UUID worldId, @NotNull String name) {
         if (!containers.containsKey(worldId)) {
-            throw new IllegalStateException("A region container for this world does not exist.");
+            throw new IllegalStateException("A region container for the given world does not exist.");
         }
-        return containers.get(worldId).region(key);
+        return containers.get(worldId).region(name);
     }
 
     public Collection<Region> regionsAt(@NotNull Location point) {

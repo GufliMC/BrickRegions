@@ -8,10 +8,10 @@ import java.util.UUID;
 
 @Entity
 @Table(
-        name = "locality_attributes",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"locality_id", "name"})
+        name = "region_attributes",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"region_id", "name"})
 )
-public class DLocalityAttribute {
+public class DRegionAttribute {
 
     @Id
     @GeneratedValue
@@ -25,19 +25,19 @@ public class DLocalityAttribute {
 
     @ManyToOne(optional = false)
     @DbForeignKey(onDelete = ConstraintMode.CASCADE)
-    private DLocality locality;
+    private DRegion region;
 
-    public DLocalityAttribute() {
+    public DRegionAttribute() {
     }
 
-    public DLocalityAttribute(DLocality locality, String name, String value) {
-        this.locality = locality;
+    public DRegionAttribute(DRegion region, String name, String value) {
+        this.region = region;
         this.name = name;
         this.value = value;
     }
 
-    public DLocality locality() {
-        return locality;
+    public DRegion region() {
+        return region;
     }
 
     public String name() {

@@ -1,6 +1,6 @@
 package com.guflimc.brick.regions.common.domain;
 
-import com.guflimc.brick.regions.api.domain.locality.LocalityRule;
+import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleTarget;
 import com.guflimc.brick.regions.api.rules.RuleType;
@@ -17,9 +17,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "locality_rules")
-@Index(columnNames = {"locality_id", "status", "target", "type_set"}, unique = true)
-public class DLocalityProtectionRule implements LocalityRule {
+@Table(name = "region_rules")
+@Index(columnNames = {"region_id", "status", "target", "types"}, unique = true)
+public class DRegionRule implements RegionRule {
 
     @Id
     @GeneratedValue
@@ -37,31 +37,31 @@ public class DLocalityProtectionRule implements LocalityRule {
     @Convert(converter = RuleTargetConverter.class)
     private RuleTarget target;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "types")
     @Convert(converter = RuleTypeSetConverter.class)
     private RuleTypeSet typeSet;
 
     @ManyToOne(optional = false)
     @DbForeignKey(onDelete = ConstraintMode.CASCADE)
-    private DLocality locality;
+    private DRegion region;
 
-    public DLocalityProtectionRule() {
+    public DRegionRule() {
     }
 
-    public DLocalityProtectionRule(DLocality locality, int priority, RuleStatus status, RuleTarget target, RuleType... types) {
-        this.locality = locality;
+    public DRegionRule(DRegion region, int priority, RuleStatus status, RuleTarget target, RuleType... types) {
+        this.region = region;
         this.priority = priority;
         this.status = status;
         this.target = target;
         this.typeSet = new RuleTypeSet(types);
     }
 
-    public DLocalityProtectionRule(DLocality locality, RuleStatus status, RuleTarget target, RuleType... types) {
-        this(locality, 0, status, target, types);
+    public DRegionRule(DRegion region, RuleStatus status, RuleTarget target, RuleType... types) {
+        this(region, 0, status, target, types);
     }
 
-    public DLocality locality() {
-        return locality;
+    public DRegion region() {
+        return region;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.guflimc.brick.regions.spigot.squaremap;
 
-import com.guflimc.brick.regions.api.domain.locality.Locality;
+import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.spigot.api.events.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -73,10 +73,10 @@ public class EventListener implements Listener {
 
     //
 
-    private final Map<Locality, Instant> queue = new ConcurrentHashMap<>();
+    private final Map<Region, Instant> queue = new ConcurrentHashMap<>();
 
-    private void render(Locality locality) {
-        queue.put(locality, Instant.now());
+    private void render(Region region) {
+        queue.put(region, Instant.now());
     }
 
     private void timer() {

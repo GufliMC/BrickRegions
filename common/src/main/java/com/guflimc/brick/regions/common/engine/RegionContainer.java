@@ -1,64 +1,66 @@
 package com.guflimc.brick.regions.common.engine;
 
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
-import com.guflimc.brick.regions.api.domain.region.Region;
-import com.guflimc.brick.regions.api.domain.region.RegionKey;
-import com.guflimc.brick.regions.api.domain.region.WorldRegion;
+import com.guflimc.brick.regions.api.domain.Region;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
 public class RegionContainer {
 
-    private final Map<RegionKey, Region> byName = new ConcurrentHashMap<>();
-    private final UUID worldId;
-    private final WorldRegion worldRegion;
+    private final Set<Region> regions = new CopyOnWriteArraySet<>();
+    private final Map<String, Region.Keyed> byName = new ConcurrentHashMap<>();
 
-    public RegionContainer(UUID worldId, WorldRegion worldRegion) {
-        if (!worldRegion.worldId().equals(worldId)) {
+    private final Region.World region;
+
+    public <T extends Region.World & Region.Keyed> RegionContainer(UUID worldId, T region) {
+        if (!region.worldId().equals(worldId)) {
             throw new IllegalArgumentException("The world region is not for this world.");
         }
 
-        this.worldId = worldId;
-        this.worldRegion = worldRegion;
-        byName.put(worldRegion.key(), worldRegion);
+        this.region = region;
+        byName.put(region.name(), region);
     }
 
-    public UUID worldId() {
-        return worldId;
-    }
-
-    public WorldRegion worldRegion() {
-        return worldRegion;
+    public Region.World world() {
+        return region;
     }
 
     //
 
     public void removeRegion(Region region) {
-        if (region.equals(worldRegion)) {
+        if (region.equals(this.region)) {
             return;
         }
-        byName.remove(region.key(), region);
+
+        regions.remove(region);
+
+        if (region instanceof Region.Keyed rk)
+            byName.remove(rk.name(), rk);
     }
 
     public void addRegion(Region region) {
-        byName.put(region.key(), region);
+        regions.add(region);
+
+        if (region instanceof Region.Keyed rk)
+            byName.put(rk.name(), rk);
     }
 
     //
 
     public Collection<Region> regions() {
-        return Collections.unmodifiableCollection(byName.values());
+        return Collections.unmodifiableSet(regions);
     }
 
-    public Optional<Region> region(@NotNull RegionKey key) {
-        return Optional.ofNullable(byName.get(key));
+    public Optional<Region.Keyed> region(@NotNull String name) {
+        return Optional.ofNullable(byName.get(name));
     }
 
     public Collection<Region> regionsAt(@NotNull Point3 point) {
-        return byName.values().stream()
+        return regions.stream()
                 .filter(rg -> rg.contains(point))
                 .collect(Collectors.toUnmodifiableSet());
     }

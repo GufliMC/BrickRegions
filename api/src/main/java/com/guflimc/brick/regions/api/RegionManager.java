@@ -2,16 +2,9 @@ package com.guflimc.brick.regions.api;
 
 import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
-import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
-import com.guflimc.brick.regions.api.domain.locality.Locality;
-import com.guflimc.brick.regions.api.domain.region.Region;
-import com.guflimc.brick.regions.api.domain.region.RegionKey;
-import com.guflimc.brick.regions.api.domain.region.ShapeRegion;
-import com.guflimc.brick.regions.api.domain.region.WorldRegion;
-import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
-import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,37 +25,37 @@ public interface RegionManager<S> {
 
     // REGIONS
 
-    Optional<Region> region(@NotNull UUID id);
+    Region.World world(@NotNull UUID worldId);
 
-    Optional<Region> region(@NotNull UUID worldId, @NotNull RegionKey key);
+    Optional<Region.Keyed> region(@NotNull UUID id);
+
+    Optional<Region.Keyed> region(@NotNull UUID worldId, @NotNull String name);
 
     Collection<Region> regions();
 
+    <R extends Region> Collection<R> regions(@NotNull Class<R> type);
+
+    <R extends Region, R1 extends Region> Collection<R> regions(@NotNull Class<R> type, @NotNull Class<R1> type1);
+
+    <R extends Region, R1 extends Region, R2 extends Region> Collection<R> regions(@NotNull Class<R> type, @NotNull Class<R1> type1, @NotNull Class<R2> type2);
+
     Collection<Region> regions(@NotNull UUID worldId);
 
-    Collection<Region> regions(@NotNull UUID worldId, @NotNull String namespace);
+    <R extends Region> Collection<R> regions(@NotNull UUID worldId, @NotNull Class<R> type);
 
-    WorldRegion worldRegion(@NotNull UUID worldId);
+    <R extends Region, R1 extends Region> Collection<R> regions(@NotNull UUID worldId, @NotNull Class<R> type, @NotNull Class<R1> type1);
 
-    Collection<ShapeRegion> intersecting(@NotNull UUID worldId, @NotNull Shape3 shape);
+    <R extends Region, R1 extends Region, R2 extends Region> Collection<R> regions(@NotNull UUID worldId, @NotNull Class<R> type, @NotNull Class<R1> type1, @NotNull Class<R2> type2);
 
-    Collection<ShapeRegion> intersecting(@NotNull ShapeRegion region);
-
-    Collection<TileGroup> intersecting(@NotNull UUID worldId, @NotNull Shape2 shape);
+    Collection<Region> intersecting(@NotNull UUID worldId, @NotNull Shape3 shape);
 
     Collection<Region> regionsAt(@NotNull UUID worldId, @NotNull Point3 position);
 
     Collection<Region> regionsAt(@NotNull Location position);
 
-//    Optional<TileRegion> tileRegionAt(@NotNull Location location);
-//
-//    Optional<TileGroup> tileGroupAt(@NotNull Location location);
+    CompletableFuture<Void> remove(@NotNull Region region);
 
-    CompletableFuture<Void> delete(@NotNull Locality locality);
-
-    CompletableFuture<Void> save(@NotNull Locality locality);
-
-    <T extends Locality> CompletableFuture<Void> save(@NotNull Collection<T> localities);
+    CompletableFuture<Void> persist(@NotNull Region region);
 
     void register(@NotNull Region region);
 
@@ -70,10 +63,10 @@ public interface RegionManager<S> {
 
     //
 
-    CompletableFuture<Region> create(@NotNull RegionKey key, @NotNull UUID worldId, @NotNull Shape3 shape);
+    <T extends Region.Keyed & Region.Shaped> CompletableFuture<T> create(@NotNull String name, @NotNull UUID worldId, @NotNull Shape3 shape);
 
-    CompletableFuture<Region> create(@NotNull RegionKey key, @NotNull Selection selection);
+    <T extends Region.Keyed & Region.Shaped> CompletableFuture<T> create(@NotNull String name, @NotNull Selection selection);
 
-    CompletableFuture<TileRegion> createHexagonTileRegion(@NotNull RegionKey key, @NotNull UUID worldId, int radius);
+    <T extends Region.Keyed & TileRegion> CompletableFuture<T> createHexagonTileRegion(@NotNull String name, @NotNull UUID worldId, int radius);
 
 }

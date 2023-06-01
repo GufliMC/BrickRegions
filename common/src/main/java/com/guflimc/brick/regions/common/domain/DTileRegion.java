@@ -5,11 +5,10 @@ import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.database.Point2Converter;
-import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.region.RegionKey;
-import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
-import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
-import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileKey;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import com.guflimc.brick.regions.common.EventManager;
 import io.ebean.annotation.DbDefault;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Inheritance
-public abstract class DTileRegion extends DRegion implements TileRegion {
+public abstract class DTileRegion extends DKeyedPropertyRegion implements TileRegion {
 
     @OneToMany(targetEntity = DTileGroup.class, mappedBy = "region",
             cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -40,18 +39,18 @@ public abstract class DTileRegion extends DRegion implements TileRegion {
         super();
     }
 
-    public DTileRegion(UUID worldId, RegionKey key, int radius) {
-        super(worldId, key);
+    public DTileRegion(@NotNull UUID worldId, @NotNull String name, int radius) {
+        super(worldId, name);
         this.radius = radius;
 
-        setAttribute(LocalityAttributeKey.MAP_STROKE_WEIGHT, 1);
+        setAttribute(RegionAttributeKey.MAP_STROKE_WEIGHT, 1);
     }
 
     //
 
     @PostLoad
     public void maptiles() {
-        for ( DTileGroup group : groups ) {
+        for (DTileGroup group : groups) {
             group.tiles().forEach(tile -> tilemap.put(tile, group));
         }
     }
@@ -110,7 +109,7 @@ public abstract class DTileRegion extends DRegion implements TileRegion {
         removeGroup(group);
 
         List<TileGroup> result = new ArrayList<>();
-        for ( TileKey tile : group.tiles() ) {
+        for (TileKey tile : group.tiles()) {
             DTileGroup tg = new DTileGroup(this, tile);
             groups.add(tg);
             result.add(tg);
@@ -124,8 +123,6 @@ public abstract class DTileRegion extends DRegion implements TileRegion {
 
     //
 
-    private final static Random random = new Random();
-
     @Override
     public void groupify(int size) {
         new HashSet<>(groups).forEach(this::unmerge);
@@ -134,20 +131,20 @@ public abstract class DTileRegion extends DRegion implements TileRegion {
         Set<TileGroup> frontier = new HashSet<>();
 
         int radius = 0;
-        while ( !groups.isEmpty() && radius < 100 ) {
+        while (!groups.isEmpty() && radius < 100) {
             frontier.removeIf(tg -> tg.tiles().size() >= size);
 
             // get contouring tiles of current radius
             Set<TileGroup> contour = new HashSet<>();
-            for ( int rx = -1; rx <= 1; rx += 2) {
+            for (int rx = -1; rx <= 1; rx += 2) {
                 int x = radius * rx;
-                for ( int z = -radius; z <= radius; z++ ) {
+                for (int z = -radius; z <= radius; z++) {
                     groupAt(new TileKey(x, z)).ifPresent(contour::add);
                 }
             }
-            for ( int rz = -1; rz <= 1; rz += 2) {
+            for (int rz = -1; rz <= 1; rz += 2) {
                 int z = radius * rz;
-                for ( int x = -radius; x <= radius; x++ ) {
+                for (int x = -radius; x <= radius; x++) {
                     groupAt(new TileKey(x, z)).ifPresent(contour::add);
                 }
             }
@@ -160,13 +157,13 @@ public abstract class DTileRegion extends DRegion implements TileRegion {
             Collections.shuffle(shufcontour);
 
             // add new groups to the frontier
-            for ( TileGroup group : shufcontour ) {
+            for (TileGroup group : shufcontour) {
                 List<TileGroup> adjacent = adjacent(group).stream()
                         .filter(frontier::contains)
                         .distinct()
                         .toList();
 
-                if ( adjacent.isEmpty() ) {
+                if (adjacent.isEmpty()) {
                     frontier.add(group);
                     continue;
                 }
@@ -177,7 +174,7 @@ public abstract class DTileRegion extends DRegion implements TileRegion {
                 frontier.remove(target);
                 frontier.remove(group);
 
-                if ( replacement.tiles().size() < size ) {
+                if (replacement.tiles().size() < size) {
                     frontier.add(replacement);
                 }
             }

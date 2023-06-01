@@ -3,9 +3,10 @@ package com.guflimc.brick.regions.spigot;
 import com.guflimc.brick.gui.spigot.SpigotBrickGUI;
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
 import com.guflimc.brick.i18n.spigot.api.namespace.SpigotNamespace;
+import com.guflimc.brick.math.common.geometry.pos3.Location;
 import com.guflimc.brick.math.spigot.SpigotMath;
-import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.BrickRegionsConfig;
 import com.guflimc.brick.regions.common.BrickRegionsDatabaseContext;
@@ -109,14 +110,17 @@ public class SpigotBrickRegions extends JavaPlugin {
             return ((Player) s).getWorld().getUID();
         });
 
-        colonel.registry().registerSourceMapper(TileGroup.class, s -> SpigotRegionAPI.get()
-                .regionsAt((Player) s)
-                .stream().filter(TileRegion.class::isInstance)
-                .map(TileRegion.class::cast)
-                .map(rg -> rg.groupAt(SpigotMath.toBrickLocation(((Player) s).getLocation())).orElse(null))
-                .filter(Objects::nonNull)
-                .max(Comparator.comparingInt(TileGroup::priority))
-                .orElseThrow(() -> FailureHandler.of(() -> SpigotI18nAPI.get(this).send(s, "cmd.error.tile"))));
+        colonel.registry().registerSourceMapper(TileGroup.class, "tileGroup", s -> {
+            Location loc = SpigotMath.toBrickLocation(((Player) s).getLocation());
+            return SpigotRegionAPI.get()
+                    .regionsAt((Player) s)
+                    .stream().filter(TileRegion.class::isInstance)
+                    .map(TileRegion.class::cast)
+                    .map(rg -> rg.groupAt(loc).orElse(null))
+                    .filter(Objects::nonNull)
+                    .max(Comparator.comparingInt(TileGroup::priority))
+                    .orElseThrow(() -> FailureHandler.of(() -> SpigotI18nAPI.get(this).send(s, "cmd.error.tile")));
+        });
 
         colonel.registry().registerSourceMapper(Selection.class, s -> SpigotRegionAPI.get().selection((Player) s)
                 .orElseThrow(() -> FailureHandler.of(() -> SpigotI18nAPI.get(this).send(s, "cmd.error.selection"))));
@@ -126,9 +130,13 @@ public class SpigotBrickRegions extends JavaPlugin {
 
         // ACTUAL COMMANDS
         colonel.registerAll(new RegionCommands());
+        colonel.registerAll(new RegionAttributeCommands());
         colonel.registerAll(new SpigotRegionCommands(this));
         colonel.registerAll(new SpigotSelectionCommands(this));
-        colonel.registerAll(new RegionAttributeCommands());
+
+        getLogger().warning("---- EXPERIMENTAL WARNING ----");
+        getLogger().warning("This plugin is still in development, use at your own risk.");
+        getLogger().warning("Data consistency and API compatibility between updates is not guaranteed.");
 
         getLogger().info("Enabled " + nameAndVersion() + ".");
     }

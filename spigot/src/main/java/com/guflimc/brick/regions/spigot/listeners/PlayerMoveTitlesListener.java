@@ -1,7 +1,7 @@
 package com.guflimc.brick.regions.spigot.listeners;
 
-import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
+import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.spigot.SpigotBrickRegions;
 import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsMoveDisplayEvent;
 import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsMoveEvent;
@@ -51,8 +51,10 @@ public class PlayerMoveTitlesListener implements Listener {
 
     //
 
-    private <T> T get(Collection<Region> ca, LocalityAttributeKey<T> la, Collection<Region> cb, LocalityAttributeKey<T> lb) {
-        Region ra = ca.stream()
+    private <T> T get(Collection<Region> ca, RegionAttributeKey<T> la, Collection<Region> cb, RegionAttributeKey<T> lb) {
+        Region.Attributeable ra = ca.stream()
+                .filter(Region.Attributeable.class::isInstance)
+                .map(Region.Attributeable.class::cast)
                 .filter(rg -> rg.attribute(la).isPresent())
                 .max(Comparator.comparingInt(Region::priority))
                 .orElse(null);
@@ -65,7 +67,9 @@ public class PlayerMoveTitlesListener implements Listener {
             priority = ra.priority();
         }
 
-        Region rb = cb.stream()
+        Region.Attributeable rb = cb.stream()
+                .filter(Region.Attributeable.class::isInstance)
+                .map(Region.Attributeable.class::cast)
                 .filter(rg -> rg.attribute(lb).isPresent())
                 .max(Comparator.comparingInt(Region::priority))
                 .orElse(null);
@@ -82,9 +86,9 @@ public class PlayerMoveTitlesListener implements Listener {
             return;
         }
 
-        Component title = get(to, LocalityAttributeKey.ENTRANCE_TITLE, from, LocalityAttributeKey.EXIT_TITLE);
-        Component subtitle = get(to, LocalityAttributeKey.ENTRANCE_SUBTITLE, from, LocalityAttributeKey.EXIT_SUBTITLE);
-        Component actionbar = get(to, LocalityAttributeKey.ENTRANCE_ACTIONBAR, from, LocalityAttributeKey.EXIT_ACTIONBAR);
+        Component title = get(to, RegionAttributeKey.ENTRANCE_TITLE, from, RegionAttributeKey.EXIT_TITLE);
+        Component subtitle = get(to, RegionAttributeKey.ENTRANCE_SUBTITLE, from, RegionAttributeKey.EXIT_SUBTITLE);
+        Component actionbar = get(to, RegionAttributeKey.ENTRANCE_ACTIONBAR, from, RegionAttributeKey.EXIT_ACTIONBAR);
 
         PlayerRegionsMoveDisplayEvent e = new PlayerRegionsMoveDisplayEvent(player, from, to, title, subtitle, actionbar);
         Bukkit.getServer().getPluginManager().callEvent(e);

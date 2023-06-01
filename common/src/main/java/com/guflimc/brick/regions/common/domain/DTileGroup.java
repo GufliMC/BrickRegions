@@ -5,10 +5,10 @@ import com.guflimc.brick.math.common.geometry.pos2.Vector2;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Polygon;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
-import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
-import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileKey;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
@@ -16,12 +16,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
-public class DTileGroup extends DLocality implements TileGroup {
+public class DTileGroup extends DRegion implements TileGroup {
 
-    @JoinColumn(name = "tilegroup_parent_region_id")
-    @ManyToOne(targetEntity = DTileRegion.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "tilegroup_tileregion_id")
+    @ManyToOne(targetEntity = DTileRegion.class, fetch = FetchType.EAGER, optional = false)
     private DTileRegion region;
 
+    @Column(name = "tilegroup_tiles")
     @Convert(converter = TileKeySetConverter.class)
     private TileKeySet tileSet = new TileKeySet(new ArrayList<>());
 
@@ -59,7 +60,7 @@ public class DTileGroup extends DLocality implements TileGroup {
     }
 
     @Override
-    public <U> Optional<U> attribute(LocalityAttributeKey<U> key) {
+    public <U> Optional<U> attribute(RegionAttributeKey<U> key) {
         Optional<U> opt = super.attribute(key);
         if (opt.isPresent()) {
             return opt;

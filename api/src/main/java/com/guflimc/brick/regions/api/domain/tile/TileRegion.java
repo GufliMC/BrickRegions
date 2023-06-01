@@ -1,15 +1,15 @@
-package com.guflimc.brick.regions.api.domain.region.tile;
+package com.guflimc.brick.regions.api.domain.tile;
 
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
-import com.guflimc.brick.regions.api.domain.region.ModifiableRegion;
+import com.guflimc.brick.regions.api.domain.Region;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Optional;
 
-public interface TileRegion extends ModifiableRegion {
+public interface TileRegion extends Region {
 
     Collection<TileGroup> groups();
 

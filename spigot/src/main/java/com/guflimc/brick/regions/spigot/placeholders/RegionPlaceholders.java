@@ -3,7 +3,7 @@ package com.guflimc.brick.regions.spigot.placeholders;
 import com.guflimc.brick.placeholders.api.module.BasePlaceholderModule;
 import com.guflimc.brick.placeholders.api.resolver.PlaceholderResolver;
 import com.guflimc.brick.placeholders.spigot.api.SpigotPlaceholderAPI;
-import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -22,7 +22,11 @@ public class RegionPlaceholders {
 
     public static void init() {
         BasePlaceholderModule<Player> module = new BasePlaceholderModule<>("region");
-        module.register("name", region(region -> Component.text(region.key().name())));
+        module.register("name", region(region -> {
+            if ( region instanceof Region.Keyed rk )
+                return Component.text(rk.name());
+            return null;
+        }));
         SpigotPlaceholderAPI.get().register(module);
     }
 

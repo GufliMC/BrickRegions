@@ -2,7 +2,7 @@ package com.guflimc.brick.regions.spigot.listeners;
 
 import com.guflimc.brick.math.spigot.SpigotMath;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsEntityBreakEvent;
 import com.guflimc.brick.regions.spigot.api.events.PlayerRegionsEntityPlaceEvent;
 import org.bukkit.Bukkit;

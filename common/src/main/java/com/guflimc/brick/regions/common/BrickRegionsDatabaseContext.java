@@ -31,10 +31,13 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
     }
 
     private static final Class<?>[] APPLICABLE_CLASSES = new Class[]{
-            DLocality.class,
-            DLocalityAttribute.class,
-            DLocalityProtectionRule.class,
             DRegion.class,
+            DKeyedRegion.class,
+            DKeyedPropertyRegion.class,
+
+            DRegionAttribute.class,
+            DRegionRule.class,
+
             DShapeRegion.class,
             DWorldRegion.class,
 
@@ -45,10 +48,10 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
             Shape3Converter.class,
             Shape2Converter.class,
             Point2Converter.class,
-            DLocalityProtectionRule.RuleTargetConverter.class,
-            DLocalityProtectionRule.RuleTypeSetConverter.class,
             ComponentConverter.class,
-            DTileGroup.TileKeySetConverter.class
+            DRegionRule.RuleTargetConverter.class,
+            DRegionRule.RuleTypeSetConverter.class,
+            DTileGroup.TileKeySetConverter.class,
     };
 
     public static void main(String[] args) throws IOException, SQLException {
@@ -58,6 +61,6 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
                 Platform.H2, Platform.MYSQL
         );
         Arrays.stream(APPLICABLE_CLASSES).forEach(generator::addClass);
-        generator.generate();
+        generator.generate(true);
     }
 }

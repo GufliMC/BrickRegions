@@ -6,9 +6,8 @@ import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape2d.Rectangle;
 import com.guflimc.brick.math.common.geometry.shape2d.RegularHexagon;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
-import com.guflimc.brick.regions.api.domain.region.RegionKey;
-import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileKey;
 import com.guflimc.brick.regions.common.EventManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,8 +21,8 @@ public class DHexagonTileRegion extends DTileRegion {
         super();
     }
 
-    public DHexagonTileRegion(UUID worldId, RegionKey key, int radius) {
-        super(worldId, key, radius);
+    public DHexagonTileRegion(@NotNull UUID worldId, @NotNull String name, int radius) {
+        super(worldId, name, radius);
     }
 
     @Override

@@ -3,8 +3,7 @@ package com.guflimc.brick.regions.common.domain;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.math.database.Shape3Converter;
-import com.guflimc.brick.regions.api.domain.region.RegionKey;
-import com.guflimc.brick.regions.api.domain.region.ShapeRegion;
+import com.guflimc.brick.regions.api.domain.Region;
 import io.ebean.annotation.DbDefault;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +13,7 @@ import javax.persistence.Entity;
 import java.util.UUID;
 
 @Entity
-public class DShapeRegion extends DRegion implements ShapeRegion {
+public class DShapeRegion extends DKeyedPropertyRegion implements Region.Shaped {
 
     @Convert(converter = Shape3Converter.class)
     @Column(name = "shaperegion_shape", length = 2048)
@@ -25,8 +24,8 @@ public class DShapeRegion extends DRegion implements ShapeRegion {
         super();
     }
 
-    public DShapeRegion(UUID worldId, RegionKey key, Shape3 shape) {
-        super(worldId, key);
+    public DShapeRegion(@NotNull UUID worldId, @NotNull String name, @NotNull Shape3 shape) {
+        super(worldId, name);
         this.shape = shape;
     }
 
@@ -37,6 +36,6 @@ public class DShapeRegion extends DRegion implements ShapeRegion {
 
     @Override
     public boolean contains(@NotNull Point3 point) {
-        return ShapeRegion.super.contains(point);
+        return Region.Shaped.super.contains(point);
     }
 }

@@ -1,10 +1,7 @@
 package com.guflimc.brick.regions.spigot.api;
 
 import com.guflimc.brick.regions.api.RegionManager;
-import com.guflimc.brick.regions.api.domain.locality.Locality;
-import com.guflimc.brick.regions.api.domain.region.Region;
-import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.Region;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -13,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface SpigotRegionManager extends RegionManager<Player> {
 
@@ -31,7 +27,7 @@ public interface SpigotRegionManager extends RegionManager<Player> {
 
     Collection<Region> regions(@NotNull World world);
 
-    Region worldRegion(@NotNull World world);
+    Region.World world(@NotNull World world);
 
     //
 

@@ -1,7 +1,8 @@
 package com.guflimc.brick.regions.spigot.rules;
 
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
-import com.guflimc.brick.regions.api.domain.locality.LocalityRule;
+import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
 import com.guflimc.brick.regions.api.rules.RuleStatus;
 import com.guflimc.brick.regions.api.rules.RuleType;
 import com.guflimc.brick.regions.spigot.api.events.*;
@@ -13,10 +14,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import java.util.stream.Collectors;
+
 public class RuleHandler implements Listener {
 
     private boolean shouldCancel(PlayerRegionsEvent event, RuleType type) {
-        LocalityRule rule = LocalityRule.match(event.player(), type, event.regions()).orElse(null);
+        RegionRule rule = RegionRule.match(event.player(), type, event.regions()).orElse(null);
         if (rule == null || rule.status() == RuleStatus.ALLOW) {
             return false; // DEFAULT ALLOWED
         }

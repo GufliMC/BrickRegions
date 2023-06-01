@@ -3,13 +3,11 @@ package com.guflimc.brick.regions.spigot.dynmap;
 import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.locality.Locality;
-import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.region.Region;
-import com.guflimc.brick.regions.api.domain.region.ShapeRegion;
-import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.region.tile.TileKey;
-import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileKey;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.dynmap.DynmapAPI;
@@ -60,8 +58,8 @@ public class DynmapRenderer {
 
         // render shape regions
         RegionAPI.get().regions(world.getUID()).stream()
-                .filter(ShapeRegion.class::isInstance)
-                .map(ShapeRegion.class::cast)
+                .filter(Region.Shaped.class::isInstance)
+                .map(Region.Shaped.class::cast)
                 .forEach(rg -> this.render(world, rg));
 
         // render tile groups
@@ -72,24 +70,24 @@ public class DynmapRenderer {
                 .forEach(rg -> this.render(world, rg));
     }
 
-    public void render(@NotNull Locality locality) {
-        if (locality instanceof TileGroup tg) {
+    public void render(@NotNull Region region) {
+        if (region instanceof TileGroup tg) {
             render(tg);
             return;
         }
 
-        if (locality instanceof ShapeRegion sr) {
+        if (region instanceof Region.Shaped sr) {
             world(sr.worldId()).ifPresent(w -> render(w, sr));
             return;
         }
 
-        if (locality instanceof TileRegion tr) {
+        if (region instanceof TileRegion tr) {
             world(tr.worldId()).ifPresent(w -> render(w, tr));
             return;
         }
     }
 
-    private void render(@NotNull World world, @NotNull ShapeRegion region) {
+    private void render(@NotNull World world, @NotNull Region.Shaped region) {
         render(this.markerSet, world, region, region.shape().contour());
     }
 
@@ -100,7 +98,7 @@ public class DynmapRenderer {
             ms.deleteMarkerSet();
         }
 
-        ms = dynmap.getMarkerAPI().createMarkerSet(tileRegion.key().name(), tileRegion.key().name(), null, false);
+        ms = dynmap.getMarkerAPI().createMarkerSet("TR-" + tileRegion.hashCode(), "", null, false);
         ms.setHideByDefault(false);
         ms.setLayerPriority(1 + tileRegion.priority());
         tileLayers.put(tileRegion, ms);
@@ -119,24 +117,24 @@ public class DynmapRenderer {
         }
 
         ms.getAreaMarkers().stream()
-                .filter(m -> m.getMarkerID().equals(group.id().toString()))
+                .filter(m -> m.getMarkerID().equals("RG-" + group.hashCode()))
                 .findFirst().ifPresent(GenericMarker::deleteMarker);
         render(ms, world, group, group.shape());
     }
 
-    private void render(@NotNull MarkerSet markerSet, @NotNull World world, @NotNull Locality locality, @NotNull Shape2 shape) {
+    private void render(@NotNull MarkerSet markerSet, @NotNull World world, @NotNull Region region, @NotNull Shape2 shape) {
         double[] xPoints = shape.vertices().stream().mapToDouble(Point2::x).toArray();
         double[] zPoints = shape.vertices().stream().mapToDouble(Point2::y).toArray();
 
         String label = "";
-        if (locality instanceof TileGroup tg && tg.tiles().size() == 1) {
+        if (region instanceof TileGroup tg && tg.tiles().size() == 1) {
             TileKey t = tg.tiles().iterator().next();
             label = t.x() + ", " + t.z();
-        } else if (locality instanceof Region r) {
-            label = r.key().name();
+        } else if (region instanceof Region.Keyed rk) {
+            label = rk.name();
         }
 
-        AreaMarker am = markerSet.createAreaMarker(locality.id().toString(), label, true, world.getName(), xPoints, zPoints, false);
+        AreaMarker am = markerSet.createAreaMarker("RG-" + region.hashCode(), label, true, world.getName(), xPoints, zPoints, false);
 
         int fillColor = Color.WHITE.getRGB();
         double fillOpacity = 0.25;
@@ -145,19 +143,21 @@ public class DynmapRenderer {
         double strokeOpacity = 0.8;
         int strokeWeight = 2;
 
-        if (locality.attribute(LocalityAttributeKey.MAP_HIDDEN).orElse(false)) {
-            am.deleteMarker();
-            return; // do not render
+        if ( region instanceof Region.Attributeable al) {
+            if (al.attribute(RegionAttributeKey.MAP_HIDDEN).orElse(false)) {
+                am.deleteMarker();
+                return; // do not render
+            }
+
+            al.attribute(RegionAttributeKey.MAP_CLICK_TEXT).ifPresent(am::setDescription);
+            al.attribute(RegionAttributeKey.MAP_HOVER_TEXT).ifPresent(am::setDescription);
+
+            fillColor = al.attribute(RegionAttributeKey.MAP_FILL_COLOR).map(c -> c.getRGB() & 0xFFFFFF).orElse(fillColor);
+            fillOpacity = al.attribute(RegionAttributeKey.MAP_FILL_OPACITY).orElse(fillOpacity);
+            strokeColor = al.attribute(RegionAttributeKey.MAP_STROKE_COLOR).map(c -> c.getRGB() & 0xFFFFFF).orElse(strokeColor);
+            strokeOpacity = al.attribute(RegionAttributeKey.MAP_STROKE_OPACITY).orElse(strokeOpacity);
+            strokeWeight = al.attribute(RegionAttributeKey.MAP_STROKE_WEIGHT).orElse(strokeWeight);
         }
-
-        locality.attribute(LocalityAttributeKey.MAP_CLICK_TEXT).ifPresent(am::setDescription);
-        locality.attribute(LocalityAttributeKey.MAP_HOVER_TEXT).ifPresent(am::setDescription);
-
-        fillColor = locality.attribute(LocalityAttributeKey.MAP_FILL_COLOR).map(c -> c.getRGB() & 0xFFFFFF).orElse(fillColor);
-        fillOpacity = locality.attribute(LocalityAttributeKey.MAP_FILL_OPACITY).orElse(fillOpacity);
-        strokeColor = locality.attribute(LocalityAttributeKey.MAP_STROKE_COLOR).map(c -> c.getRGB() & 0xFFFFFF).orElse(strokeColor);
-        strokeOpacity = locality.attribute(LocalityAttributeKey.MAP_STROKE_OPACITY).orElse(strokeOpacity);
-        strokeWeight = locality.attribute(LocalityAttributeKey.MAP_STROKE_WEIGHT).orElse(strokeWeight);
 
         am.setFillStyle(fillOpacity, fillColor);
         am.setLineStyle(strokeWeight, strokeOpacity, strokeColor);
@@ -165,14 +165,14 @@ public class DynmapRenderer {
 
     //
 
-    public void delete(@NotNull Locality locality) {
-        if (locality instanceof TileRegion tr) {
+    public void delete(@NotNull Region region) {
+        if (region instanceof TileRegion tr) {
             delete(tr);
             return;
         }
 
         markerSet.getAreaMarkers().stream()
-                .filter(m -> m.getMarkerID().equals(locality.id().toString()))
+                .filter(m -> m.getMarkerID().equals("RG-" + region.hashCode()))
                 .findFirst()
                 .ifPresent(GenericMarker::deleteMarker);
     }

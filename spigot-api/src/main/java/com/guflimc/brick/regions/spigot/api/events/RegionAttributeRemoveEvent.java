@@ -1,22 +1,22 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
-import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.region.Region;
+import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
+import com.guflimc.brick.regions.api.domain.Region;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class RegionAttributeRemoveEvent<T> extends RegionEvent {
 
-    private final LocalityAttributeKey<T> key;
+    private final RegionAttributeKey<T> key;
     private final T previousValue;
 
-    public RegionAttributeRemoveEvent(Region region, boolean async, LocalityAttributeKey<T> key, T previousValue) {
+    public RegionAttributeRemoveEvent(Region region, boolean async, RegionAttributeKey<T> key, T previousValue) {
         super(region, async);
         this.key = key;
         this.previousValue = previousValue;
     }
 
-    public LocalityAttributeKey<T> key() {
+    public RegionAttributeKey<T> key() {
         return key;
     }
 

@@ -3,11 +3,10 @@ package com.guflimc.brick.regions.spigot.squaremap;
 import com.guflimc.brick.math.common.geometry.pos2.Point2;
 import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.RegionAPI;
-import com.guflimc.brick.regions.api.domain.locality.Locality;
-import com.guflimc.brick.regions.api.domain.locality.LocalityAttributeKey;
-import com.guflimc.brick.regions.api.domain.region.ShapeRegion;
-import com.guflimc.brick.regions.api.domain.region.tile.TileGroup;
-import com.guflimc.brick.regions.api.domain.region.tile.TileRegion;
+import com.guflimc.brick.regions.api.domain.Region;
+import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
+import com.guflimc.brick.regions.api.domain.tile.TileGroup;
+import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -61,7 +60,7 @@ public class SquaremapRenderer {
             return;
         }
 
-        if ( !worlds.containsKey(mapWorld) ) {
+        if (!worlds.containsKey(mapWorld)) {
             return;
         }
 
@@ -78,19 +77,19 @@ public class SquaremapRenderer {
         mapWorld(world).ifPresent(this::render);
     }
 
-    public void render(@NotNull Locality locality) {
-        if ( locality instanceof TileGroup tg) {
+    public void render(@NotNull Region region) {
+        if (region instanceof TileGroup tg) {
             render(tg);
             return;
         }
 
-        if ( locality instanceof ShapeRegion sr ) {
-            mapWorld(locality.worldId()).ifPresent(mw -> render(mw, sr));
+        if (region instanceof Region.Shaped sr) {
+            mapWorld(region.worldId()).ifPresent(mw -> render(mw, sr));
             return;
         }
 
-        if ( locality instanceof TileRegion tr ) {
-            mapWorld(locality.worldId()).ifPresent(mw -> render(mw, tr));
+        if (region instanceof TileRegion tr) {
+            mapWorld(region.worldId()).ifPresent(mw -> render(mw, tr));
             return;
         }
     }
@@ -106,8 +105,8 @@ public class SquaremapRenderer {
 
         // render shape regions
         RegionAPI.get().regions(world.getUID()).stream()
-                .filter(ShapeRegion.class::isInstance)
-                .map(ShapeRegion.class::cast)
+                .filter(Region.Shaped.class::isInstance)
+                .map(Region.Shaped.class::cast)
                 .forEach(rg -> this.render(layer, rg));
 
         // render tiles
@@ -118,18 +117,18 @@ public class SquaremapRenderer {
                 .forEach(rg -> this.render(mapWorld, rg));
     }
 
-    private void render(@NotNull MapWorld world, @NotNull ShapeRegion region) {
+    private void render(@NotNull MapWorld world, @NotNull Region.Shaped region) {
         SimpleLayerProvider layer = defaultLayer(world);
         render(layer, region);
     }
 
-    private void render(@NotNull SimpleLayerProvider layer, @NotNull ShapeRegion region) {
+    private void render(@NotNull SimpleLayerProvider layer, @NotNull Region.Shaped region) {
         render(layer, region, region.shape().contour());
     }
 
     private void render(@NotNull MapWorld mapWorld, @NotNull TileRegion tileRegion) {
         tileLayers.computeIfAbsent(tileRegion, tr -> {
-            SimpleLayerProvider layer = SimpleLayerProvider.builder("Tiles-" + tileRegion.key().name())
+            SimpleLayerProvider layer = SimpleLayerProvider.builder("TR-" + tileRegion.hashCode())
                     .showControls(true)
                     .defaultHidden(false)
                     .layerPriority(1 + tileRegion.priority())
@@ -147,11 +146,11 @@ public class SquaremapRenderer {
 
     private void render(@NotNull TileGroup group) {
         SimpleLayerProvider layer = tileLayers.get(group.parent());
-        layer.removeMarker(Key.of(group.id().toString()));
+        layer.removeMarker(Key.of("RG-" + group.hashCode()));
         render(layer, group, group.shape());
     }
 
-    private void render(@NotNull SimpleLayerProvider layer, @NotNull Locality locality, @NotNull Shape2 shape) {
+    private void render(@NotNull SimpleLayerProvider layer, @NotNull Region region, @NotNull Shape2 shape) {
         MarkerOptions options = MarkerOptions.defaultOptions().asBuilder()
                 .fillRule(MarkerOptions.FillRule.NONZERO)
                 .stroke(true)
@@ -161,19 +160,21 @@ public class SquaremapRenderer {
                 .fillOpacity(0.2)
                 .build();
 
-        if ( locality.attribute(LocalityAttributeKey.MAP_HIDDEN).orElse(false) ) {
-            return; // do not render
-        }
+        if (region instanceof Region.Attributeable.Attributeable al) {
+            if (al.attribute(RegionAttributeKey.MAP_HIDDEN).orElse(false)) {
+                return; // do not render
+            }
 
-        MarkerOptions.Builder builder = options.asBuilder();
-        locality.attribute(LocalityAttributeKey.MAP_CLICK_TEXT).ifPresent(builder::clickTooltip);
-        locality.attribute(LocalityAttributeKey.MAP_HOVER_TEXT).ifPresent(builder::hoverTooltip);
-        locality.attribute(LocalityAttributeKey.MAP_FILL_COLOR).ifPresent(builder::fillColor);
-        locality.attribute(LocalityAttributeKey.MAP_FILL_OPACITY).ifPresent(builder::fillOpacity);
-        locality.attribute(LocalityAttributeKey.MAP_STROKE_COLOR).ifPresent(builder::strokeColor);
-        locality.attribute(LocalityAttributeKey.MAP_STROKE_OPACITY).ifPresent(builder::strokeOpacity);
-        locality.attribute(LocalityAttributeKey.MAP_STROKE_WEIGHT).ifPresent(builder::strokeWeight);
-        options = builder.build();
+            MarkerOptions.Builder builder = options.asBuilder();
+            al.attribute(RegionAttributeKey.MAP_CLICK_TEXT).ifPresent(builder::clickTooltip);
+            al.attribute(RegionAttributeKey.MAP_HOVER_TEXT).ifPresent(builder::hoverTooltip);
+            al.attribute(RegionAttributeKey.MAP_FILL_COLOR).ifPresent(builder::fillColor);
+            al.attribute(RegionAttributeKey.MAP_FILL_OPACITY).ifPresent(builder::fillOpacity);
+            al.attribute(RegionAttributeKey.MAP_STROKE_COLOR).ifPresent(builder::strokeColor);
+            al.attribute(RegionAttributeKey.MAP_STROKE_OPACITY).ifPresent(builder::strokeOpacity);
+            al.attribute(RegionAttributeKey.MAP_STROKE_WEIGHT).ifPresent(builder::strokeWeight);
+            options = builder.build();
+        }
 
         // draw shape
         List<Point> vertices = new ArrayList<>();
@@ -183,40 +184,40 @@ public class SquaremapRenderer {
 
         Polygon marker = Marker.polygon(vertices);
         marker.markerOptions(options);
-        layer.addMarker(Key.of(locality.id().toString()), marker);
+        layer.addMarker(Key.of("RG-" + region.hashCode()), marker);
     }
 
     //
 
-    public void delete(@NotNull Locality locality) {
-        if ( locality instanceof TileGroup tg ) {
+    public void delete(@NotNull Region region) {
+        if (region instanceof TileGroup tg) {
             delete(tg);
             return;
         }
 
-        if ( locality instanceof TileRegion tr ) {
-            mapWorld(locality.worldId()).ifPresent(mw -> delete(mw, tr));
+        if (region instanceof TileRegion tr) {
+            mapWorld(region.worldId()).ifPresent(mw -> delete(mw, tr));
             return;
         }
 
-        mapWorld(locality.worldId()).ifPresent(mw -> delete(mw, locality));
+        mapWorld(region.worldId()).ifPresent(mw -> delete(mw, region));
     }
 
     private void delete(@NotNull MapWorld world, @NotNull TileRegion region) {
         SimpleLayerProvider layer = tileLayers.get(region);
-        if ( layer == null ) return;
+        if (layer == null) return;
         layer.clearMarkers();
         world.layerRegistry().unregister(Key.of(layer.getLabel()));
     }
 
     private void delete(@NotNull TileGroup group) {
         SimpleLayerProvider layer = tileLayers.get(group.parent());
-        layer.removeMarker(Key.of(group.id().toString()));
+        layer.removeMarker(Key.of("RG-" + group.hashCode()));
     }
 
-    private void delete(@NotNull MapWorld world, @NotNull Locality locality) {
+    private void delete(@NotNull MapWorld world, @NotNull Region region) {
         SimpleLayerProvider layer = defaultLayer(world);
-        layer.removeMarker(Key.of(locality.id().toString()));
+        layer.removeMarker(Key.of("RG-" + region.hashCode()));
     }
 
 }
