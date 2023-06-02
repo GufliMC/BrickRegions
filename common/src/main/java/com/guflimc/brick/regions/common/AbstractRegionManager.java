@@ -232,8 +232,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
         if (!(region instanceof DRegion)) {
             throw new IllegalArgumentException("The given region cannot be deleted.");
         }
-        return databaseContext.persistAsync(region)
-                .thenRun(() -> EventManager.INSTANCE.onSave(region));
+        return databaseContext.persistAsync(region);
     }
 
 //    @Override

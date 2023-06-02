@@ -35,27 +35,32 @@ public class SpigotEventManager extends EventManager {
     }
 
     @Override
-    public <T> void onAttributeChange(Region region, RegionAttributeKey<T> key, T previousValue, T value) {
+    public <T> void onAttributeChange(Region.Attributeable region, RegionAttributeKey<T> key, T previousValue, T value) {
         Bukkit.getServer().getPluginManager().callEvent(new RegionAttributeChangeEvent<>(region, !Bukkit.isPrimaryThread(), key, previousValue, value));
     }
 
     @Override
-    public <T> void onAttributeRemove(Region region, RegionAttributeKey<T> key, T previousValue) {
+    public <T> void onAttributeRemove(Region.Attributeable region, RegionAttributeKey<T> key, T previousValue) {
         Bukkit.getServer().getPluginManager().callEvent(new RegionAttributeRemoveEvent<>(region, !Bukkit.isPrimaryThread(), key, previousValue));
     }
 
     @Override
-    public void onRuleAdd(Region region, RegionRule rule) {
+    public void onRuleAdd(Region.Ruleable region, RegionRule rule) {
         Bukkit.getServer().getPluginManager().callEvent(new RegionRuleAddEvent(region, !Bukkit.isPrimaryThread(), rule));
     }
 
     @Override
-    public void onRuleRemove(Region region, RegionRule rule) {
+    public void onRuleRemove(Region.Ruleable region, RegionRule rule) {
         Bukkit.getServer().getPluginManager().callEvent(new RegionRuleRemoveEvent(region, !Bukkit.isPrimaryThread(), rule));
     }
 
     @Override
-    public void onSave(Region region) {
-        Bukkit.getServer().getPluginManager().callEvent(new RegionSaveEvent(region, !Bukkit.isPrimaryThread()));
+    public void onActivate(Region.Activateable region) {
+        Bukkit.getServer().getPluginManager().callEvent(new RegionActivateEvent(region, !Bukkit.isPrimaryThread()));
+    }
+
+    @Override
+    public void onDeactivate(Region.Activateable region) {
+        Bukkit.getServer().getPluginManager().callEvent(new RegionDeactivateEvent(region, !Bukkit.isPrimaryThread()));
     }
 }

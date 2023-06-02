@@ -10,11 +10,15 @@ import javax.persistence.Entity;
 import java.util.UUID;
 
 @Entity
-public class DKeyedPropertyRegion extends DKeyedRegion implements Region.PropertyModifiable {
+public class DKeyedPropertyRegion extends DKeyedRegion implements Region.PropertyModifiable, Region.ActiveModifiable {
 
     @Column(name = "region_priority", nullable = false)
     @DbDefault("0")
     protected int priority = 1;
+
+    @Column(name = "region_active", nullable = false)
+    @DbDefault("1")
+    protected boolean active = true;
 
     public DKeyedPropertyRegion() {
     }
@@ -32,5 +36,22 @@ public class DKeyedPropertyRegion extends DKeyedRegion implements Region.Propert
     public void setPriority(int priority) {
         this.priority = priority;
         EventManager.INSTANCE.onPropertyChange(this);
+    }
+
+    @Override
+    public boolean active() {
+        return active;
+    }
+
+    @Override
+    public void setActive(boolean active) {
+        if ( active == this.active ) return;
+        this.active = active;
+
+        if ( active ) {
+            EventManager.INSTANCE.onActivate(this);
+        } else {
+            EventManager.INSTANCE.onDeactivate(this);
+        }
     }
 }

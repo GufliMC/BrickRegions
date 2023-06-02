@@ -26,19 +26,22 @@ public abstract class EventManager {
     public void onPropertyChange(Region region) {
     }
 
-    public <T> void onAttributeChange(Region region, RegionAttributeKey<T> key, T previousValue, T value) {
+    public <T> void onAttributeChange(Region.Attributeable region, RegionAttributeKey<T> key, T previousValue, T value) {
     }
 
-    public <T> void onAttributeRemove(Region region, RegionAttributeKey<T> key, T previousValue) {
+    public <T> void onAttributeRemove(Region.Attributeable region, RegionAttributeKey<T> key, T previousValue) {
     }
 
-    public void onRuleAdd(Region region, RegionRule rule) {
+    public void onRuleAdd(Region.Ruleable region, RegionRule rule) {
     }
 
-    public void onRuleRemove(Region region, RegionRule rule) {
+    public void onRuleRemove(Region.Ruleable region, RegionRule rule) {
     }
 
-    public void onSave(Region region) {
+    public void onActivate(Region.Activateable region) {
+    }
+
+    public void onDeactivate(Region.Activateable region) {
     }
 
 }

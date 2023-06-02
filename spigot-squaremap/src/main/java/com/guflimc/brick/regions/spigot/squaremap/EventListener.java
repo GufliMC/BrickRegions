@@ -66,11 +66,6 @@ public class EventListener implements Listener {
         render(event.region());
     }
 
-    @EventHandler
-    public void onSave(RegionSaveEvent event) {
-        render(event.region());
-    }
-
     //
 
     private final Map<Region, Instant> queue = new ConcurrentHashMap<>();
