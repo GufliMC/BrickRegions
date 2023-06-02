@@ -154,6 +154,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     public Collection<Region> intersecting(@NotNull UUID worldId, @NotNull Shape3 shape) {
         return regions(worldId).stream()
                 .filter(rg -> rg instanceof Region.Shaped rs && shape.intersects(rs.shape()))
+                .filter(rg -> !(rg instanceof Region.Activateable ra) || ra.active())
                 .toList();
     }
 
@@ -193,7 +194,10 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public Collection<Region> regionsAt(@NotNull Location position) {
-        return regionEngine.regionsAt(position);
+        return regionEngine.regionsAt(position)
+                .stream()
+                .filter(rg -> !(rg instanceof Region.Activateable ra) || ra.active())
+                .collect(Collectors.toList());
     }
 
 //    @Override
