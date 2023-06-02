@@ -76,6 +76,10 @@ public class EventListener implements Listener {
     private final Map<Region, Instant> queue = new ConcurrentHashMap<>();
 
     private void render(Region region) {
+        if ( region instanceof Region.Activateable ra && !ra.active() ) {
+            return;
+        }
+
         queue.put(region, Instant.now());
     }
 
