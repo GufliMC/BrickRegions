@@ -123,6 +123,7 @@ public class SquaremapRenderer {
     }
 
     private void render(@NotNull SimpleLayerProvider layer, @NotNull Region.Shaped region) {
+        layer.removeMarker(Key.of("RG-" + region.hashCode()));
         render(layer, region, region.shape().contour());
     }
 

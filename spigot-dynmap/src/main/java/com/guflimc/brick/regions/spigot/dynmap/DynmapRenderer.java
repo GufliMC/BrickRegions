@@ -88,6 +88,7 @@ public class DynmapRenderer {
     }
 
     private void render(@NotNull World world, @NotNull Region.Shaped region) {
+        delete(region);
         render(this.markerSet, world, region, region.shape().contour());
     }
 
