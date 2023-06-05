@@ -43,7 +43,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -73,14 +73,23 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Superinterfaces:</dt>
-<dd><code><a href="../AttributedLocality.html" title="interface in com.guflimc.brick.regions.api.domain">AttributedLocality</a></code>, <code><a href="../Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a></code>, <code><a href="../modifiable/ModifiableAttributedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableAttributedLocality</a></code>, <code><a href="../modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a></code>, <code><a href="../modifiable/ModifiableProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableProtectedLocality</a></code>, <code><a href="../ProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain">ProtectedLocality</a></code></dd>
+<dd><code><a href="../Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">TileGroup</span><span class="extends-implements">
-extends <a href="../modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a>, <a href="../modifiable/ModifiableProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableProtectedLocality</a>, <a href="../modifiable/ModifiableAttributedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableAttributedLocality</a></span></div>
+extends <a href="../Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h2 id="nested-classes-inherited-from-class-com.guflimc.brick.regions.api.domain.Region">Nested classes/interfaces inherited from interface&nbsp;com.guflimc.brick.regions.api.domain.<a href="../Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a></h2>
+<code><a href="../Region.Activateable.html" title="interface in com.guflimc.brick.regions.api.domain">Region.Activateable</a>, <a href="../Region.ActiveModifiable.html" title="interface in com.guflimc.brick.regions.api.domain">Region.ActiveModifiable</a>, <a href="../Region.Attributeable.html" title="interface in com.guflimc.brick.regions.api.domain">Region.Attributeable</a>, <a href="../Region.AttributeModifiable.html" title="interface in com.guflimc.brick.regions.api.domain">Region.AttributeModifiable</a>, <a href="../Region.Keyed.html" title="interface in com.guflimc.brick.regions.api.domain">Region.Keyed</a>, <a href="../Region.PropertyModifiable.html" title="interface in com.guflimc.brick.regions.api.domain">Region.PropertyModifiable</a>, <a href="../Region.Ruleable.html" title="interface in com.guflimc.brick.regions.api.domain">Region.Ruleable</a>, <a href="../Region.RuleModifiable.html" title="interface in com.guflimc.brick.regions.api.domain">Region.RuleModifiable</a>, <a href="../Region.Shaped.html" title="interface in com.guflimc.brick.regions.api.domain">Region.Shaped</a>, <a href="../Region.World.html" title="interface in com.guflimc.brick.regions.api.domain">Region.World</a></code></div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
@@ -98,30 +107,15 @@ extends <a href="../modifiable/ModifiableLocality.html" title="interface in com.
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>com.guflimc.brick.math.common.geometry.shape2d.Shape2</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#shape()" class="member-name-link">shape</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain.tile">Tile</a>&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="TileKey.html" title="class in com.guflimc.brick.regions.api.domain.tile">TileKey</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#tiles()" class="member-name-link">tiles</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.guflimc.brick.regions.api.domain.AttributedLocality">Methods inherited from interface&nbsp;com.guflimc.brick.regions.api.domain.<a href="../AttributedLocality.html" title="interface in com.guflimc.brick.regions.api.domain">AttributedLocality</a></h3>
-<code><a href="../AttributedLocality.html#attribute(com.guflimc.brick.regions.api.domain.LocalityAttributeKey)">attribute</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.guflimc.brick.regions.api.domain.Locality">Methods inherited from interface&nbsp;com.guflimc.brick.regions.api.domain.<a href="../Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a></h3>
-<code><a href="../Locality.html#contains(com.guflimc.brick.math.common.geometry.pos3.Point3)">contains</a>, <a href="../Locality.html#id()">id</a>, <a href="../Locality.html#priority()">priority</a>, <a href="../Locality.html#worldId()">worldId</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.guflimc.brick.regions.api.domain.modifiable.ModifiableAttributedLocality">Methods inherited from interface&nbsp;com.guflimc.brick.regions.api.domain.modifiable.<a href="../modifiable/ModifiableAttributedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableAttributedLocality</a></h3>
-<code><a href="../modifiable/ModifiableAttributedLocality.html#removeAttribute(com.guflimc.brick.regions.api.domain.LocalityAttributeKey)">removeAttribute</a>, <a href="../modifiable/ModifiableAttributedLocality.html#setAttribute(com.guflimc.brick.regions.api.domain.LocalityAttributeKey,T)">setAttribute</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.guflimc.brick.regions.api.domain.modifiable.ModifiableLocality">Methods inherited from interface&nbsp;com.guflimc.brick.regions.api.domain.modifiable.<a href="../modifiable/ModifiableLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableLocality</a></h3>
-<code><a href="../modifiable/ModifiableLocality.html#setPriority(int)">setPriority</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.guflimc.brick.regions.api.domain.modifiable.ModifiableProtectedLocality">Methods inherited from interface&nbsp;com.guflimc.brick.regions.api.domain.modifiable.<a href="../modifiable/ModifiableProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain.modifiable">ModifiableProtectedLocality</a></h3>
-<code><a href="../modifiable/ModifiableProtectedLocality.html#addProtectionRule(int,com.guflimc.brick.regions.api.rules.RuleStatus,com.guflimc.brick.regions.api.rules.RuleTarget,com.guflimc.brick.regions.api.rules.RuleType...)">addProtectionRule</a>, <a href="../modifiable/ModifiableProtectedLocality.html#addProtectionRule(com.guflimc.brick.regions.api.rules.RuleStatus,com.guflimc.brick.regions.api.rules.RuleTarget,com.guflimc.brick.regions.api.rules.RuleType...)">addProtectionRule</a>, <a href="../modifiable/ModifiableProtectedLocality.html#removeRule(com.guflimc.brick.regions.api.domain.LocalityProtectionRule)">removeRule</a>, <a href="../modifiable/ModifiableProtectedLocality.html#removeRules()">removeRules</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.guflimc.brick.regions.api.domain.ProtectedLocality">Methods inherited from interface&nbsp;com.guflimc.brick.regions.api.domain.<a href="../ProtectedLocality.html" title="interface in com.guflimc.brick.regions.api.domain">ProtectedLocality</a></h3>
-<code><a href="../ProtectedLocality.html#rules()">rules</a></code></div>
+<h3 id="methods-inherited-from-class-com.guflimc.brick.regions.api.domain.Region">Methods inherited from interface&nbsp;com.guflimc.brick.regions.api.domain.<a href="../Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a></h3>
+<code><a href="../Region.html#contains(com.guflimc.brick.math.common.geometry.pos3.Point3)">contains</a>, <a href="../Region.html#priority()">priority</a>, <a href="../Region.html#worldId()">worldId</a></code></div>
 </section>
 </li>
 </ul>
@@ -136,7 +130,7 @@ extends <a href="../modifiable/ModifiableLocality.html" title="interface in com.
 <li>
 <section class="detail" id="tiles()">
 <h3>tiles</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Tile.html" title="interface in com.guflimc.brick.regions.api.domain.tile">Tile</a>&gt;</span>&nbsp;<span class="element-name">tiles</span>()</div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="TileKey.html" title="class in com.guflimc.brick.regions.api.domain.tile">TileKey</a>&gt;</span>&nbsp;<span class="element-name">tiles</span>()</div>
 </section>
 </li>
 <li>

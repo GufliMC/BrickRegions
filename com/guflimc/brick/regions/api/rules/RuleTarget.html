@@ -116,16 +116,16 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#register(java.lang.String,int,java.lang.Class,java.util.function.BiPredicate)" class="member-name-link">register</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  int&nbsp;priority,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;T,<wbr><a href="../domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&gt;&nbsp;predicate)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;T,<wbr><a href="../domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;predicate)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="RuleTarget.html" title="class in com.guflimc.brick.regions.api.rules">RuleTarget</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#register(java.lang.String,java.lang.Class,java.util.function.BiPredicate)" class="member-name-link">register</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;T,<wbr><a href="../domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&gt;&nbsp;predicate)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;T,<wbr><a href="../domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;predicate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#test(java.lang.Object,com.guflimc.brick.regions.api.domain.Locality)" class="member-name-link">test</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;subject,
- <a href="../domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&nbsp;locality)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#test(java.lang.Object,com.guflimc.brick.regions.api.domain.Region)" class="member-name-link">test</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;subject,
+ <a href="../domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="RuleTarget.html" title="class in com.guflimc.brick.regions.api.rules">RuleTarget</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
@@ -177,10 +177,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="test(java.lang.Object,com.guflimc.brick.regions.api.domain.Locality)">
+<section class="detail" id="test(java.lang.Object,com.guflimc.brick.regions.api.domain.Region)">
 <h3>test</h3>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">test</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;subject,
- <a href="../domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&nbsp;locality)</span></div>
+ <a href="../domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&nbsp;region)</span></div>
 </section>
 </li>
 <li>
@@ -202,7 +202,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="RuleTarget.html" title="class in com.guflimc.brick.regions.api.rules">RuleTarget</a></span>&nbsp;<span class="element-name">register</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  int&nbsp;priority,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;T,<wbr><a href="../domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&gt;&nbsp;predicate)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;T,<wbr><a href="../domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;predicate)</span></div>
 </section>
 </li>
 <li>
@@ -210,7 +210,7 @@ loadScripts(document, 'script');</script>
 <h3>register</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="RuleTarget.html" title="class in com.guflimc.brick.regions.api.rules">RuleTarget</a></span>&nbsp;<span class="element-name">register</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;T,<wbr><a href="../domain/Locality.html" title="interface in com.guflimc.brick.regions.api.domain">Locality</a>&gt;&nbsp;predicate)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;T,<wbr><a href="../domain/Region.html" title="interface in com.guflimc.brick.regions.api.domain">Region</a>&gt;&nbsp;predicate)</span></div>
 </section>
 </li>
 </ul>

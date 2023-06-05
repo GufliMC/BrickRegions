@@ -1,6 +1,6 @@
 com.guflimc.brick.regions.api
 com.guflimc.brick.regions.api.domain
-com.guflimc.brick.regions.api.domain.modifiable
+com.guflimc.brick.regions.api.domain.attribute
 com.guflimc.brick.regions.api.domain.tile
 com.guflimc.brick.regions.api.rules
 com.guflimc.brick.regions.api.selection
