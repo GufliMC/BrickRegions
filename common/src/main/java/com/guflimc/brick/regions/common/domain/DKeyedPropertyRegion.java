@@ -17,7 +17,7 @@ public class DKeyedPropertyRegion extends DKeyedRegion implements Region.Propert
     protected int priority = 1;
 
     @Column(name = "region_active", nullable = false)
-    @DbDefault("1")
+    @DbDefault("true")
     protected boolean active = true;
 
     public DKeyedPropertyRegion() {

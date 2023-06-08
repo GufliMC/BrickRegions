@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class DTileGroup extends DRegion implements TileGroup {
 
     @JoinColumn(name = "tilegroup_tileregion_id")
-    @ManyToOne(targetEntity = DTileRegion.class, fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(targetEntity = DTileRegion.class, fetch = FetchType.EAGER)
     private DTileRegion region;
 
     @Column(name = "tilegroup_tiles")

@@ -28,6 +28,13 @@ public class PlayerMoveTitlesListener implements Listener {
             Duration.of(250, ChronoUnit.MILLIS)
     );
 
+    private final static Title.Times EMPTY_TIMES = Title.Times.times(
+            Duration.of(0, ChronoUnit.MILLIS),
+            Duration.of(0, ChronoUnit.MILLIS),
+            Duration.of(0, ChronoUnit.MILLIS)
+    );
+
+
     private final SpigotBrickRegions plugin;
 
     public PlayerMoveTitlesListener(SpigotBrickRegions plugin) {
@@ -38,7 +45,7 @@ public class PlayerMoveTitlesListener implements Listener {
     public void onMove(PlayerRegionsMoveEvent event) {
         handle(event.player(),
                 event.uniqueFrom().stream().map(Region.class::cast).toList(),
-                event.uniqueFrom().stream().map(Region.class::cast).toList());
+                event.uniqueTo().stream().map(Region.class::cast).toList());
     }
 
 //    @EventHandler
@@ -97,20 +104,26 @@ public class PlayerMoveTitlesListener implements Listener {
         if (e.title() != null) {
             audience.sendTitlePart(TitlePart.TITLE, e.title());
         } else {
-            audience.sendTitlePart(TitlePart.TITLE, Component.empty());
+//            audience.sendTitlePart(TitlePart.TITLE, Component.empty()); // TODO only when leaving the region that is currently showing at title
         }
 
         if (e.subtitle() != null) {
             audience.sendTitlePart(TitlePart.SUBTITLE, e.subtitle());
         } else {
-            audience.sendTitlePart(TitlePart.SUBTITLE, Component.empty());
+//            audience.sendTitlePart(TitlePart.SUBTITLE, Component.empty()); // TODO only when leaving the region that is currently showing at title
         }
 
         if (e.actionbar() != null) {
             audience.sendActionBar(e.actionbar());
+        } else {
+//            audience.sendActionBar(Component.empty()); // TODO only when leaving the region that is currently showing at title
         }
 
-        audience.sendTitlePart(TitlePart.TIMES, DEFAULT_TIMES);
+        if ( e.title() != null || e.subtitle() != null || e.actionbar() != null ) {
+            audience.sendTitlePart(TitlePart.TIMES, DEFAULT_TIMES);
+        } else {
+//            audience.sendTitlePart(TitlePart.TIMES, EMPTY_TIMES);
+        }
     }
 
 }
