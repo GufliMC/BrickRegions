@@ -7,9 +7,9 @@ import com.guflimc.brick.regions.api.domain.Region;
 import io.ebean.annotation.DbDefault;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
 import java.util.UUID;
 
 @Entity

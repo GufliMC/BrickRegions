@@ -9,7 +9,7 @@ import io.ebean.annotation.DbDefault;
 import io.ebean.annotation.DbForeignKey;
 import io.ebean.annotation.Index;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;

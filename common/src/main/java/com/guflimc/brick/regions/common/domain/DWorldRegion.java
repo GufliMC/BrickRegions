@@ -4,7 +4,7 @@ import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.regions.api.domain.Region;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import java.util.UUID;
 
 @Entity

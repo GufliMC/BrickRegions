@@ -30,8 +30,6 @@ dependencies {
     implementation 'com.guflimc.config:toml:+'
 }
 
-compileJava.options.compilerArgs.add '-parameters'
-
 bukkit {
     name = rootProject.name
     main = project.group + '.spigot.SpigotBrickRegions'

@@ -24,6 +24,12 @@ subprojects {
         maven { url 'https://repo.spongepowered.org/maven' }
         maven { url "https://repo.jorisg.com/snapshots" }
     }
+
+    compileJava {
+        options.compilerArgs += ["-parameters"]
+        options.fork = true
+        options.forkOptions.executable = 'javac'
+    }
 }
 
 apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-default.gradle'

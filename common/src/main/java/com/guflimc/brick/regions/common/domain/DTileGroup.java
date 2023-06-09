@@ -11,7 +11,7 @@ import com.guflimc.brick.regions.api.domain.tile.TileKey;
 import com.guflimc.brick.regions.api.domain.tile.TileRegion;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 

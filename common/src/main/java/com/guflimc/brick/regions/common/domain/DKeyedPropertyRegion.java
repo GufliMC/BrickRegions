@@ -5,8 +5,8 @@ import com.guflimc.brick.regions.common.EventManager;
 import io.ebean.annotation.DbDefault;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import java.util.UUID;
 
 @Entity

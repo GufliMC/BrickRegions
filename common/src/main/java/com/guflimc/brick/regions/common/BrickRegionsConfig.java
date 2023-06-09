@@ -4,7 +4,7 @@ import com.guflimc.brick.orm.ebean.database.EbeanConfig;
 
 public class BrickRegionsConfig {
 
-    public transient EbeanConfig database = new EbeanConfig();
+    public EbeanConfig database = new EbeanConfig();
 
     public BrickRegionsConfig() {
         database.dsn = "jdbc:h2:file:./plugins/BrickRegions/data/database.h2;MODE=MySQL";

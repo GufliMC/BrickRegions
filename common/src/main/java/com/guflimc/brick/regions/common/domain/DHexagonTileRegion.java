@@ -9,9 +9,9 @@ import com.guflimc.brick.math.common.geometry.shape2d.Shape2;
 import com.guflimc.brick.regions.api.domain.tile.TileGroup;
 import com.guflimc.brick.regions.api.domain.tile.TileKey;
 import com.guflimc.brick.regions.common.EventManager;
+import jakarta.persistence.Entity;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Entity;
 import java.util.*;
 
 @Entity

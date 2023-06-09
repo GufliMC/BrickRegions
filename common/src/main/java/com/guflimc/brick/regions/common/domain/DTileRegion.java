@@ -13,7 +13,7 @@ import com.guflimc.brick.regions.common.EventManager;
 import io.ebean.annotation.DbDefault;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
