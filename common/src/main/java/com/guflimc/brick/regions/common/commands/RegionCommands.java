@@ -3,10 +3,11 @@ package com.guflimc.brick.regions.common.commands;
 import com.guflimc.brick.i18n.api.I18nAPI;
 import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleTarget;
-import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.api.rules.Rule;
+import com.guflimc.brick.regions.api.rules.attributes.RuleAction;
+import com.guflimc.brick.regions.api.rules.attributes.RuleActionType;
+import com.guflimc.brick.regions.api.rules.attributes.RuleCondition;
+import com.guflimc.brick.regions.api.rules.attributes.RuleStatus;
 import com.guflimc.colonel.annotation.annotations.Command;
 import com.guflimc.colonel.annotation.annotations.parameter.Parameter;
 import com.guflimc.colonel.annotation.annotations.parameter.Source;
@@ -16,7 +17,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RegionCommands {
@@ -37,7 +37,7 @@ public class RegionCommands {
     public <R extends Region.Keyed & Region.RuleModifiable> void rulesList(@Source Audience sender,
                                                                            @Parameter(parser = "ruleable", completer = "ruleable") R region) {
 
-        List<RegionRule> rules = region.rules();
+        List<Rule> rules = region.rules();
         if (rules.isEmpty()) {
             I18nAPI.get(this).send(sender, "cmd.region.rule.list.error.empty", region.name());
             return;
@@ -45,7 +45,7 @@ public class RegionCommands {
 
         List<Component> result = new ArrayList<>();
         for (int i = 0; i < rules.size(); i++) {
-            RegionRule rule = rules.get(i);
+            Rule rule = rules.get(i);
             result.add(I18nAPI.get(this).translate(sender, "cmd.region.rule.list.format", (i + 1), rule));
         }
 
@@ -58,13 +58,15 @@ public class RegionCommands {
     public <R extends Region.Keyed & Region.RuleModifiable> void rulesAdd(@Source Audience sender,
                                                                           @Parameter(parser = "ruleable", completer = "ruleable") R region,
                                                                           @Parameter RuleStatus status,
-                                                                          @Parameter RuleTarget target,
-                                                                          @Parameter RuleType type) {
+                                                                          @Parameter RuleCondition condition,
+                                                                          @Parameter RuleActionType type,
+                                                                          @Parameter RuleAction action,
+                                                                          @Parameter int priority) {
 
-        RegionRule rule = region.rules().stream()
+        Rule rule = region.rules().stream()
                 .filter(r -> r.status().equals(status))
-                .filter(r -> r.target().equals(target))
-                .filter(r -> Arrays.asList(r.types()).contains(type))
+                .filter(r -> r.condition().equals(condition))
+                .filter(r -> r.action().equals(action))
                 .findFirst().orElse(null);
 
         if (rule != null) {
@@ -72,10 +74,21 @@ public class RegionCommands {
             return;
         }
 
-        rule = region.addRule(status, target, type);
+        rule = region.addRule(status, condition, action, priority);
         RegionAPI.get().persist(region);
 
         I18nAPI.get(this).send(sender, "cmd.region.rule.add", rule, region.name());
+    }
+
+    @Command("br region rule add")
+    @Permission("brickregions.region.rule.add")
+    public <R extends Region.Keyed & Region.RuleModifiable> void rulesAdd(@Source Audience sender,
+                                                                          @Parameter(parser = "ruleable", completer = "ruleable") R region,
+                                                                          @Parameter RuleStatus status,
+                                                                          @Parameter RuleCondition condition,
+                                                                          @Parameter RuleActionType type,
+                                                                          @Parameter RuleAction action) {
+        rulesAdd(sender, region, status, condition, type, action, 0);
     }
 
     @Command("br region rule remove")
@@ -89,7 +102,7 @@ public class RegionCommands {
             return;
         }
 
-        RegionRule rule = region.rules().get(index - 1);
+        Rule rule = region.rules().get(index - 1);
         region.removeRule(rule);
         RegionAPI.get().persist(region);
 

@@ -1,13 +1,14 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
-import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
+
+import com.guflimc.brick.regions.api.rules.Rule;
 
 public class PlayerRegionsDenyByRuleEvent extends PlayerRegionsEvent {
 
-    private final RegionRule rule;
+    private final Rule rule;
     private final PlayerRegionsEvent source;
 
-    public PlayerRegionsDenyByRuleEvent(PlayerRegionsEvent source, RegionRule rule) {
+    public PlayerRegionsDenyByRuleEvent(PlayerRegionsEvent source, Rule rule) {
         super(source.player(), source.regions());
         this.rule = rule;
         this.source = source;
@@ -17,7 +18,7 @@ public class PlayerRegionsDenyByRuleEvent extends PlayerRegionsEvent {
         return source;
     }
 
-    public RegionRule rule() {
+    public Rule rule() {
         return rule;
     }
 

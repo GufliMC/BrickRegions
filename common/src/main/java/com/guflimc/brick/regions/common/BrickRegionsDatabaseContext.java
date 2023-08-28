@@ -49,8 +49,8 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
             Shape2Converter.class,
             Point2Converter.class,
             ComponentConverter.class,
-            DRegionRule.RuleTargetConverter.class,
-            DRegionRule.RuleTypeSetConverter.class,
+            DRegionRule.RuleConditionConverter.class,
+            DRegionRule.RuleActionConverter.class,
             DTileGroup.TileKeySetConverter.class,
     };
 

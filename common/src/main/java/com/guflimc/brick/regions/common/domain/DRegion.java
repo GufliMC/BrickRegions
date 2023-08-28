@@ -3,15 +3,14 @@ package com.guflimc.brick.regions.common.domain;
 import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
-import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleTarget;
-import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.api.rules.Rule;
+import com.guflimc.brick.regions.api.rules.attributes.RuleAction;
+import com.guflimc.brick.regions.api.rules.attributes.RuleCondition;
+import com.guflimc.brick.regions.api.rules.attributes.RuleStatus;
 import com.guflimc.brick.regions.common.EventManager;
-import io.ebean.annotation.Index;
+import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
-import jakarta.persistence.*;
 import java.util.*;
 
 @Entity
@@ -109,24 +108,26 @@ public class DRegion implements Region, Region.AttributeModifiable, Region.RuleM
     // rules
 
     @Override
-    public List<RegionRule> rules() {
+    public List<Rule> rules() {
         return Collections.unmodifiableList(rules);
     }
 
-    public RegionRule addRule(int priority, @NotNull RuleStatus status, @NotNull RuleTarget target, RuleType @NotNull ... ruleTypes) {
-        DRegionRule rule = new DRegionRule(this, priority, status, target, ruleTypes);
+    @Override
+    public Rule addRule(@NotNull RuleStatus status, @NotNull RuleCondition condition, @NotNull RuleAction action, int priority) {
+        DRegionRule rule = new DRegionRule(this, priority, status, condition, action);
         rules.add(rule);
 
         EventManager.INSTANCE.onRuleAdd(this, rule);
         return rule;
     }
 
-    public RegionRule addRule(@NotNull RuleStatus status, @NotNull RuleTarget target, RuleType @NotNull ... ruleTypes) {
-        return addRule(0, status, target, ruleTypes);
+    @Override
+    public Rule addRule(@NotNull RuleStatus status, @NotNull RuleCondition condition, @NotNull RuleAction action) {
+        return addRule(status, condition, action, 0);
     }
 
     @Override
-    public void removeRule(@NotNull RegionRule rule) {
+    public void removeRule(@NotNull Rule rule) {
         if (rule instanceof DRegionRule && rules.contains(rule)) {
             rules.remove(rule);
             EventManager.INSTANCE.onRuleRemove(this, rule);

@@ -1,25 +1,24 @@
 package com.guflimc.brick.regions.common.domain;
 
-import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleTarget;
-import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.api.RegionAPI;
+import com.guflimc.brick.regions.api.rules.Rule;
+import com.guflimc.brick.regions.api.rules.attributes.RuleAction;
+import com.guflimc.brick.regions.api.rules.attributes.RuleActionType;
+import com.guflimc.brick.regions.api.rules.attributes.RuleCondition;
+import com.guflimc.brick.regions.api.rules.attributes.RuleStatus;
 import io.ebean.annotation.ConstraintMode;
 import io.ebean.annotation.DbDefault;
 import io.ebean.annotation.DbForeignKey;
 import io.ebean.annotation.Index;
-
 import jakarta.persistence.*;
-import java.util.Arrays;
-import java.util.Objects;
+
 import java.util.UUID;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "region_rules")
-@Index(columnNames = {"region_id", "status", "target", "types"}, unique = true)
-public class DRegionRule implements RegionRule {
+@Index(columnNames = {"region_id", "status", "condition", "action"}, unique = true)
+public class DRegionRule implements Rule {
 
     @Id
     @GeneratedValue
@@ -34,12 +33,11 @@ public class DRegionRule implements RegionRule {
     private RuleStatus status;
 
     @Column(nullable = false)
-    @Convert(converter = RuleTargetConverter.class)
-    private RuleTarget target;
+    @Convert(converter = RuleConditionConverter.class)
+    private RuleCondition condition;
 
-    @Column(nullable = false, name = "types")
-    @Convert(converter = RuleTypeSetConverter.class)
-    private RuleTypeSet typeSet;
+    @Convert(converter = RuleActionConverter.class)
+    private RuleAction action;
 
     @ManyToOne(optional = false)
     @DbForeignKey(onDelete = ConstraintMode.CASCADE)
@@ -48,16 +46,16 @@ public class DRegionRule implements RegionRule {
     public DRegionRule() {
     }
 
-    public DRegionRule(DRegion region, int priority, RuleStatus status, RuleTarget target, RuleType... types) {
+    public DRegionRule(DRegion region, int priority, RuleStatus status, RuleCondition condition, RuleAction action) {
         this.region = region;
         this.priority = priority;
         this.status = status;
-        this.target = target;
-        this.typeSet = new RuleTypeSet(types);
+        this.condition = condition;
+        this.action = action;
     }
 
-    public DRegionRule(DRegion region, RuleStatus status, RuleTarget target, RuleType... types) {
-        this(region, 0, status, target, types);
+    public DRegionRule(DRegion region, RuleStatus status, RuleCondition condition, RuleAction action) {
+        this(region, 0, status, condition, action);
     }
 
     public DRegion region() {
@@ -75,54 +73,50 @@ public class DRegionRule implements RegionRule {
     }
 
     @Override
-    public RuleTarget target() {
-        return target;
+    public RuleCondition condition() {
+        return condition;
     }
 
     @Override
-    public RuleType[] types() {
-        return typeSet.types;
+    public RuleAction action() {
+        return action;
     }
 
     @Override
     public String toString() {
-        return status.name() + " " + target.name() + " " + Arrays.stream(typeSet.types).map(RuleType::name)
-                .collect(Collectors.joining(", "));
+        return status.name() + " " + condition.name() + " " + action.type().name() + " " + action.name();
     }
 
     //
 
-    private record RuleTypeSet(RuleType[] types) {
-    }
+    public static class RuleActionConverter implements AttributeConverter<RuleAction, String> {
 
-    public static class RuleTypeSetConverter implements AttributeConverter<RuleTypeSet, String> {
-
-        private final static String PATTERN = Pattern.quote(", ");
 
         @Override
-        public String convertToDatabaseColumn(RuleTypeSet attribute) {
-            return Arrays.stream(attribute.types).map(RuleType::name).collect(Collectors.joining(","));
+        public String convertToDatabaseColumn(RuleAction attribute) {
+            return attribute.type().name() + ";" + attribute.name();
         }
 
         @Override
-        public RuleTypeSet convertToEntityAttribute(String dbData) {
-            return new RuleTypeSet(Arrays.stream(dbData.split(PATTERN))
-                    .map(RuleType::valueOf)
-                    .filter(Objects::nonNull)
-                    .toArray(RuleType[]::new));
+        public RuleAction convertToEntityAttribute(String dbData) {
+            String[] split = dbData.split(Pattern.quote(";"));
+            RuleActionType type = RegionAPI.get().rules().actionType(split[0]).orElseThrow();
+            return RegionAPI.get().rules().action(split[1], type).orElseThrow();
         }
     }
 
-    public static class RuleTargetConverter implements AttributeConverter<RuleTarget, String> {
+    public static class RuleConditionConverter implements AttributeConverter<RuleCondition, String> {
+
         @Override
-        public String convertToDatabaseColumn(RuleTarget attribute) {
+        public String convertToDatabaseColumn(RuleCondition attribute) {
             return attribute.name();
         }
 
         @Override
-        public RuleTarget convertToEntityAttribute(String dbData) {
-            return RuleTarget.valueOf(dbData);
+        public RuleCondition convertToEntityAttribute(String dbData) {
+            return RegionAPI.get().rules().condition(dbData).orElseThrow();
         }
+
     }
 
 }

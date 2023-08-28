@@ -1,10 +1,12 @@
 package com.guflimc.brick.regions.spigot.rules;
 
 import com.guflimc.brick.i18n.spigot.api.SpigotI18nAPI;
-import com.guflimc.brick.regions.api.domain.Region;
-import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.api.rules.Rule;
+import com.guflimc.brick.regions.api.rules.action.RuleActionBase;
+import com.guflimc.brick.regions.api.rules.attributes.RuleAction;
+import com.guflimc.brick.regions.api.rules.attributes.RuleStatus;
+import com.guflimc.brick.regions.common.rules.attributes.BaseRuleAction;
+import com.guflimc.brick.regions.spigot.api.SpigotRegionAPI;
 import com.guflimc.brick.regions.spigot.api.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,12 +16,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import java.util.stream.Collectors;
-
 public class RuleHandler implements Listener {
 
-    private boolean shouldCancel(PlayerRegionsEvent event, RuleType type) {
-        RegionRule rule = RegionRule.match(event.player(), type, event.regions()).orElse(null);
+    private boolean shouldCancel(PlayerRegionsEvent event, RuleAction action) {
+        Rule rule = SpigotRegionAPI.get().rules().match(event.player(), event.regions(), action).orElse(null);
         if (rule == null || rule.status() == RuleStatus.ALLOW) {
             return false; // DEFAULT ALLOWED
         }
@@ -33,7 +33,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockBreak(PlayerRegionsBlockBreakEvent event) {
-        if (shouldCancel(event, RuleType.BUILD)) {
+        if (shouldCancel(event, SpigotRegionAPI.get().rules().action())) {
             event.setCancelled(true);
             SpigotI18nAPI.get(this).send(event.player(), "protection.build");
         }
@@ -41,7 +41,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockPlace(PlayerRegionsBlockPlaceEvent event) {
-        if (shouldCancel(event, RuleType.BUILD)) {
+        if (shouldCancel(event, RuleActionBase.BUILD)) {
             event.setCancelled(true);
             SpigotI18nAPI.get(this).send(event.player(), "protection.build");
         }
@@ -51,7 +51,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onEntityBreak(PlayerRegionsEntityBreakEvent event) {
-        if (shouldCancel(event, RuleType.BUILD)) {
+        if (shouldCancel(event, RuleActionBase.BUILD)) {
             event.setCancelled(true);
             SpigotI18nAPI.get(this).send(event.player(), "protection.build");
         }
@@ -59,7 +59,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onEntityPlace(PlayerRegionsEntityPlaceEvent event) {
-        if (shouldCancel(event, RuleType.BUILD)) {
+        if (shouldCancel(event, RuleActionBase.BUILD)) {
             event.setCancelled(true);
             SpigotI18nAPI.get(this).send(event.player(), "protection.build");
         }
@@ -69,7 +69,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockInteract(PlayerRegionsBlockInteractEvent event) {
-        if (shouldCancel(event, RuleType.INTERACT)) {
+        if (shouldCancel(event, RuleActionBase.INTERACT)) {
             event.setCancelled(true);
 
             Material type = event.block().getType();
@@ -84,7 +84,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onEntityInteract(PlayerRegionsEntityInteractEvent event) {
-        if (shouldCancel(event, RuleType.INTERACT)) {
+        if (shouldCancel(event, RuleActionBase.INTERACT)) {
             event.setCancelled(true);
             SpigotI18nAPI.get(this).send(event.player(), "protection.interact");
         }
@@ -94,7 +94,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onContainerOpen(PlayerRegionsContainerOpenEvent event) {
-        if (shouldCancel(event, RuleType.CONTAINER)) {
+        if (shouldCancel(event, RuleActionBase.CONTAINER)) {
             event.setCancelled(true);
             SpigotI18nAPI.get(this).send(event.player(), "protection.container");
         }
@@ -105,14 +105,14 @@ public class RuleHandler implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onEntityDamage(PlayerRegionsEntityDamageEvent event) {
         if (event.entity() instanceof Monster) {
-            if (shouldCancel(event, RuleType.ATTACK_HOSTILE_MOBS)) {
+            if (shouldCancel(event, RuleActionBase.ATTACK_HOSTILE_MOBS)) {
                 event.setCancelled(true);
                 SpigotI18nAPI.get(this).send(event.player(), "protection.attack_hostile_mobs");
             }
             return;
         }
 
-        if (shouldCancel(event, RuleType.ATTACK_NEUTRAL_MOBS)) {
+        if (shouldCancel(event, RuleActionBase.ATTACK_NEUTRAL_MOBS)) {
             event.setCancelled(true);
             SpigotI18nAPI.get(this).send(event.player(), "protection.attack_neutral_mobs");
         }
@@ -122,7 +122,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onCollectItem(PlayerRegionsCollectItemEvent event) {
-        if (shouldCancel(event, RuleType.COLLECT_ITEMS)) {
+        if (shouldCancel(event, RuleActionBase.COLLECT_ITEMS)) {
             event.setCancelled(true);
         }
     }
@@ -131,7 +131,7 @@ public class RuleHandler implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onDropItem(PlayerRegionsDropItemEvent event) {
-        if (shouldCancel(event, RuleType.DROP_ITEMS)) {
+        if (shouldCancel(event, RuleActionBase.DROP_ITEMS)) {
             event.setCancelled(true);
             SpigotI18nAPI.get(this).send(event.player(), "protection.drop_items");
         }
@@ -144,7 +144,7 @@ public class RuleHandler implements Listener {
         if (!(event.entity() instanceof Player)) {
             return;
         }
-        if (shouldCancel(event, RuleType.PVP)) {
+        if (shouldCancel(event, RuleActionBase.PVP)) {
             event.setCancelled(true);
             SpigotI18nAPI.get(this).send(event.player(), "protection.pvp");
         }

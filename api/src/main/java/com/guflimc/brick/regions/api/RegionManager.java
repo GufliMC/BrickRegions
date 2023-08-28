@@ -5,6 +5,7 @@ import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.rules.RuleManager;
 import com.guflimc.brick.regions.api.selection.Selection;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,5 +69,9 @@ public interface RegionManager<S> {
     <T extends Region.Keyed & Region.Shaped> CompletableFuture<T> create(@NotNull String name, @NotNull Selection selection);
 
     <T extends Region.Keyed & TileRegion> CompletableFuture<T> createHexagonTileRegion(@NotNull String name, @NotNull UUID worldId, int radius);
+
+    //
+
+    RuleManager<S> rules();
 
 }

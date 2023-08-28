@@ -1,20 +1,20 @@
 package com.guflimc.brick.regions.spigot.api.events;
 
-import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
+import com.guflimc.brick.regions.api.rules.Rule;;
 import com.guflimc.brick.regions.api.domain.Region;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class RegionRuleAddEvent extends RegionEvent {
 
-    private final RegionRule rule;
+    private final Rule rule;
 
-    public RegionRuleAddEvent(Region region, boolean async, RegionRule rule) {
+    public RegionRuleAddEvent(Region region, boolean async, Rule rule) {
         super(region, async);
         this.rule = rule;
     }
 
-    public RegionRule rule() {
+    public Rule rule() {
         return rule;
     }
 

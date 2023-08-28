@@ -7,9 +7,11 @@ import com.guflimc.brick.regions.api.RegionManager;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
 import com.guflimc.brick.regions.api.domain.tile.TileRegion;
+import com.guflimc.brick.regions.api.rules.RuleManager;
 import com.guflimc.brick.regions.api.selection.Selection;
 import com.guflimc.brick.regions.common.domain.*;
 import com.guflimc.brick.regions.common.engine.RegionEngine;
+import com.guflimc.brick.regions.common.rules.BaseRuleManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
@@ -19,15 +21,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public abstract class AbstractRegionManager<P> implements RegionManager<P> {
+public abstract class BaseRegionManager<P> implements RegionManager<P> {
 
     private final Map<P, Selection> selections = new ConcurrentHashMap<>();
     private final RegionEngine regionEngine = new RegionEngine();
 
     private final BrickRegionsDatabaseContext databaseContext;
+    private final BaseRuleManager<P> ruleManager;
 
-    protected AbstractRegionManager(BrickRegionsDatabaseContext databaseContext) {
+    protected BaseRegionManager(BrickRegionsDatabaseContext databaseContext) {
         this.databaseContext = databaseContext;
+
+        this.ruleManager = new BaseRuleManager<>();
+
     }
 
     public void loadWorld(@NotNull UUID worldId) {
@@ -154,7 +160,6 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     public Collection<Region> intersecting(@NotNull UUID worldId, @NotNull Shape3 shape) {
         return regions(worldId).stream()
                 .filter(rg -> rg instanceof Region.Shaped rs && shape.intersects(rs.shape()))
-                .filter(rg -> !(rg instanceof Region.Activateable ra) || ra.active())
                 .toList();
     }
 
@@ -194,10 +199,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
     @Override
     public Collection<Region> regionsAt(@NotNull Location position) {
-        return regionEngine.regionsAt(position)
-                .stream()
-                .filter(rg -> !(rg instanceof Region.Activateable ra) || ra.active())
-                .collect(Collectors.toList());
+        return regionEngine.regionsAt(position);
     }
 
 //    @Override
@@ -290,6 +292,11 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
             EventManager.INSTANCE.onCreate(region);
             return (T) region;
         });
+    }
+
+    @Override
+    public RuleManager<P> rules() {
+        return ruleManager;
     }
 
 }

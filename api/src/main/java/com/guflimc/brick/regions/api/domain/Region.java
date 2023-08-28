@@ -5,10 +5,10 @@ import com.guflimc.brick.math.common.geometry.pos3.Point3;
 import com.guflimc.brick.math.common.geometry.pos3.Vector3;
 import com.guflimc.brick.math.common.geometry.shape3d.Shape3;
 import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
-import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleTarget;
-import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.api.rules.Rule;
+import com.guflimc.brick.regions.api.rules.attributes.RuleAction;
+import com.guflimc.brick.regions.api.rules.attributes.RuleCondition;
+import com.guflimc.brick.regions.api.rules.attributes.RuleStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -50,33 +50,19 @@ public interface Region {
 
     static interface Ruleable extends Region {
 
-        List<RegionRule> rules();
+        List<Rule> rules();
 
     }
 
     static interface RuleModifiable extends Ruleable {
 
-        RegionRule addRule(int priority, @NotNull RuleStatus status, @NotNull RuleTarget target, @NotNull RuleType... ruleTypes);
+        Rule addRule(@NotNull RuleStatus status, @NotNull RuleCondition condition, @NotNull RuleAction action);
 
-        default RegionRule addRule(@NotNull RuleStatus status, @NotNull RuleTarget target, @NotNull RuleType... ruleTypes) {
-            return addRule(0, status, target, ruleTypes);
-        }
+        Rule addRule(@NotNull RuleStatus status, @NotNull RuleCondition condition, @NotNull RuleAction action, int priority);
 
-        void removeRule(@NotNull RegionRule rule);
+        void removeRule(@NotNull Rule rule);
 
         void removeRules();
-
-    }
-
-    static interface Activateable extends Region {
-
-        boolean active();
-
-    }
-
-    static interface ActiveModifiable extends Region, Activateable {
-
-        void setActive(boolean active);
 
     }
 

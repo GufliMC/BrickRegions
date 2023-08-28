@@ -6,9 +6,10 @@ import com.guflimc.brick.regions.api.RegionAPI;
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
 import com.guflimc.brick.regions.api.domain.tile.TileRegion;
-import com.guflimc.brick.regions.api.rules.RuleStatus;
-import com.guflimc.brick.regions.api.rules.RuleTarget;
-import com.guflimc.brick.regions.api.rules.RuleType;
+import com.guflimc.brick.regions.api.rules.attributes.RuleAction;
+import com.guflimc.brick.regions.api.rules.attributes.RuleActionType;
+import com.guflimc.brick.regions.api.rules.attributes.RuleCondition;
+import com.guflimc.brick.regions.api.rules.attributes.RuleStatus;
 import com.guflimc.brick.regions.api.selection.SelectionType;
 import com.guflimc.colonel.annotation.annotations.Completer;
 import com.guflimc.colonel.annotation.annotations.Parser;
@@ -186,43 +187,66 @@ public class RegionArguments<S> {
         return attribute;
     }
 
-    // RULE TYPE
-
-    @Parser(type = RuleType.class)
-    public RuleType ruleType(@Source Audience audience, @Input String input) {
-        return Optional.ofNullable(RuleType.valueOf(input.toUpperCase()))
-                .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.ruletype", input)));
-    }
-
-    @Completer(type = RuleType.class)
-    public List<String> ruleType() {
-        return Arrays.stream(RuleType.values()).map(RuleType::name).toList();
-    }
-
-    // RULE TARGET
-
-    @Parser(type = RuleTarget.class)
-    public RuleTarget ruleTarget(@Source Audience audience, @Input String input) {
-        return Optional.ofNullable(RuleTarget.valueOf(input.toUpperCase()))
-                .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.ruletarget", input)));
-    }
-
-    @Completer(type = RuleTarget.class)
-    public List<String> ruleTarget() {
-        return Arrays.stream(RuleType.values()).map(RuleType::name).toList();
-    }
-
     // RULE STATUS
 
     @Parser(type = RuleStatus.class)
     public RuleStatus ruleStatus(@Source Audience audience, @Input String input) {
         return Arrays.stream(RuleStatus.values()).filter(rs -> rs.name().equalsIgnoreCase(input)).findFirst()
-                .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.rulestatus", input)));
+                .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.rule.status", input)));
     }
 
     @Completer(type = RuleStatus.class)
     public List<String> ruleStatus() {
         return Arrays.stream(RuleStatus.values()).map(RuleStatus::name).toList();
+    }
+
+
+    // RULE CONDITION
+
+    @Parser(type = RuleCondition.class)
+    public RuleCondition ruleCondition(@Source Audience audience, @Input String input) {
+        return RegionAPI.get().rules().condition(input.toUpperCase())
+                .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.rule.condition", input)));
+    }
+
+    @Completer(type = RuleCondition.class)
+    public List<String> ruleCondition() {
+        return RegionAPI.get().rules().conditions()
+                .stream()
+                .map(RuleCondition::name)
+                .toList();
+    }
+
+    // RULE ACTION TYPE
+
+    @Parser(type = RuleActionType.class)
+    public RuleActionType ruleActionType(@Source Audience audience, @Input String input) {
+        return RegionAPI.get().rules().actionType(input.toUpperCase())
+                .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.rule.actiontype", input)));
+    }
+
+    @Completer(type = RuleActionType.class)
+    public List<String> ruleActionType() {
+        return RegionAPI.get().rules().actionTypes()
+                .stream()
+                .map(RuleActionType::name)
+                .toList();
+    }
+
+    // RULE ACTION
+
+    @Parser(type = RuleAction.class)
+    public RuleAction ruleAction(@Source Audience audience, @Input RuleActionType type, @Input String input) {
+        return RegionAPI.get().rules().action(input.toUpperCase(), type)
+                .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.rule.action", input)));
+    }
+
+    @Completer(type = RuleAction.class)
+    public List<String> ruleAction() {
+        return RegionAPI.get().rules().actions()
+                .stream()
+                .map(RuleAction::name)
+                .toList();
     }
 
     // SELECTION TYPE

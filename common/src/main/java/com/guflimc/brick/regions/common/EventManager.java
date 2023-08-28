@@ -2,7 +2,8 @@ package com.guflimc.brick.regions.common;
 
 import com.guflimc.brick.regions.api.domain.Region;
 import com.guflimc.brick.regions.api.domain.attribute.RegionAttributeKey;
-import com.guflimc.brick.regions.api.domain.attribute.RegionRule;
+import com.guflimc.brick.regions.api.rules.Rule;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class EventManager {
 
@@ -11,37 +12,31 @@ public abstract class EventManager {
 
     //
 
-    public void onCreate(Region region) {
+    public void onCreate(@NotNull Region region) {
     }
 
-    public void onDelete(Region region) {
+    public void onDelete(@NotNull Region region) {
     }
 
-    public void onRegister(Region region) {
+    public void onRegister(@NotNull Region region) {
     }
 
-    public void onUnregister(Region region) {
+    public void onUnregister(@NotNull Region region) {
     }
 
-    public void onPropertyChange(Region region) {
+    public void onPropertyChange(@NotNull Region region) {
     }
 
-    public <T> void onAttributeChange(Region.Attributeable region, RegionAttributeKey<T> key, T previousValue, T value) {
+    public <T> void onAttributeChange(@NotNull Region.Attributeable region, @NotNull RegionAttributeKey<T> key, T previousValue, T value) {
     }
 
-    public <T> void onAttributeRemove(Region.Attributeable region, RegionAttributeKey<T> key, T previousValue) {
+    public <T> void onAttributeRemove(@NotNull Region.Attributeable region, @NotNull RegionAttributeKey<T> key, T previousValue) {
     }
 
-    public void onRuleAdd(Region.Ruleable region, RegionRule rule) {
+    public void onRuleAdd(@NotNull Region.Ruleable region, @NotNull Rule rule) {
     }
 
-    public void onRuleRemove(Region.Ruleable region, RegionRule rule) {
-    }
-
-    public void onActivate(Region.Activateable region) {
-    }
-
-    public void onDeactivate(Region.Activateable region) {
+    public void onRuleRemove(@NotNull Region.Ruleable region, @NotNull Rule rule) {
     }
 
 }
