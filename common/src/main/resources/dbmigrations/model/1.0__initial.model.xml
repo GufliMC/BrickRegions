@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
     <changeSet type="apply">
-        <createTable name="regions" identityType="external" pkName="pk_regions">
+        <createTable name="&quot;regions&quot;" identityType="external" pkName="&quot;pk_regions&quot;">
             <column name="dtype" type="varchar(31)" notnull="true"/>
-            <column name="id" type="uuid" primaryKey="true" identity="true"/>
-            <column name="region_world_id" type="uuid" notnull="true"/>
-            <column name="region_name" type="varchar"/>
-            <column name="region_priority" type="integer" defaultValue="0" notnull="true"/>
-            <column name="shaperegion_shape" type="varchar(2048)" defaultValue="null"/>
-            <column name="tileregion_tile_radius" type="integer" defaultValue="0" notnull="true"/>
-            <column name="tileregion_tile_offset" type="varchar"/>
-            <column name="tilegroup_tileregion_id" type="uuid" references="regions.id" foreignKeyName="fk_regions_tilegroup_tileregion_id" foreignKeyIndex="ix_regions_tilegroup_tileregion_id"/>
-            <column name="tilegroup_tiles" type="varchar"/>
+            <column name="&quot;id&quot;" type="uuid(40)" primaryKey="true" identity="true"/>
+            <column name="&quot;region_world_id&quot;" type="uuid(40)" notnull="true"/>
+            <column name="&quot;region_name&quot;" type="varchar"/>
+            <column name="&quot;region_priority&quot;" type="integer" defaultValue="0" notnull="true"/>
+            <column name="&quot;region_active&quot;" type="boolean" defaultValue="true" notnull="true"/>
+            <column name="&quot;shaperegion_shape&quot;" type="varchar(2048)" defaultValue="null"/>
+            <column name="&quot;tileregion_tile_radius&quot;" type="integer" defaultValue="0" notnull="true"/>
+            <column name="&quot;tileregion_tile_offset&quot;" type="varchar"/>
+            <column name="&quot;tilegroup_tileregion_id&quot;" type="uuid" references="&quot;regions&quot;.&quot;id&quot;" foreignKeyName="&quot;fk_regions_tilegroup_tileregion_id&quot;" foreignKeyIndex="&quot;ix_regions_tilegroup_tileregion_id&quot;"/>
+            <column name="&quot;tilegroup_tiles&quot;" type="varchar"/>
         </createTable>
-        <createTable name="region_attributes" identityType="external" pkName="pk_region_attributes">
-            <column name="id" type="uuid" primaryKey="true" identity="true"/>
-            <column name="name" type="varchar" notnull="true"/>
-            <column name="attrvalue" type="varchar" notnull="true"/>
-            <column name="region_id" type="uuid" notnull="true" references="regions.id" foreignKeyName="fk_region_attributes_region_id" foreignKeyIndex="ix_region_attributes_region_id" foreignKeyOnDelete="CASCADE" foreignKeyOnUpdate="RESTRICT"/>
-            <uniqueConstraint name="uq_region_attributes_region_id_name" columnNames="region_id,name" oneToOne="false" nullableColumns=""/>
+        <createTable name="&quot;region_attributes&quot;" identityType="external" pkName="&quot;pk_region_attributes&quot;">
+            <column name="&quot;id&quot;" type="uuid(40)" primaryKey="true" identity="true"/>
+            <column name="&quot;name&quot;" type="varchar" notnull="true"/>
+            <column name="&quot;attrvalue&quot;" type="varchar" notnull="true"/>
+            <column name="&quot;region_id&quot;" type="uuid" notnull="true" references="&quot;regions&quot;.&quot;id&quot;" foreignKeyName="&quot;fk_region_attributes_region_id&quot;" foreignKeyIndex="&quot;ix_region_attributes_region_id&quot;" foreignKeyOnDelete="CASCADE" foreignKeyOnUpdate="RESTRICT"/>
+            <uniqueConstraint name="&quot;uq_region_attributes_region_id_name&quot;" columnNames="&quot;region_id&quot;,&quot;name&quot;" oneToOne="false" nullableColumns=""/>
         </createTable>
-        <createTable name="region_rules" identityType="external" pkName="pk_region_rules">
-            <column name="id" type="uuid" primaryKey="true" identity="true"/>
-            <column name="priority" type="integer" defaultValue="0" notnull="true"/>
-            <column name="status" type="varchar(5)" notnull="true" checkConstraint="check ( status in ('DENY','ALLOW'))" checkConstraintName="ck_region_rules_status"/>
-            <column name="target" type="varchar" notnull="true"/>
-            <column name="types" type="varchar" notnull="true"/>
-            <column name="region_id" type="uuid" notnull="true" references="regions.id" foreignKeyName="fk_region_rules_region_id" foreignKeyIndex="ix_region_rules_region_id" foreignKeyOnDelete="CASCADE" foreignKeyOnUpdate="RESTRICT"/>
-            <uniqueConstraint name="uq_region_rules_region_id_status_target_types" columnNames="region_id,status,target,types" oneToOne="false" nullableColumns=""/>
+        <createTable name="&quot;region_rules&quot;" identityType="external" pkName="&quot;pk_region_rules&quot;">
+            <column name="&quot;id&quot;" type="uuid(40)" primaryKey="true" identity="true"/>
+            <column name="&quot;priority&quot;" type="integer" defaultValue="0" notnull="true"/>
+            <column name="&quot;status&quot;" type="varchar(5)" notnull="true" checkConstraint="check ( &quot;status&quot; in ('DENY','ALLOW'))" checkConstraintName="&quot;ck_region_rules_status&quot;"/>
+            <column name="&quot;target&quot;" type="varchar" notnull="true"/>
+            <column name="&quot;types&quot;" type="varchar" notnull="true"/>
+            <column name="&quot;region_id&quot;" type="uuid" notnull="true" references="&quot;regions&quot;.&quot;id&quot;" foreignKeyName="&quot;fk_region_rules_region_id&quot;" foreignKeyIndex="&quot;ix_region_rules_region_id&quot;" foreignKeyOnDelete="CASCADE" foreignKeyOnUpdate="RESTRICT"/>
+            <uniqueConstraint name="&quot;uq_region_rules_region_id_status_target_types&quot;" columnNames="&quot;region_id&quot;,&quot;status&quot;,&quot;target&quot;,&quot;types&quot;" oneToOne="false" nullableColumns=""/>
         </createTable>
     </changeSet>
 </migration>

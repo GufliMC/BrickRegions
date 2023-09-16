@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RegionContainer {
 
@@ -52,7 +53,8 @@ public class RegionContainer {
     //
 
     public Collection<Region> regions() {
-        return Collections.unmodifiableSet(regions);
+        return Stream.concat(regions.stream(), Stream.of(region))
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     public Optional<Region.Keyed> region(@NotNull String name) {
@@ -60,7 +62,7 @@ public class RegionContainer {
     }
 
     public Collection<Region> regionsAt(@NotNull Point3 point) {
-        return regions.stream()
+        return regions().stream()
                 .filter(rg -> rg.contains(point))
                 .collect(Collectors.toUnmodifiableSet());
     }

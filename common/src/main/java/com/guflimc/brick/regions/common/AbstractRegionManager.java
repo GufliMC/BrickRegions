@@ -47,6 +47,10 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
         regionEngine.addContainer(region);
         regions.forEach(regionEngine::addRegion);
+
+        regions.forEach(rg -> {
+            System.out.println("Loaded region: " + rg.name() + " - " + rg.id());
+        });
     }
 
     // SELECTION

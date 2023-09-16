@@ -49,7 +49,9 @@ public class SpigotRegionCommands {
         I18nAPI.get(this).send(sender, "cmd.region.list.world", world.getName(),
                 RegionAPI.get().regions(world.getUID(), Region.Keyed.class).stream()
                         .map(Region.Keyed::name)
-                        .filter(Objects::nonNull).toList()
+                        .filter(Objects::nonNull)
+                        .sorted()
+                        .toList()
         );
     }
 

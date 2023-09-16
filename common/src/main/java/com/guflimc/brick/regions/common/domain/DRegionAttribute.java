@@ -25,6 +25,7 @@ public class DRegionAttribute {
 
     @ManyToOne(optional = false)
     @DbForeignKey(onDelete = ConstraintMode.CASCADE)
+    @JoinColumn(name = "region_id")
     private DRegion region;
 
     public DRegionAttribute() {

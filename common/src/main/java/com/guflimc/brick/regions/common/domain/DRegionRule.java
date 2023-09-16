@@ -43,6 +43,7 @@ public class DRegionRule implements RegionRule {
 
     @ManyToOne(optional = false)
     @DbForeignKey(onDelete = ConstraintMode.CASCADE)
+    @JoinColumn(name = "region_id")
     private DRegion region;
 
     public DRegionRule() {
