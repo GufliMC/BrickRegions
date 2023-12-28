@@ -31,8 +31,8 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
     }
 
     public void loadWorld(@NotNull UUID worldId) {
-        List<DKeyedRegion> regions = databaseContext
-                .findAllWhereAsync(DKeyedRegion.class, "worldId", worldId).join();
+        List<DNamedRegion> regions = databaseContext
+                .findAllWhereAsync(DNamedRegion.class, "worldId", worldId).join();
 
         DWorldRegion region = (DWorldRegion) regions.stream()
                 .filter(rg -> rg instanceof Region.World)
@@ -79,7 +79,7 @@ public abstract class AbstractRegionManager<P> implements RegionManager<P> {
 
 
     @Override
-    public Optional<Region.Keyed> region(@NotNull UUID worldId, @NotNull String name) {
+    public Optional<Region.Named> region(@NotNull UUID worldId, @NotNull String name) {
         return regionEngine.region(worldId, name);
     }
 

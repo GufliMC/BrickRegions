@@ -8,7 +8,7 @@ import jakarta.persistence.Entity;
 import java.util.UUID;
 
 @Entity
-public class DWorldRegion extends DKeyedRegion implements Region.World {
+public class DWorldRegion extends DNamedRegion implements Region.World {
 
     public DWorldRegion() {
     }

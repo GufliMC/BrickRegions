@@ -17,7 +17,7 @@ public class RegionAttributeCommands {
 
     @Command("br region attribute set")
     @Permission("brickregions.region.attribute.set")
-    public <T, R extends Region.Keyed & Region.AttributeModifiable> void regionAttributeSet(@Source Audience sender,
+    public <T, R extends Region.Named & Region.AttributeModifiable> void regionAttributeSet(@Source Audience sender,
                                                                                             @Parameter(parser = "attributeable", completer = "attributeable") R region,
                                                                                             @Parameter RegionAttributeKey<T> attributeKey,
                                                                                             @Parameter T attributeValue) {
@@ -30,7 +30,7 @@ public class RegionAttributeCommands {
 
     @Command("br region attribute unset")
     @Permission("brickregions.region.attribute.unset")
-    public <T, R extends Region.Keyed & Region.AttributeModifiable> void regiosAttributeUnset(@Source Audience sender,
+    public <T, R extends Region.Named & Region.AttributeModifiable> void regiosAttributeUnset(@Source Audience sender,
                                                                                               @Parameter(parser = "attributeable", completer = "attributeable") R region,
                                                                                               @Parameter RegionAttributeKey<?> attributeKey) {
         region.removeAttribute(attributeKey);

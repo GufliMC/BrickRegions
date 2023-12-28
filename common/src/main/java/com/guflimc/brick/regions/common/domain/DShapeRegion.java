@@ -13,7 +13,7 @@ import jakarta.persistence.Entity;
 import java.util.UUID;
 
 @Entity
-public class DShapeRegion extends DKeyedPropertyRegion implements Region.Shaped {
+public class DShapeRegion extends DNamedPropertyRegion implements Region.Shaped {
 
     @Convert(converter = Shape3Converter.class)
     @Column(name = "shaperegion_shape", length = 2048)

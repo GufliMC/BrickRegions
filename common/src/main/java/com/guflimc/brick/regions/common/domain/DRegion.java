@@ -17,7 +17,7 @@ import java.util.*;
 @Entity
 @Inheritance
 @Table(name = "regions")
-public class DRegion implements Region, Region.AttributeModifiable, Region.RuleModifiable {
+public class DRegion implements Region.Keyed, Region.AttributeModifiable, Region.RuleModifiable {
 
     @Id
     @GeneratedValue
@@ -43,6 +43,7 @@ public class DRegion implements Region, Region.AttributeModifiable, Region.RuleM
 
     //
 
+    @Override
     public UUID id() {
         return id;
     }

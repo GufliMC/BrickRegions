@@ -29,7 +29,7 @@ public interface RegionManager<S> {
 
     Optional<Region.Keyed> region(@NotNull UUID id);
 
-    Optional<Region.Keyed> region(@NotNull UUID worldId, @NotNull String name);
+    Optional<Region.Named> region(@NotNull UUID worldId, @NotNull String name);
 
     Collection<Region> regions();
 

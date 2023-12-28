@@ -131,7 +131,7 @@ public class DynmapRenderer {
         if (region instanceof TileGroup tg && tg.tiles().size() == 1) {
             TileKey t = tg.tiles().iterator().next();
             label = t.x() + ", " + t.z();
-        } else if (region instanceof Region.Keyed rk) {
+        } else if (region instanceof Region.Named rk) {
             label = rk.name();
         }
 

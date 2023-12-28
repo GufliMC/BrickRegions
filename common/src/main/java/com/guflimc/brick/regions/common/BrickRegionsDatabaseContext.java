@@ -32,8 +32,8 @@ public class BrickRegionsDatabaseContext extends EbeanDatabaseContext {
 
     private static final Class<?>[] APPLICABLE_CLASSES = new Class[]{
             DRegion.class,
-            DKeyedRegion.class,
-            DKeyedPropertyRegion.class,
+            DNamedRegion.class,
+            DNamedPropertyRegion.class,
 
             DRegionAttribute.class,
             DRegionRule.class,

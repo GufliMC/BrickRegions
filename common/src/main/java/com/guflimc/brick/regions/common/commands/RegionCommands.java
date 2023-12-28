@@ -25,7 +25,7 @@ public class RegionCommands {
 
     @Command("br region delete")
     @Permission("brickregions.region.delete")
-    public void delete(@Source Audience sender, @Parameter(parser = "not-global", completer = "not-global") Region.Keyed region) {
+    public void delete(@Source Audience sender, @Parameter(parser = "not-global", completer = "not-global") Region.Named region) {
         RegionAPI.get().remove(region);
         I18nAPI.get(this).send(sender, "cmd.region.delete", region.name());
     }
@@ -34,7 +34,7 @@ public class RegionCommands {
 
     @Command("br region rule list")
     @Permission("brickregions.region.rule.list")
-    public <R extends Region.Keyed & Region.RuleModifiable> void rulesList(@Source Audience sender,
+    public <R extends Region.Named & Region.RuleModifiable> void rulesList(@Source Audience sender,
                                                                            @Parameter(parser = "ruleable", completer = "ruleable") R region) {
 
         List<RegionRule> rules = region.rules();
@@ -55,7 +55,7 @@ public class RegionCommands {
 
     @Command("br region rule add")
     @Permission("brickregions.region.rule.add")
-    public <R extends Region.Keyed & Region.RuleModifiable> void rulesAdd(@Source Audience sender,
+    public <R extends Region.Named & Region.RuleModifiable> void rulesAdd(@Source Audience sender,
                                                                           @Parameter(parser = "ruleable", completer = "ruleable") R region,
                                                                           @Parameter RuleStatus status,
                                                                           @Parameter RuleTarget target,
@@ -80,7 +80,7 @@ public class RegionCommands {
 
     @Command("br region rule remove")
     @Permission("brickregions.region.rule.remove")
-    public <R extends Region.Keyed & Region.RuleModifiable> void rulesRemove(@Source Audience sender,
+    public <R extends Region.Named & Region.RuleModifiable> void rulesRemove(@Source Audience sender,
                                                                              @Parameter(parser = "ruleable", completer = "ruleable") R region,
                                                                              @Parameter int index) {
 
@@ -98,7 +98,7 @@ public class RegionCommands {
 
     @Command("br region rule clear")
     @Permission("brickregions.region.rule.clear")
-    public <R extends Region.Keyed & Region.RuleModifiable> void rulesClear(@Source Audience sender,
+    public <R extends Region.Named & Region.RuleModifiable> void rulesClear(@Source Audience sender,
                                                                             @Parameter(parser = "ruleable", completer = "ruleable") R region) {
         region.removeRules();
         RegionAPI.get().persist(region);

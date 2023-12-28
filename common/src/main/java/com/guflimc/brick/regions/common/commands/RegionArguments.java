@@ -79,18 +79,18 @@ public class RegionArguments<S> {
 
     // REGION
 
-    @Parser(type = Region.Keyed.class)
-    public Region.Keyed region(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
+    @Parser(type = Region.Named.class)
+    public Region.Named region(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
         return RegionAPI.get()
                 .region(worldId, input)
                 .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
     }
 
-    @Completer(type = Region.Keyed.class)
+    @Completer(type = Region.Named.class)
     public List<String> region(@Source("worldId") UUID worldId) {
         return RegionAPI.get()
-                .regions(worldId, Region.Keyed.class)
-                .stream().map(Region.Keyed::name).toList();
+                .regions(worldId, Region.Named.class)
+                .stream().map(Region.Named::name).toList();
     }
 
     // TILE REGION
@@ -98,8 +98,8 @@ public class RegionArguments<S> {
     @Completer(value = "region", type = TileRegion.class)
     public List<String> tileRegion(@Source("worldId") UUID worldId) {
         return RegionAPI.get()
-                .regions(worldId, Region.Keyed.class, TileRegion.class).stream()
-                .map(Region.Keyed::name).toList();
+                .regions(worldId, Region.Named.class, TileRegion.class).stream()
+                .map(Region.Named::name).toList();
     }
 
     @Parser("region")
@@ -113,59 +113,59 @@ public class RegionArguments<S> {
 
     // REGION NOT GLOBAL
 
-    @Parser(type = Region.Keyed.class, value = "not-global")
-    public Region.Keyed regionNotGlobal(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
+    @Parser(type = Region.Named.class, value = "not-global")
+    public Region.Named regionNotGlobal(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
         return RegionAPI.get()
                 .region(worldId, input)
                 .filter(region -> !(region instanceof Region.World))
                 .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
     }
 
-    @Completer(type = Region.Keyed.class, value = "not-global")
+    @Completer(type = Region.Named.class, value = "not-global")
     public List<String> regionNotGlobal(@Source("worldId") UUID worldId) {
         return RegionAPI.get()
-                .regions(worldId, Region.Keyed.class)
+                .regions(worldId, Region.Named.class)
                 .stream()
                 .filter(region -> !(region instanceof Region.World))
-                .map(Region.Keyed::name).toList();
+                .map(Region.Named::name).toList();
     }
 
     // REGION ATTRIBUTEABLE
 
-    @Parser(type = Region.Keyed.class, value = "attributeable")
-    public Region.Keyed regionAttributeable(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
+    @Parser(type = Region.Named.class, value = "attributeable")
+    public Region.Named regionAttributeable(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
         return RegionAPI.get()
                 .region(worldId, input)
-                .filter(region -> region instanceof Region.AttributeModifiable)
+                .filter(Region.AttributeModifiable.class::isInstance)
                 .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
     }
 
-    @Completer(type = Region.Keyed.class, value = "attributeable")
+    @Completer(type = Region.Named.class, value = "attributeable")
     public List<String> regionAttributeable(@Source("worldId") UUID worldId) {
         return RegionAPI.get()
-                .regions(worldId, Region.Keyed.class)
+                .regions(worldId, Region.Named.class)
                 .stream()
-                .filter(region -> region instanceof Region.AttributeModifiable)
-                .map(Region.Keyed::name).toList();
+                .filter(Region.AttributeModifiable.class::isInstance)
+                .map(Region.Named::name).toList();
     }
 
     // REGION RULEABLE
 
-    @Parser(type = Region.Keyed.class, value = "ruleable")
-    public Region.Keyed regionRuleable(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
+    @Parser(type = Region.Named.class, value = "ruleable")
+    public Region.Named regionRuleable(@Source Audience audience, @Source("worldId") UUID worldId, @Input String input) {
         return RegionAPI.get()
                 .region(worldId, input)
-                .filter(region -> region instanceof Region.RuleModifiable)
+                .filter(Region.RuleModifiable.class::isInstance)
                 .orElseThrow(() -> FailureHandler.of(() -> I18nAPI.get(this).send(audience, "cmd.error.args.region", input)));
     }
 
-    @Completer(type = Region.Keyed.class, value = "ruleable")
+    @Completer(type = Region.Named.class, value = "ruleable")
     public List<String> regionRuleable(@Source("worldId") UUID worldId) {
         return RegionAPI.get()
-                .regions(worldId, Region.Keyed.class)
+                .regions(worldId, Region.Named.class)
                 .stream()
-                .filter(region -> region instanceof Region.RuleModifiable)
-                .map(Region.Keyed::name).toList();
+                .filter(Region.RuleModifiable.class::isInstance)
+                .map(Region.Named::name).toList();
     }
 
     // ATTRIBUTE

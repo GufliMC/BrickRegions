@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Inheritance
-public abstract class DTileRegion extends DKeyedPropertyRegion implements TileRegion {
+public abstract class DTileRegion extends DNamedPropertyRegion implements TileRegion {
 
     @OneToMany(targetEntity = DTileGroup.class, mappedBy = "region",
             cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

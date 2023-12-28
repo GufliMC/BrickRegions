@@ -10,15 +10,15 @@ import java.util.UUID;
 
 @Entity
 @Index(columnNames = {"region_world_id", "region_name"}, unique = true)
-public class DKeyedRegion extends DRegion implements Region.Keyed {
+public class DNamedRegion extends DRegion implements Region.Named {
 
     @Column(name = "region_name")
     private String name;
 
-    public DKeyedRegion() {
+    public DNamedRegion() {
     }
 
-    public DKeyedRegion(@NotNull UUID worldId, @NotNull String name) {
+    public DNamedRegion(@NotNull UUID worldId, @NotNull String name) {
         super(worldId);
         this.name = name;
     }

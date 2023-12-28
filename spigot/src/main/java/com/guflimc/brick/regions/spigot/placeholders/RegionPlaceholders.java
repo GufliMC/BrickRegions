@@ -23,7 +23,7 @@ public class RegionPlaceholders {
     public static void init() {
         BasePlaceholderModule<Player> module = new BasePlaceholderModule<>("region");
         module.register("name", region(region -> {
-            if ( region instanceof Region.Keyed rk )
+            if ( region instanceof Region.Named rk )
                 return Component.text(rk.name());
             return null;
         }));

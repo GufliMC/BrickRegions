@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 import java.util.UUID;
 
 @Entity
-public class DKeyedPropertyRegion extends DKeyedRegion implements Region.PropertyModifiable, Region.ActiveModifiable {
+public class DNamedPropertyRegion extends DNamedRegion implements Region.PropertyModifiable, Region.ActiveModifiable {
 
     @Column(name = "region_priority", nullable = false)
     @DbDefault("0")
@@ -20,10 +20,10 @@ public class DKeyedPropertyRegion extends DKeyedRegion implements Region.Propert
     @DbDefault("true")
     protected boolean active = true;
 
-    public DKeyedPropertyRegion() {
+    public DNamedPropertyRegion() {
     }
 
-    public DKeyedPropertyRegion(@NotNull UUID worldId, @NotNull String name) {
+    public DNamedPropertyRegion(@NotNull UUID worldId, @NotNull String name) {
         super(worldId, name);
     }
 

@@ -13,7 +13,7 @@ public class RegionEngine {
     private final Map<UUID, Region.Keyed> byId = new ConcurrentHashMap<>();
     private final Map<UUID, RegionContainer> containers = new ConcurrentHashMap<>();
 
-    public <T extends Region.World & Region.Keyed> void addContainer(@NotNull T region) {
+    public <T extends Region.World & Region.Named> void addContainer(@NotNull T region) {
         containers.put(region.worldId(), new RegionContainer(region.worldId(), region));
     }
 
@@ -72,7 +72,7 @@ public class RegionEngine {
         return Optional.ofNullable(byId.get(id));
     }
 
-    public Optional<Region.Keyed> region(@NotNull UUID worldId, @NotNull String name) {
+    public Optional<Region.Named> region(@NotNull UUID worldId, @NotNull String name) {
         if (!containers.containsKey(worldId)) {
             throw new IllegalStateException("A region container for the given world does not exist.");
         }

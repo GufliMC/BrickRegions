@@ -13,11 +13,11 @@ import java.util.stream.Stream;
 public class RegionContainer {
 
     private final Set<Region> regions = new CopyOnWriteArraySet<>();
-    private final Map<String, Region.Keyed> byName = new ConcurrentHashMap<>();
+    private final Map<String, Region.Named> byName = new ConcurrentHashMap<>();
 
     private final Region.World region;
 
-    public <T extends Region.World & Region.Keyed> RegionContainer(UUID worldId, T region) {
+    public <T extends Region.World & Region.Named> RegionContainer(UUID worldId, T region) {
         if (!region.worldId().equals(worldId)) {
             throw new IllegalArgumentException("The world region is not for this world.");
         }
@@ -39,14 +39,14 @@ public class RegionContainer {
 
         regions.remove(region);
 
-        if (region instanceof Region.Keyed rk)
+        if (region instanceof Region.Named rk)
             byName.remove(rk.name(), rk);
     }
 
     public void addRegion(Region region) {
         regions.add(region);
 
-        if (region instanceof Region.Keyed rk)
+        if (region instanceof Region.Named rk)
             byName.put(rk.name(), rk);
     }
 
@@ -57,7 +57,7 @@ public class RegionContainer {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    public Optional<Region.Keyed> region(@NotNull String name) {
+    public Optional<Region.Named> region(@NotNull String name) {
         return Optional.ofNullable(byName.get(name));
     }
 

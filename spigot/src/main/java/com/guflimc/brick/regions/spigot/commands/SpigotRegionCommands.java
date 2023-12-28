@@ -37,8 +37,8 @@ public class SpigotRegionCommands {
     @Permission("brickregions.region.list")
     public void list(@Source Player sender) {
         SpigotI18nAPI.get(this).send(sender, "cmd.region.list",
-                RegionAPI.get().regions(sender.getWorld().getUID(), Region.Keyed.class).stream()
-                        .map(Region.Keyed::name)
+                RegionAPI.get().regions(sender.getWorld().getUID(), Region.Named.class).stream()
+                        .map(Region.Named::name)
                         .filter(Objects::nonNull).toList()
         );
     }
@@ -47,8 +47,8 @@ public class SpigotRegionCommands {
     @Permission("brickregions.region.list")
     public void listWorld(@Source Audience sender, @Parameter World world) {
         I18nAPI.get(this).send(sender, "cmd.region.list.world", world.getName(),
-                RegionAPI.get().regions(world.getUID(), Region.Keyed.class).stream()
-                        .map(Region.Keyed::name)
+                RegionAPI.get().regions(world.getUID(), Region.Named.class).stream()
+                        .map(Region.Named::name)
                         .filter(Objects::nonNull)
                         .sorted()
                         .toList()
@@ -99,7 +99,7 @@ public class SpigotRegionCommands {
 
     @Command("br tileregion fill")
     @Permission("brickregions.tileregion.fill")
-    public <R extends TileRegion & Region.Keyed> void fillTiles(@Source Player sender,
+    public <R extends TileRegion & Region.Named> void fillTiles(@Source Player sender,
                                                                 @Source Selection selection,
                                                                 @Parameter R region) {
         Shape3 shape = selection.shape();
@@ -119,7 +119,7 @@ public class SpigotRegionCommands {
 
     @Command("br tileregion groupify")
     @Permission("brickregions.tileregion.groupify")
-    public <R extends TileRegion & Region.Keyed> void groupifyTiles(@Source Player sender,
+    public <R extends TileRegion & Region.Named> void groupifyTiles(@Source Player sender,
                                                                     @Parameter R region,
                                                                     @Parameter int size) {
         region.groupify(size);
@@ -130,7 +130,7 @@ public class SpigotRegionCommands {
 
     @Command("br tileregion merge")
     @Permission("brickregions.tileregion.merge")
-    public <R extends TileRegion & Region.Keyed> void merge(@Source Player sender,
+    public <R extends TileRegion & Region.Named> void merge(@Source Player sender,
                                                                     @Parameter R region) {
 
         region.merge(

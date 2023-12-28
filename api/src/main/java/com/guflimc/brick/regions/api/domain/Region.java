@@ -30,6 +30,10 @@ public interface Region {
 
         UUID id();
 
+    }
+
+    static interface Named extends Region {
+
         String name();
 
     }
